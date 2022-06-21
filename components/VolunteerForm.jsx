@@ -12,14 +12,14 @@ export default function VolunteerForm({ volunteer, setVolunteer }) {
             // Move to main
             window.localStorage.setItem('code', volunteer.code)
             window.location = '/main'
+        } else {
+            // Else reset form, render error text
+            setVolunteer({
+                ...volunteer,
+                code: 0
+            })
+            setError(true)
         }
-
-        // Else reset form, render error text
-        setVolunteer({
-            ...volunteer,
-            code: 0
-        })
-        setError(true)
     }
     const handleChange = (e) =>
     {
