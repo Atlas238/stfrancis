@@ -1,8 +1,0 @@
-.form {
-    display: flex;
-    flex-direction: column;
-}
-
-.form label {
-    padding: 0.4rem;
-}
