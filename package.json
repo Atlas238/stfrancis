@@ -9,11 +9,20 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^2.6.1",
+    "daisyui": "^2.19.0",
+    "express-jwt": "^6.0.0",
+    "jsonwebtoken": "^8.5.1",
     "next": "12.1.6",
+    "prop-types": "^15.7.2",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-hook-form": "^7.12.1",
+    "rxjs": "^7.3.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^8.5.8",
     "autoprefixer": "^10.4.7",
     "eslint": "8.18.0",
     "eslint-config-next": "12.1.6",
