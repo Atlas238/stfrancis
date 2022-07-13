@@ -46,26 +46,21 @@ function App({ Component, pageProps }) {
     }
 
     return (
-        <>
+        <div className="overflow-y-hidden">
             <Head>
                 <title>St Francis House</title>
             </Head>
 
-            <div className="container">
+            <div className="">
                 <Nav />
-                <div className="container px-2 py-4">
+                <div className="">
                     {authorized &&
-                        <>
+                        <div className="overflow-y-hidden">
                             <Component {...pageProps} />
-                        </>
+                        </div>
                     }
                 </div>
             </div>
-
-            {/* credits */}
-            <div className="text-center mt-4">
-                <p>Copyright 2022 : The Saint Francis House Foundation</p>
-            </div>
-        </>
+        </div>
     );
 }

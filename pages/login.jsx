@@ -42,32 +42,33 @@ function Login() {
     }
 
     return (
-        <div className="col-md-6 offset-md-3 mt-5">
-            <div className="alert alert-info">
-                Username: test<br />
-                Password: test
-            </div>
-            <div className="card">
-                <h4 className="card-header">St Francis House</h4>
-                <div className="card-body">
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className="form-group">
-                            <label>Username</label>
-                            <input name="username" type="text" {...register('username')} className={`form-control ${errors.username ? 'is-invalid' : ''}`} />
+        <div className="hero min-h-screen bg-slate-300">
+            <div className="hero-content flex-col lg:flex-row-reverse">
+                <div className="text-center lg:text-left text-black">
+                    <h1 className="text-5xl font-bold">Login to Continue</h1>
+                    <p className="py-6">Enter your issued username and password to sign into the main portal</p>
+                </div>
+                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-slate-600">
+                    <form onSubmit={handleSubmit(onSubmit)} className="card-body">
+                        <div className="form-control">
+                            <label className='label'>Username</label>
+                            <input name="username" type="text" {...register('username')} className={`form-control text-black ${errors.username ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.username?.message}</div>
                         </div>
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input name="password" type="password" {...register('password')} className={`form-control ${errors.password ? 'is-invalid' : ''}`} />
+                        <div className="form-control">
+                            <label className='label'>Password</label>
+                            <input name="password" type="password" {...register('password')} className={`form-control text-black ${errors.password ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.password?.message}</div>
                         </div>
-                        <button disabled={formState.isSubmitting} className="btn btn-primary">
-                            {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                            Login
-                        </button>
-                        {errors.apiError &&
-                            <div className="alert alert-danger mt-3 mb-0">{errors.apiError?.message}</div>
-                        }
+                        <div className='form-control mt-6'>
+                            <button disabled={formState.isSubmitting} className="btn btn-accent">
+                                {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
+                                Login
+                            </button>
+                            {errors.apiError &&
+                                <div className="alert alert-danger mt-3 mb-0">{errors.apiError?.message}</div>
+                            }
+                        </div>
                     </form>
                 </div>
             </div>

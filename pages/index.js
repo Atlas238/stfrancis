@@ -13,10 +13,8 @@ function Home() {
     }, []);
 
     return (
-        <div className="card mt-4">
-            <h4 className="card-header">You're logged in with Next.js 11 & JWT!!</h4>
-            <div className="card-body">
-                <h6>Users from secure api end point</h6>
+        <div className="">
+            <div className='card'>
                 {users &&
                     <ul>
                         {users.map(user =>
@@ -24,7 +22,7 @@ function Home() {
                         )}
                     </ul>
                 }
-                {!users && <div className="spinner-border spinner-border-sm"></div>}
+                {!users && <div className="progress w-56"></div>}
             </div>
         </div>
     );
