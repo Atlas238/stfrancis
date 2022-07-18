@@ -4,6 +4,15 @@
         "username": "test",
         "password": "test",
         "firstName": "Test",
-        "lastName": "User"
+        "lastName": "User",
+        "isAdmin": false
+    },
+    {
+        "id": 2,
+        "username": "admin",
+        "password": "password",
+        "firstName": "Admin",
+        "lastName": "Admin",
+        "isAdmin": true
     }
 ]

@@ -14,7 +14,6 @@ function Home() {
     }, []);
 
     return (
-        // Branch from homepage from check-in, check-out
         <main className="flex min-w-full min-h-screen border-red-500 border-2">
 
             <div>
@@ -31,14 +30,6 @@ function Home() {
                             <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Sign Out</button>
                         </div>
                     </div>
-                </div>
-
-                <div>
-                 <form>
-                    <input type="text">First Name</input>
-                    <input type="text">Last Name</input>
-                    <input type="text">Birthdate</input>
-                 </form>
                 </div>
 
             </div>

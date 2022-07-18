@@ -28,7 +28,7 @@ function App({ Component, pageProps }) {
             router.events.off('routeChangeStart', hideContent);
             router.events.off('routeChangeComplete', authCheck);
         }
-    }, [router]);
+    }, []);
 
     function authCheck(url) {
         // redirect to login page if accessing a private page and not logged in 
@@ -51,9 +51,9 @@ function App({ Component, pageProps }) {
                 <title>St Francis House</title>
             </Head>
 
-            <div className="">
+            <div>
                 <Nav />
-                <div className="">
+                <div>
                     {authorized &&
                         <div className="overflow-y-hidden">
                             <Component {...pageProps} />
