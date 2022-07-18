@@ -18,7 +18,7 @@ function Nav() {
     }
 
     // Only show Nav if logged in
-    if (!user) return null
+    /* if (!user) return null
 
     return (
         <div className="navbar bg-base-100">
@@ -33,5 +33,5 @@ function Nav() {
                 </ul>
             </div>
         </div>
-    )
+    ) */
 }
