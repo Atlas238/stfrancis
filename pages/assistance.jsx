@@ -17,10 +17,7 @@ function Home() {
         <div className="gap-5 columns-2xs">
             <div>
                 <div class="absolute inset-y-5 right-5">
-                <NavLink href= "/" className="btn rounded-full bg-red-500 border-red-600 hover:bg-red-700">Back</NavLink>
-                <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Assistance</button>
-                <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Requests</button>
-                <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Donations</button>
+                <NavLink href= "/index" className="btn rounded-full bg-red-500 border-red-600 hover:bg-red-700">Back</NavLink>
                 <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Reprint Receipts</button>
                 <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Sign Out</button>
                 </div>
