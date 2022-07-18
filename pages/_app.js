@@ -28,7 +28,7 @@ function App({ Component, pageProps }) {
             router.events.off('routeChangeStart', hideContent);
             router.events.off('routeChangeComplete', authCheck);
         }
-    }, []);
+    }, [router]);
 
     function authCheck(url) {
         // redirect to login page if accessing a private page and not logged in 
