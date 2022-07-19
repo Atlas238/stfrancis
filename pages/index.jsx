@@ -14,7 +14,8 @@ function Home() {
     }, []);
 
     return (
-        <main class="flex min-w-full min-h-screen border-red-500 border-2">
+        <main className="flex min-w-full min-h-screen border-red-500 border-2">
+
             <div>
                 <img src="../pages/images/sfhlogo.png" alt="sfh"></img>
             </div>
@@ -31,6 +32,7 @@ function Home() {
                         <button className="btn rounded-full bg-blue-500 border-blue-600 hover:bg-blue-700">Sign Out</button>
                     </div>
                 </div>
+
             </div>
         </main>
     );

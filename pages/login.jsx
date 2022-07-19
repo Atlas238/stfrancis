@@ -16,13 +16,14 @@ function Login() {
         if (userService.userValue) {
             router.push('/');
         }
-    }, []);
+    }, [router]);
 
     // form validation rules 
     const validationSchema = Yup.object().shape({
         username: Yup.string().required('Username is required'),
         password: Yup.string().required('Password is required')
     });
+
     const formOptions = { resolver: yupResolver(validationSchema) };
 
     // get functions to build form with useForm() hook
