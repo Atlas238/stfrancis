@@ -18,6 +18,18 @@ function Nav() {
         userService.logout()
     }
 
+    function setThemeCupcake() {
+        let html = document.getElementById('html')
+        html.setAttribute("data-theme", "cupcake")
+    }
+    function setThemeDark() {
+        let html = document.getElementById('html')
+        html.setAttribute("data-theme", "dark")
+    }
+    function setThemeRainbow() {
+        let html = document.getElementById('html')
+        html.setAttribute("data-theme", "pastel")
+    }
     // Only show Nav if logged in
     if (!user) return null
 
@@ -29,9 +41,16 @@ function Nav() {
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
                     {/* Render diff navlinks based on location variable */}
-                    <li><NavLink href={"/checkin"}>Check In</NavLink></li>
-                    <li><NavLink href={"/checkout"}>Check Out</NavLink></li>
-                    <li><a onClick={logout}>Logout</a></li>
+                    <li><NavLink href={"/checkin"} className="btn btn-primary m-1">Check In</NavLink></li>
+                    <div className="dropdown">
+                        <label tabIndex={0} className="btn btn-secondary m-1">Theme</label>
+                        <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                            <li><a onClick={setThemeCupcake}>Light</a></li>
+                            <li><a onClick={setThemeDark}>Dark</a></li>
+                            <li><a onClick={setThemeRainbow}>Rainbow</a></li>
+                        </ul>
+                    </div>
+                    <li><a onClick={logout} className="btn btn-accent m-1">Logout</a></li>
                 </ul>
             </div>
         </div>
