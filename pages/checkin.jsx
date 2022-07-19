@@ -6,9 +6,11 @@ export default function checkin() {
             {/* Lookup form */}
             <form>
 
+
             </form>
 
             {/* Add new user (routes to user sign up form, takes form data*/}
+             
 
         </div>
     )
