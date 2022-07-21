@@ -24,7 +24,7 @@ export default function newclient() {
     });
 
     const submitForm = (data) => {
-        console.log(data)
+        console.log(data) 
     }
 
     return (
