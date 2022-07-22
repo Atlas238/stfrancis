@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { parse, isDate } from 'date-fns'
-
 import { userService } from '../services/user.service';
 
 import Client from '../components/Client'
@@ -26,15 +25,15 @@ function parseDateString(value, originalValue) {
 
 export default function Home() {
 
-    const { register, handleSubmit, errors } = useForm({
+    const { register, handleSubmit } = useForm({
         resolver: yupResolver(clientLookupSchema)
     })
 
     const [users, setUsers] = useState(null)
-    const [client, setClient] = useState(null)
+    const [lookupClient, setLookupClient] = useState(null)
+    const [dbClients, setDbClients] = useState(null)
     const [submitted, setSubmitted] = useState(false)
     const [loading, setLoading] = useState(false)
-    const [progVal, setProgVal] = useState(5)
 
     const [submitErrors, setSubmitErrors] = useState({
         firstName: null,
@@ -50,7 +49,7 @@ export default function Home() {
         dateOfBirth: false
     })
 
-    const submitForm = (data) => {
+    const submitForm = async (data) => {
         setSubmitErrors({
             firstName: null,
             lastName: null,
@@ -60,8 +59,10 @@ export default function Home() {
         setSubmitted(true)
         setLoading(true)
 
-        setClient(data) //setLocally for easy tracking
-        console.log(client)
+        setLookupClient(data) //setLocally for easy tracking
+        let res = await fetch('/api/clients')
+        let clients = JSON.parse(await res.json())
+        setDbClients(clients)
     }
 
     const handleError = (err) => {
@@ -86,7 +87,7 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
-            <form onSubmit={handleSubmit(submitForm, handleError)} className="card mt-10 mx-auto">
+            <form onSubmit={handleSubmit(submitForm, handleError)} className="card mt-20 mx-auto">
                     <div className='card-body min-w-full'>
                         <h1 className='card-title text-primary-content my-0'>Lookup Client</h1>
                         <div className='divider my-0'></div>
@@ -126,10 +127,12 @@ export default function Home() {
                         <div className='divider my-0'></div>
                     </div>
             </form>
-            {/* Render client list */}
+
+            {/* Render Client list - Select desired Client + Check them in */}
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container`}>
-                <Client client={client} />
+                {dbClients ? dbClients.map(client => { return <Client client={client} key={client.id} />}) : <></>}
             </div>
+
         </div>
     )
 }
