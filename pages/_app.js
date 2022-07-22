@@ -12,6 +12,13 @@ function App({ Component, pageProps }) {
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
 
+    const tick = () => {
+
+        
+
+        requestAnimationFrame(tick) // calls itself 
+    }
+
     useEffect(() => {
         // run auth check on initial load
         authCheck(router.asPath);
