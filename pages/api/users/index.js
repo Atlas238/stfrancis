@@ -1,7 +1,7 @@
 import { apiHandler } from '../../../helpers/api/api-handler';
 
 // users in JSON file for simplicity, store in a db for production applications
-const users = require('data/users.json');
+const users = require('/public/json/users.json');
 
 export default apiHandler(handler);
 

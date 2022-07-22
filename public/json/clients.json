@@ -1,0 +1,10 @@
+[
+    {
+        "id": 0,
+        "firstName": "test",
+        "lastName": "testerson",
+        "middleInitial": "T",
+        "dateOfBirth": "07/11/2022",
+        "eligibleItems": ["Backpack"]
+    }
+]
