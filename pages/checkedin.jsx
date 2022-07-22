@@ -6,19 +6,21 @@ const clients = [
         firstName: 'tex',
         lastName: 'mex',
         middleInitial: 'n',
-        dateOfBirth: new Date()
+        dateOfBirth: new Date(),
+        eligibleItems: ['Backpack']
     },
     {
         id: 1,
         firstName: 'john',
         lastName: 'mast',
         middleInitial: 't',
-        dateOfBirth: new Date()
+        dateOfBirth: new Date(),
+        eligibleItems: ['Sleeping Bag']
     }
 ]
 
 export default function checkedin() {
-    // let clients = localStorage.getItem('checkedIn')
+    // let clients = localStorage.getItem('checkedInClients')
 
     let mapped = clients.map((client) => {
         if (client.firstName && client.lastName) {
