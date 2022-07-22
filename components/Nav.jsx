@@ -41,7 +41,7 @@ function Nav() {
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
                     {/* Render diff navlinks based on location variable */}
-                    {/* <li><NavLink href={"/checkin"} className="btn btn-primary m-1">Check In</NavLink></li> */}
+                    <li><NavLink href={"/checkedin"} className="btn btn-primary m-1">Checked In Clients</NavLink></li>
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-secondary m-1">Theme</label>
                         <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
