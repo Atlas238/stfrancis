@@ -1,24 +1,33 @@
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 export default function checkout() {
-    const [checkedInClients, setCheckedInClients] = useState(null)
+    const [client, setClient] = useState(null)
+    const router = useRouter()
 
-    let clients = []
+    const { id } = router.query
 
     useEffect(() => {
-        setCheckedInClients(localStorage.getItem("checkedInClients"))        
-    },[])
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+
+        checkedInClients?.forEach(client => {
+            if (client.id === id) setClient(client)
+        })
+    }, [localStorage.getItem('checkedInClients')])
 
     return (
-        <div>
+        <div className="mt-20">
+            <div className="card mx-auto w-8/12">
+            <p className="card-title">Fill out what {client?.firstName} recieved today!</p>
+            <p>client ID: {id}</p>
 
-            <h1>Check out Client</h1>
+            <form className="card-body">
 
-            {/* Show list of clients who have checked in today - and not checked out (can store this locally) */}
+                <input type={"checkbox"} name="backpack" />
+                <input type={"checkbox"} name="sleepingbag" />
 
-            {/* Render reconciliation form after selecting user */}
-            
-
+            </form>
+            </div>
         </div>
     )
 }
