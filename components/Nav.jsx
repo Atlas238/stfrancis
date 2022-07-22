@@ -8,8 +8,17 @@ export { Nav }
 function Nav() {
     const [user, setUser] = useState(null)
     const [location, setLocation] = useState(null)
+    const [checkedIn, setCheckedIn] = useState(null)
 
     useEffect(() => {
+        let stored = JSON.parse(localStorage.getItem('checkedInClients'))
+        if (stored != null) {
+            if (stored.length > 0) {
+                setCheckedIn(true)
+            }
+        } else {
+            setCheckedIn(false)
+        }
         const subscription = userService.user.subscribe(x => setUser(x))
         return () => subscription.unsubscribe()
     }, [])
@@ -34,14 +43,14 @@ function Nav() {
     if (!user) return null
 
     return (
-        <div className="navbar bg-base-100 fixed z-10">
+        <div className="navbar bg-base-200 shadow-sm fixed z-10">
             <div className="flex-1">
                 <NavLink className="btn btn-ghost normal-case text-xl" href={"/"}>Home</NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
                     {/* Render diff navlinks based on location variable */}
-                    <li><NavLink href={"/checkedin"} className="btn btn-primary m-1">Checked In Clients</NavLink></li>
+                    {checkedIn ? <li><NavLink href={"/checkedin"} className="btn btn-primary m-1">Checked In Clients</NavLink></li> : <></>}
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-secondary m-1">Theme</label>
                         <ul tabIndex={0} className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
