@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
+import { parse, isDate } from 'date-fns'
 
 import { userService } from '../services/user.service';
 
@@ -13,8 +14,15 @@ const clientLookupSchema = Yup.object().shape({
     firstName: Yup.string().required(),
     lastName: Yup.string().required(),
     middleInitial: Yup.string().notRequired().when('middleInitial', {is: (value) => value?.length, then: (rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().required()
+    dateOfBirth: Yup.date().transform(parseDateString).required()
 }, ['middleInitial', 'middleInitial'])
+
+function parseDateString(value, originalValue) {
+    const parsedDate = isDate(originalValue)
+    ? originalValue
+    : parse(originalValue, "yyyy-MM-dd", new Date())
+    return parsedDate
+}
 
 export default function Home() {
 
@@ -43,10 +51,17 @@ export default function Home() {
     })
 
     const submitForm = (data) => {
-        console.log(data)
+        setSubmitErrors({
+            firstName: null,
+            lastName: null,
+            middleInitial: null,
+            dateOfBirth: null
+        })
         setSubmitted(true)
         setLoading(true)
-        setClient(data)
+
+        setClient(data) //setLocally for easy tracking
+        console.log(client)
     }
 
     const handleError = (err) => {
@@ -70,53 +85,51 @@ export default function Home() {
     }, []);
 
     return (
-        <div className="flex min-w-full min-h-screen overflow-x-hidden">
-            {submitted && loading
-            ? 
-            <div className='my-auto mx-auto mt-20'>
-                <Client client={client}/>
-                <div className="my-auto mx-auto mt-80">Loading...</div> 
-            </div>
-            :
-            <form onSubmit={handleSubmit(submitForm, handleError)} className="px-40 py-4 my-20">
-                <div className="card bg-base-100 shadow-xl">
-                    <div className='card-body'>
-                        <h1 className='card-title text-primary-content'>Lookup Client</h1>
-                            <div className='flex'>
+        <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
+            <form onSubmit={handleSubmit(submitForm, handleError)} className="card mt-10 mx-auto">
+                    <div className='card-body min-w-full'>
+                        <h1 className='card-title text-primary-content my-0'>Lookup Client</h1>
+                        <div className='divider my-0'></div>
+                        <div className="form-control flex-row">
 
-                                {/* First Name */}
-                                <div className="">
-                                <label className="block font-bold text-primary-content">First name</label>
-                                <input type="text" name="firstName" {...register('firstName')} onClick={() => setTouched({...touched, firstName: true})} className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
-                                {submitErrors.firstName && touched.firstName ? <p className='badge badge-error'>First Name is required</p> : null}
-                                </div>
-
-                                {/* Last Name */}
-                                <div className="">
-                                <label className="block font-bold text-primary-content">Last name</label>
-                                <input type="text" name="lastName" {...register('lastName')} onClick={() => setTouched({...touched, lastName: true})} className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
-                                {submitErrors.lastName && touched.lastName ? <p className="badge badge-error">Last Name is required</p> : null}
-                                </div>
-                                {/* Middle Initial */}
-                                <div className="col-span-9 sm:col-span-3">
-                                <label className="block font-bold text-primary-content">Middle Initial</label>
-                                <input type="text" name="middleInitial" {...register('middleInitial')} onClick={() => setTouched({...touched, middleInitial: true})} className="flex-1 w-1/3 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
-                                {submitErrors.middleInitial && touched.middleInitial ? <p className='badge badge-error'>Middle Initial must only be one letter</p> : null}
-                                </div>
+                            {/* First Name */}
+                            <div className='p-2 w-60 flex flex-col'>
+                            <label className="label label-text">First name</label>
+                            <input type="text" name="firstName" {...register('firstName')} onClick={() => setTouched({...touched, firstName: true})} className="input input-bordered min-w-sm p-2" />
+                            {submitErrors.firstName && touched.firstName ? <label className='label-text-alt badge badge-error m-1'>required</label> : null}
                             </div>
+
+                            {/* Last Name */}
+                            <div className="p-2 w-60 flex flex-col">
+                            <label className="label label-text">Last name</label>
+                            <input type="text" name="lastName" {...register('lastName')} onClick={() => setTouched({...touched, lastName: true})} className="input input-bordered min-w-sm p-2" />
+                            {submitErrors.lastName && touched.lastName ? <label className="label-text-alt badge badge-error m-1">required</label> : null}
+                            </div>
+
+                            {/* Middle Initial */}
+                            <div className="p-2 w-60 flex flex-col">
+                            <label className="label label-text">Middle Initial</label>
+                            <input type="text" name="middleInitial" {...register('middleInitial')} onClick={() => setTouched({...touched, middleInitial: true})} className="input input-bordered min-w-sm p-2" />
+                            {submitErrors.middleInitial && touched.middleInitial ? <label className='label-text-alt badge badge-error'>Middle Initial must only be one letter</label> : null}
+                            </div>
+
                             {/* Date of Birth */}
-                            <div className="col-span-9 sm:col-span-3">
-                                <label className="block font-bold text-primary-content">Date of Birth</label>
-                                <input type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" onClick={() => setTouched({...touched, dateOfBirth: true})} className="flex-1 min-w-fit w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"></input>
-                                {submitErrors.dateOfBirth && touched.dateOfBirth ? <p className='badge badge-error'>Date of Birth is required</p> : null}
+                            <div className="p-2 w-64 flex flex-col">
+                                <label className="label label-text">Date of Birth</label>
+                                <input type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" onClick={() => setTouched({...touched, dateOfBirth: true})} className="input input-bordered min-w-sm p-2"></input>
+                                <label className={`label-text-alt badge badge-error m-1 ${submitErrors.dateOfBirth && touched.dateOfBirth ? "visible" : "hidden"}`}>required</label>
                             </div>
+                        </div>
+                        <div className='card-actions justify-end my-0'>
+                            <button type="submit" className="btn btn-primary p-2 my-2 mr-1">Search</button>
+                        </div>
+                        <div className='divider my-0'></div>
                     </div>
-                    <div className="card-actions justify-center p-4">
-                        <button type="submit" className="btn btn-primary p-2">Search</button>
-                    </div>
-                </div>
             </form>
-            }
+            {/* Render client list */}
+            <div className={`${submitted ? "visible" : "hidden"} mx-auto container`}>
+                <Client client={client} />
+            </div>
         </div>
     )
 }
