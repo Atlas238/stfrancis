@@ -5,13 +5,13 @@ import * as Yup from 'yup';
 
 // form validation
 const clientSchema = Yup.object().shape({
-    firstName: Yup.string().required(),
-    lastName: Yup.string().required(),
+    firstName: Yup.string().required('*'),
+    lastName: Yup.string().required('*'),
     middleInitial: Yup.string().notRequired().when('middleInitial', {is:(value) => value?.length, then:(rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().required(),
+    dateOfBirth: Yup.date().required('*').nullable().transform(v => (v instanceof Date && !isNaN(v) ? v : null)),
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
-    postalCode: Yup.number().notRequired().when('postalCode', {is:(value) => value?.length, then:(rule) => rule.length(5)}),
+    postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
     familyId: Yup.string().notRequired()
 },
 // add cyclic dependencies for requiring itself
@@ -19,9 +19,11 @@ const clientSchema = Yup.object().shape({
 
 export default function newclient() {
 
-    const { register, handleSubmit, errors } = useForm({
+    const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(clientSchema)
     });
+
+    const {errors} = formState;
 
     const submitForm = (data) => {
         console.log(data)
@@ -36,12 +38,12 @@ export default function newclient() {
                         <div className="p-12 grid grid-cols-9 gap-12">
                         {/* First Name */}
                         <div className="col-span-9 sm:col-span-3">
-                            <label className="block font-bold text-gray-700">First name</label>
+                            <label className="block font-bold text-gray-700">First name <span className="font-bold text-orange-700">{errors.firstName?.message}</span></label>
                             <input type="text" name="firstName" {...register('firstName')} className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
                         </div>
                         {/* Last Name */}
                         <div className="col-span-9 sm:col-span-3">
-                            <label className="block font-bold text-gray-700">Last name</label>
+                            <label className="block font-bold text-gray-700">Last name <span className="font-bold text-orange-700">{errors.lastName?.message}</span></label>
                             <input type="text" name="lastName" {...register('lastName')} className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
                         </div>
                         {/* Middle Initial */}
@@ -51,7 +53,7 @@ export default function newclient() {
                         </div>
                         {/* Date of Birth */}
                         <div className="col-span-9 sm:col-span-3">
-                            <label className="block font-bold text-gray-700">Date of Birth</label>
+                            <label className="block font-bold text-gray-700">Date of Birth <span className="font-bold text-orange-700">{errors.dateOfBirth?.message}</span></label>
                             <input type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none"></input>
                         </div>
                         {/* Gender */}
@@ -80,7 +82,7 @@ export default function newclient() {
                         </div>
                         {/* Zip Code */}
                         <div className="col-span-9 sm:col-span-3">
-                            <label className="block font-bold text-gray-700">Postal code</label>
+                            <label className="block font-bold text-gray-700">Postal code <span className="font-bold text-orange-700">{errors.postalCode?.message}</span></label>
                             <input type="text" name="postalCode" {...register('postalCode')} className="flex-1 w-3/4 py-2 text-center border-b-2 border-gray-400 focus:border-green-400 text-gray-600 placeholder-gray-400 outline-none" />
                         </div>
                         {/* Family */}
