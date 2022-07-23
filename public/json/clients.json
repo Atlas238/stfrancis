@@ -6,5 +6,21 @@
         "middleInitial": "T",
         "dateOfBirth": "07/11/2022",
         "eligibleItems": ["Backpack"]
+    },
+    {
+        "id": 1,
+        "firstName": "test2",
+        "lastName": "testerson2",
+        "middleInitial": "T",
+        "dateOfBirth": "07/11/2022",
+        "eligibleItems": ["sleepingbag"]
+    },
+    {
+        "id": 2,
+        "firstName": "test3",
+        "lastName": "testerson3",
+        "middleInitial": "T",
+        "dateOfBirth": "07/11/2022",
+        "eligibleItems": ["Backpack","sleepingbag"]
     }
 ]

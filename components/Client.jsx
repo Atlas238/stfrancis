@@ -14,7 +14,7 @@ export default function Client({ client }) {
         // Convert client to checkin model ->
         let checkinModel = {
             clientID: client.id,
-            checkinDate: new Date.now()
+            checkinDate: new window.Date()
         }
 
         let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
