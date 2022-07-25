@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 export default function Client({ client }) {
     const [view, setView] = useState(null) // 0 display nothing, 1 pre-checkin, 2 post-checkin
     const [checkedIn, setCheckedIn] = useState(false)
+    let banned = false
     const router = useRouter()
 
     let handleCheckout = (e) => {
@@ -57,7 +58,7 @@ export default function Client({ client }) {
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName}</h1>
+                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} {banned ? <span className="font-bold text-2xl">BANNED</span> : <></>} </h1>
                 <p>Allowed this vist:</p>
                 <ul>
                     {mapped} 
