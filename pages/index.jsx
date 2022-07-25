@@ -60,6 +60,7 @@ export default function Home() {
         setLoading(true)
 
         setLookupClient(data) //setLocally for easy tracking
+        // let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
         let res = await fetch('/api/clients')
         let clients = JSON.parse(await res.json())
         setDbClients(clients)
@@ -82,7 +83,8 @@ export default function Home() {
     }
 
     useEffect(() => {
-        userService.getAll().then(x => setUsers(x));
+        const subscription = userService.user.subscribe(x => setUsers(x));
+        return () => subscription.unsubscribe()
     }, []);
 
     return (
@@ -129,7 +131,7 @@ export default function Home() {
             </form>
 
             {/* Render Client list - Select desired Client + Check them in */}
-            <div className={`${submitted ? "visible" : "hidden"} mx-auto container`}>
+            <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
                 {dbClients ? dbClients.map(client => { return <Client client={client} key={client.id} />}) : <></>}
             </div>
 
