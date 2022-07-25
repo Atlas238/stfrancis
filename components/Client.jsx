@@ -10,6 +10,10 @@ export default function Client({ client }) {
         router.push(`/checkout?id=${client.id}`) 
     }
 
+    let goToProfile = (e) => {
+        router.push(`/profile/${client.id}`)
+    }
+
     let handleCheckin = (e) => {
         // Convert client to checkin model ->
         let checkinModel = {
@@ -66,6 +70,7 @@ export default function Client({ client }) {
                     : view === 2 
                     ? <button className="btn btn-accent btn-sm" onClick={handleCheckout}>Checkout</button> 
                     : <></>}
+                    <button className="btn btn-accent btn-sm" onClick={goToProfile}>Profile</button>
                 </div>
             </div>
         </div>
