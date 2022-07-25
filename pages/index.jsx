@@ -10,6 +10,7 @@ import Client from '../components/Client'
 import * as Yup from 'yup'
 import Router, { useRouter } from 'next/router';
 
+// Validation Schema
 const clientLookupSchema = Yup.object().shape({
     firstName: Yup.string().required(),
     lastName: Yup.string().required(),
@@ -17,6 +18,7 @@ const clientLookupSchema = Yup.object().shape({
     dateOfBirth: Yup.date().transform(parseDateString).required()
 }, ['middleInitial', 'middleInitial'])
 
+// Utility Function
 function parseDateString(value, originalValue) {
     const parsedDate = isDate(originalValue)
     ? originalValue
@@ -24,6 +26,7 @@ function parseDateString(value, originalValue) {
     return parsedDate
 }
 
+// Main Landing Page
 export default function Home() {
     const router = useRouter()
 
@@ -31,11 +34,11 @@ export default function Home() {
         resolver: yupResolver(clientLookupSchema)
     })
 
+    // Bunch of State Variables
     const [users, setUsers] = useState(null)
     const [lookupClient, setLookupClient] = useState(null)
     const [dbClients, setDbClients] = useState(null)
     const [submitted, setSubmitted] = useState(false)
-    const [loading, setLoading] = useState(false)
 
     const [submitErrors, setSubmitErrors] = useState({
         firstName: null,
@@ -51,6 +54,7 @@ export default function Home() {
         dateOfBirth: false
     })
 
+    // Handled by YUP, sets any errors for custom display messages
     const submitForm = async (data) => {
         setSubmitErrors({
             firstName: null,
@@ -59,7 +63,6 @@ export default function Home() {
             dateOfBirth: null
         })
         setSubmitted(true)
-        setLoading(true)
 
         setLookupClient(data) //setLocally for easy tracking
         // let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
@@ -68,6 +71,7 @@ export default function Home() {
         setDbClients(clients)
     }
 
+    // Handled by YUP, transfers error from Yup to other state variable
     const handleError = (err) => {
         setSubmitErrors({
             firstName: err.firstName,
@@ -76,6 +80,7 @@ export default function Home() {
             dateOfBirth: err.dateOfBirth
         })
 
+        // Assusmes that submit was clicked so all fields are changed to "touched"
         setTouched({
             firstName: true,
             lastName: true,
@@ -84,6 +89,7 @@ export default function Home() {
         })
     }
 
+    // Rather than submitting, takes field data and sends it to another form on a different page
     const newClient = (e) => {
         let basicInfo = {
             firstName: document.getElementById("firstName").value,
@@ -95,9 +101,9 @@ export default function Home() {
         localStorage.setItem('partialClient', JSON.stringify(basicInfo))
         
         router.push('/newclient')
-        
     }
 
+    // Subscribes to the loggedin user
     useEffect(() => {
         const subscription = userService.user.subscribe(x => setUsers(x));
         return () => subscription.unsubscribe()

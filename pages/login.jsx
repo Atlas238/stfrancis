@@ -8,6 +8,7 @@ import { userService } from '../services/user.service';
 
 export default Login;
 
+// Login Page - First Page a user will see if they do not already have a valid token
 function Login() {
     const router = useRouter();
 
@@ -30,6 +31,7 @@ function Login() {
     const { register, handleSubmit, setError, formState } = useForm(formOptions);
     const { errors } = formState;
 
+    // Tries to auth a user, if it fails print errors 
     function onSubmit({ username, password }) {
         return userService.login(username, password)
             .then(() => {

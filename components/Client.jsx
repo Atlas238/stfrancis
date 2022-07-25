@@ -2,30 +2,39 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 export default function Client({ client }) {
-    const [view, setView] = useState(null) // 0 display nothing, 1 pre-checkin, 2 post-checkin
-    const [checkedIn, setCheckedIn] = useState(false)
-    let banned = false
-    const router = useRouter()
+    // State variables used to control component render
+    const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
+    const [checkedIn, setCheckedIn] = useState(false) 
+    let banned = false // Temp Bool flag
 
+    const router = useRouter() // Next Router - lets you send the user somewhere
+
+    //Sends the user to the Checkout Page and provides the client id as a query parameter
     let handleCheckout = (e) => {
         router.push(`/checkout?id=${client.id}`) 
     }
 
+    //Sends the user to the profile page for a Client providing the client id as a route parameter (nextjs)
     let goToProfile = (e) => {
         router.push(`/profile/${client.id}`)
     }
 
-    let handleCheckin = (e) => {
+    //Checks in the given client, saving a basic object to localstorage to pass around as the user navigates pages
+    let handleCheckin = async (e) => {
         // Convert client to checkin model ->
         let checkinModel = {
             clientID: client.id,
             checkinDate: new window.Date()
         }
 
+        // Create a visit with client ID
+        // let response = await fetch('', { method: 'POST', body: JSON.stringify(checkinModel) })
+
+        // Get already checked in clients from localstorage
         let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
         if (checkedInClients === undefined || checkedInClients === null) {
             let clientList = []
-            clientList.push(client)
+            clientList.push(client) // Add client to the list if there was no list
             localStorage.setItem("checkedInClients", JSON.stringify(clientList))
         } else {
             checkedInClients.forEach(checkedInClient => {
@@ -33,12 +42,14 @@ export default function Client({ client }) {
                     return // already checked in NOT WORKING ?
                 }
             })
-            checkedInClients.push(client)
-            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients)) // Store client in list
+            checkedInClients.push(client) // If client was not in list add them to it
+            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients)) // Store updated List
         }
         setCheckedIn(true)  
     }
 
+    // Runs at page load + when dependencies are updated (in array at end)
+    // Checks where this component is being rendered and changes the view state accordingly
     useEffect(() => {
         switch(window.location.pathname) {
             case '/checkedin' :
@@ -52,9 +63,11 @@ export default function Client({ client }) {
         }
     },[window.location.pathname])
 
+    // Easy way to return html elements from an array of anykind
     let mapped = client?.eligibleItems?.map(item => {
         return <li key={item}>{item}</li>
     })
+
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
@@ -63,6 +76,8 @@ export default function Client({ client }) {
                 <ul>
                     {mapped} 
                 </ul>
+                <label>Last Visit Notes:</label>
+                    <p></p>
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 

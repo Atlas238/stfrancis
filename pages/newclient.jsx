@@ -18,6 +18,7 @@ const clientSchema = Yup.object().shape({
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
 
+// Main Page to add a new Form
 export default function newclient() {
 
     const [clientPartial, setClientPartial] = useState(null)

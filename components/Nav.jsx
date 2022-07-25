@@ -7,16 +7,19 @@ export { Nav }
 
 function Nav() {
     const [user, setUser] = useState(null)
-
+    
+    // Subscribes to the loggedin user via userService
     useEffect(() => {
         const subscription = userService.user.subscribe(x => setUser(x))
         return () => subscription.unsubscribe()
     }, [])
 
+    // Logs a user out via userService
     function logout() {
         userService.logout()
     }
 
+    // Sets the theme
     function setThemeCupcake() {
         let html = document.getElementById('html')
         html.setAttribute("data-theme", "cupcake")
@@ -29,7 +32,8 @@ function Nav() {
         let html = document.getElementById('html')
         html.setAttribute("data-theme", "pastel")
     }
-    // Only show Nav if logged in
+
+    // Only show Nav if logged in - can be done in any page or component as long as you copy useEffect + user state variable
     if (!user) return null
 
     return (
@@ -39,7 +43,6 @@ function Nav() {
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
-                    {/* Render diff navlinks based on location variable */}
                     <li><NavLink href={"/checkedin"} className="btn btn-primary text-primary-content m-1">Checked In Clients</NavLink></li>
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-secondary m-1">Theme</label>

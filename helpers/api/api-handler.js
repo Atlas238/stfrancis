@@ -3,6 +3,7 @@ import { jwtMiddleware } from './jwt-middleware';
 
 export { apiHandler };
 
+// API Middleware to check JWT tokens
 function apiHandler(handler) {
     return async (req, res) => {
         try {
