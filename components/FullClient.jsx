@@ -10,14 +10,20 @@ export default function FullClient({ client }) {
         let pages = visits.length / 10
         let cumulative = []
 
-        visits.forEach(visit => {
-            
-        })
+        let start = 0
+        for (let i = 0; i < pages; i++) {
+            let page = visits.slice(start, start + 10)
+            cumulative.push(page)
 
-        return mappedVisits
+            start += 10
+        }
+
+        return pages
     }
+
+    let pages = paginate(client[0].visits)
     
-    let mappedVisits = client[0].visits?.map((visit) => {
+    let mappedVisits = client[0].visits.map((visit) => {
         return (
             <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
                 <div className=" card-body">
