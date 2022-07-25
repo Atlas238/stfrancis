@@ -83,7 +83,8 @@ export default function Home() {
     }
 
     useEffect(() => {
-        userService.getAll().then(x => setUsers(x));
+        const subscription = userService.user.subscribe(x => setUsers(x));
+        return () => subscription.unsubscribe()
     }, []);
 
     return (

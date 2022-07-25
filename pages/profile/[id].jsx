@@ -10,6 +10,7 @@ export default function profile({ data }) {
 
 export async function getServerSideProps(context) {
     let id = context.params.id
+
     const res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
     const data = await res.json()
 
