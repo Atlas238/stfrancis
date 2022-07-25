@@ -33,7 +33,11 @@ export default function checkout() {
     const {errors} = formState;
 
     const submitForm = (data) => {
+        let createAssistanceString = "https://stfrancisone.herokuapp.com/home/"
         console.log(data)
+
+        // Send data to DB!
+        // fetch(createAssistanceString, { method: 'POST', body: data })
         
         // Remove client from checkedin list
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
@@ -124,7 +128,7 @@ export default function checkout() {
                         {client?.eligibleItems.includes('Backpack') ? (
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
                         ) : (
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" disabled />
+                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
                         )}
                         </label>
                         <label className="label cursor-pointer py-4">
