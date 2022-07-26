@@ -12,6 +12,13 @@ function App({ Component, pageProps }) {
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
 
+    const tick = () => {
+
+        
+
+        requestAnimationFrame(tick) // calls itself 
+    }
+
     useEffect(() => {
         // run auth check on initial load
         authCheck(router.asPath);
@@ -46,16 +53,16 @@ function App({ Component, pageProps }) {
     }
 
     return (
-        <div className="overflow-y-hidden">
+        <div className="overflow-hidden">
             <Head>
                 <title>St Francis House</title>
             </Head>
 
-            <div>
+            <div className="overflow-hidden">
                 <Nav />
                 <div>
                     {authorized &&
-                        <div className="overflow-y-hidden">
+                        <div>
                             <Component {...pageProps} />
                         </div>
                     }
