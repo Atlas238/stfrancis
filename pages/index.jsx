@@ -8,7 +8,7 @@ import { userService } from '../services/user.service';
 import Client from '../components/Client'
 
 import * as Yup from 'yup'
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 // Validation Schema
 const clientLookupSchema = Yup.object().shape({
