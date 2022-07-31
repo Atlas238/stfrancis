@@ -111,9 +111,9 @@ export default function Home() {
 
     return (
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
-            <form onSubmit={handleSubmit(submitForm, handleError)} className="card mt-20 mx-auto">
+            <form onSubmit={handleSubmit(submitForm, handleError)} className="card mt-28 mx-auto">
                     <div className='card-body min-w-full'>
-                        <h1 className='card-title text-primary-content my-0'>Lookup Client</h1>
+                        <h1 className='card-title my-0'>Lookup Client</h1>
                         <div className='divider my-0'></div>
                         <div className="form-control flex-row">
 

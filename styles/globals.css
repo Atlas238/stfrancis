@@ -18,6 +18,6 @@
     background: #a0a0a0;
 }
 
-html {
+:root {
     font-family: 'Spectral SC';
 }
