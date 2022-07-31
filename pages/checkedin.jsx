@@ -1,13 +1,19 @@
 import Client from "../components/Client"
 
 
+// Shows all currently checked in Clients
 export default function checkedin() {
+    // Pull clients from localstorage
     let clients = JSON.parse(localStorage.getItem('checkedInClients'))
-    let mapped = clients.map((client) => {
-        if (client.firstName && client.lastName) {
-            return <Client client={client} key={client.id}/>
-        }
-    })
+    let mapped
+    if (clients != null || clients != undefined) {
+        // Create client component for each Client that is checked in 
+        mapped = clients.map((client) => {
+            if (client.firstName && client.lastName) {
+                return <Client client={client} key={client.id}/>
+            }
+        })
+    }
 
     return (
         <div className="mx-auto my-24 w-screen px-10">

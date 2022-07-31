@@ -21,10 +21,12 @@ const checkoutSchema = Yup.object().shape({
     sleeingbag: Yup.boolean(),
 },[]);
 
+// Main Checkout Page
 export default function checkout() {
-    const [client, setClient] = useState(null)
     const router = useRouter()
+    const [client, setClient] = useState(null)
 
+    // Client ID from query parameters
     const { id } = router.query
 
     const { register, handleSubmit, formState } = useForm({
@@ -32,12 +34,13 @@ export default function checkout() {
     });
     const {errors} = formState;
 
+    // Submits form data to DB, updates VISIT record
     const submitForm = (data) => {
-        let createAssistanceString = "https://stfrancisone.herokuapp.com/home/"
+        let updateVisitRoute = ""
         console.log(data)
 
         // Send data to DB!
-        // fetch(createAssistanceString, { method: 'POST', body: data })
+        // fetch(updateVisitRoute, { method: 'POST', body: data })
         
         // Remove client from checkedin list
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
@@ -46,10 +49,12 @@ export default function checkout() {
             if (c.id !== client.id) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
+        //Move them back to the checkedin page
         router.push('/checkedin');
     }
 
     useEffect(() => {
+        // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
 
         checkedInClients?.forEach(client => {

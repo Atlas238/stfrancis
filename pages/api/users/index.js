@@ -1,10 +1,11 @@
 import { apiHandler } from '../../../helpers/api/api-handler';
 
-// users in JSON file for simplicity, store in a db for production applications
+// users in JSON file for simplicity, store in a db for production 
 const users = require('/public/json/users.json');
 
 export default apiHandler(handler);
 
+// Handles the users route - helper for authenticate in a way 
 function handler(req, res) {
     switch (req.method) {
         case 'GET':

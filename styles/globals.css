@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url(https://fonts.google.com/specimen/Spectral+SC?category=Serif&preview.text=St.+Francis+House&preview.text_type=custom);
+
 ::-webkit-scrollbar {
     width: 10px
 }
@@ -14,4 +16,8 @@
 ::-webkit-scrollbar-thumb {
     border-radius: 5px;
     background: #a0a0a0;
+}
+
+:root {
+    font-family: 'Spectral SC';
 }

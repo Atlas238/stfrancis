@@ -27,8 +27,24 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
+## StFrancis Front End
+
+This repository is the front end for the StFrancis Foundations database, utilized for Client checkin/checkout and general management.
+
+Future developers should begin by following the above links to become familiarized with Next.js overall as this documentation will not go into detail regarding features specific to Next.
+
+# Authentication
+
+We are currently using Json Web Tokens to handle user authentication. The relevant files are "services/user.service.js" as well as "pages/api/users/authenticate.js" and "pages/api/users/index.js".
+Additional files that implement JWT middelware can be found in the "helpers" folder. 
+
+
+# Key Components
+
+The most curical component in our current implementation is the "Client" component. It is rendered on many different pages of the application, morphing its html structure to fit the current context. Most of the database functionality is tied to this component, and the methods are contained within it rather than the pages where the component is rendered. 
+
+Additionally the FullClient component is a helper component to facilitate the display of a full clients details on a given clients profile page. Rather than clutter up the Client component with data that is not visible anywhere other than the client profile page, we created this to hold literally everything associated with a given client.
+
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+[Find our deployment here](stfrancis.vercel.app)

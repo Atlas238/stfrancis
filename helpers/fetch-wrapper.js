@@ -4,6 +4,7 @@ import { userService } from '../services/user.service';
 
 const { publicRuntimeConfig } = getConfig();
 
+// Fetch wrapper for convenience, dont have to use!
 export const fetchWrapper = {
     get,
     post,
@@ -48,7 +49,6 @@ function _delete(url) {
 }
 
 // helper functions
-
 function authHeader(url) {
     // return auth header with jwt if user is logged in and request is to the api url
     const user = userService.userValue;
@@ -60,7 +60,6 @@ function authHeader(url) {
         return {};
     }
 }
-
 function handleResponse(response) {
     return response.text().then(text => {
         const data = text && JSON.parse(text);
