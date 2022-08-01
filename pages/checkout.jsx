@@ -50,6 +50,7 @@ export default function checkout() {
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
         //Move them back to the checkedin page
+
         router.push('/checkedin');
     }
 
