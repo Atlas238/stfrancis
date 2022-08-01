@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url(https://fonts.google.com/specimen/Spectral+SC?category=Serif&preview.text=St.+Francis+House&preview.text_type=custom);
+@import url('https://fonts.googleapis.com/css2?family=Spectral+SC:wght@300;400;500&display=swap');
 
 ::-webkit-scrollbar {
     width: 10px

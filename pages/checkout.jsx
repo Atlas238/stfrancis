@@ -72,8 +72,8 @@ export default function checkout() {
 
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title text-xl font-medium bg-base-200">Clothing</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8"> 
+                    <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
+                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Men</span> 
                             <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/4 text-center" />
@@ -96,8 +96,8 @@ export default function checkout() {
 
                 {/* Household */}
                 <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title flex-auto text-xl font-medium bg-base-200">Household</div>
-                    <div className="collapse-content flex-auto grid grid-cols-6 gap-8"> 
+                    <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
+                    <div className="collapse-content flex-auto grid grid-cols-6 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Bed Sets</span> 
                             <input type="checkbox" name="Bed Sets" {...register('Bed Sets')} className="checkbox checkbox-lg" />
@@ -126,8 +126,8 @@ export default function checkout() {
                 </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title text-xl font-medium bg-base-200">Special Requests</div>
-                    <div className="collapse-content grid grid-cols-6 gap-8"> 
+                    <div className={newFunction()}>Special Requests</div>
+                    <div className="collapse-content grid grid-cols-6 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
                         {client?.eligibleItems.includes('Backpack') ? (
@@ -164,7 +164,7 @@ export default function checkout() {
                 </div>
                 {/* Notes Section */}
                 <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title text-xl font-medium bg-base-200">Notes</div>
+                    <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
                     <textarea placeholder= "Additional requests/needs.." className ="w-full h-24 px-1 py-1 text-base text-gray-700 placeholder-gray-600 border rounded-lg focus:shadow-outline"></textarea>
                 </div>
                 <p>{errors.menClothing?.message}</p>
@@ -177,4 +177,8 @@ export default function checkout() {
             </div>
         </div>
     )
+
+    function newFunction() {
+        return "collapse-title text-xl font-body bg-base-200";
+    }
 }
