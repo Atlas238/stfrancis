@@ -33,6 +33,9 @@ export default function newclient() {
     const submitForm = (data) => {
         console.log(data)
         setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
+
+        // ADD ROUTE
+
     }
 
     const checkinNewClient = () => {
