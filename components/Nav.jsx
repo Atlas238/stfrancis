@@ -30,7 +30,7 @@ function Nav() {
     if (!user) return null
 
     return (
-        <div className="navbar bg-base-200 shadow-sm fixed z-10 h-28">
+        <div className="navbar bg-base-200 shadow-sm h-28">
             <div className="flex-1">
                 <NavLink href={"/"} className="btn btn-secondary h-24"><span><img src={"./Logo_180x180_White.jpg"} className="w-20" /></span>Home</NavLink>
             </div>
