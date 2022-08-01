@@ -65,8 +65,8 @@ export default function Home() {
         setSubmitted(true)
 
         setLookupClient(data) //setLocally for easy tracking
-        // let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
-        let res = await fetch('/api/clients')
+        let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
+        // let res = await fetch('/api/clients')
         let clients = JSON.parse(await res.json())
         setDbClients(clients)
     }
