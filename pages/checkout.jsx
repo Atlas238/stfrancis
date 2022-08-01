@@ -21,10 +21,12 @@ const checkoutSchema = Yup.object().shape({
     sleeingbag: Yup.boolean(),
 },[]);
 
+// Main Checkout Page
 export default function checkout() {
-    const [client, setClient] = useState(null)
     const router = useRouter()
+    const [client, setClient] = useState(null)
 
+    // Client ID from query parameters
     const { id } = router.query
 
     const { register, handleSubmit, formState } = useForm({
@@ -32,12 +34,13 @@ export default function checkout() {
     });
     const {errors} = formState;
 
+    // Submits form data to DB, updates VISIT record
     const submitForm = (data) => {
-        let createAssistanceString = "https://stfrancisone.herokuapp.com/home/"
+        let updateVisitRoute = ""
         console.log(data)
 
         // Send data to DB!
-        // fetch(createAssistanceString, { method: 'POST', body: data })
+        // fetch(updateVisitRoute, { method: 'POST', body: data })
         
         // Remove client from checkedin list
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
@@ -46,10 +49,12 @@ export default function checkout() {
             if (c.id !== client.id) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
+        //Move them back to the checkedin page
         router.push('/checkedin');
     }
 
     useEffect(() => {
+        // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
 
         checkedInClients?.forEach(client => {
@@ -60,8 +65,8 @@ export default function checkout() {
     return (
        <div className="mt-20">
             <div className="card mx-auto w-8/12">
-            <p className="card-title">Fill out what {client?.firstName} recieved today!</p>
-            <p>client ID: {id}</p>
+            <p className="card-title">Saint Francis Intake Form</p>
+            <p>Member: {id}</p>
 
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
 
@@ -91,37 +96,37 @@ export default function checkout() {
 
                 {/* Household */}
                 <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title text-xl font-medium bg-base-200">Household</div>
-                    <div className="collapse-content grid grid-cols-6 gap-8"> 
+                    <div className="collapse-title flex-auto text-xl font-medium bg-base-200">Household</div>
+                    <div className="collapse-content flex-auto grid grid-cols-6 gap-8"> 
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Soap</span> 
-                            <input type="checkbox" name="soap" {...register('soap')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Bed Sets</span> 
+                            <input type="checkbox" name="Bed Sets" {...register('Bed Sets')} className="checkbox checkbox-lg" />
                         </label>
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Shamp/Condit</span> 
-                            <input type="checkbox" name="shampCondit" {...register('shampCondit')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Cleaning Supplies</span> 
+                            <input type="checkbox" name="Cleaning Supplies" {...register('Cleaning Supplies')} className="checkbox checkbox-lg" />
                         </label>
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Lotion</span> 
-                            <input type="checkbox" name="lotion" {...register('lotion')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Diapers</span> 
+                            <input type="checkbox" name="Diapers" {...register('Diapers')} className="checkbox checkbox-lg" />
                         </label>
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Razor</span> 
-                            <input type="checkbox" name="razor" {...register('razoe')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Hygiene Kit</span> 
+                            <input type="checkbox" name="Hygiene Kit" {...register('Hygiene Kit')} className="checkbox checkbox-lg" />
                         </label>
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Tooth Paste</span> 
-                            <input type="checkbox" name="toothPaste" {...register('toothPaste')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Kitchenware</span> 
+                            <input type="checkbox" name="Kitchenware" {...register('Kitchenware')} className="checkbox checkbox-lg" />
                         </label>
                         <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Tooth Brush</span> 
-                            <input type="checkbox" name="toothBrush" {...register('toothBrush')} className="checkbox checkbox-lg" />
+                            <span className="label-text text-lg">Umbrella</span> 
+                            <input type="checkbox" name="Umbrella" {...register('Umbrella')} className="checkbox checkbox-lg" />
                         </label>
                     </div>
                 </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className="collapse-title text-xl font-medium bg-base-200">Special Items</div>
+                    <div className="collapse-title text-xl font-medium bg-base-200">Special Requests</div>
                     <div className="collapse-content grid grid-cols-6 gap-8"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
@@ -129,6 +134,22 @@ export default function checkout() {
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
                         ) : (
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
+                        )}
+                        </label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Bus Ticket</span> 
+                        {client?.eligibleItems.includes('Bus Ticket') ? (
+                            <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" />
+                        ) : (
+                            <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" disabled />
+                        )}
+                        </label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Financial Assistance</span> 
+                        {client?.eligibleItems.includes('Financial Assistance') ? (
+                            <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" />
+                        ) : (
+                            <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" disabled />
                         )}
                         </label>
                         <label className="label cursor-pointer py-4">
@@ -140,6 +161,11 @@ export default function checkout() {
                         )}
                         </label>
                     </div>
+                </div>
+                {/* Notes Section */}
+                <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                    <div className="collapse-title text-xl font-medium bg-base-200">Notes</div>
+                    <textarea placeholder= "Additional requests/needs.." className ="w-full h-24 px-1 py-1 text-base text-gray-700 placeholder-gray-600 border rounded-lg focus:shadow-outline"></textarea>
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>

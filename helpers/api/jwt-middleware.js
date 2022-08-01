@@ -6,6 +6,7 @@ const { serverRuntimeConfig } = getConfig()
 
 export { jwtMiddleware }
 
+// Checks token for validity
 function jwtMiddleware(req, res) {
     const middleware = expressJwt({ secret: serverRuntimeConfig.secret, algorithms: ['HS256']}).unless({
         path: [

@@ -2,6 +2,7 @@ import { NavLink } from '../components/NavLink.jsx';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import { useEffect, useState } from 'react';
 
 // form validation
 const clientSchema = Yup.object().shape({
@@ -17,7 +18,11 @@ const clientSchema = Yup.object().shape({
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
 
+// Main Page to add a new Form
 export default function newclient() {
+
+    const [clientPartial, setClientPartial] = useState(null)
+    const [newClient, setNewClient] = useState(null)
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(clientSchema)
@@ -27,7 +32,24 @@ export default function newclient() {
 
     const submitForm = (data) => {
         console.log(data)
+        setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
     }
+
+    const checkinNewClient = () => {
+        console.log(newClient) //save to localstorage somehow?
+        // let currentCheckedIn = JSON.parse(localStorage.getItem("checkedInClients") === null || undefined ? {} : localStorage.getItem('checkedInClients'))
+    }
+
+    useEffect(()=> {
+        // Trying things to get partial form from index page into this form.. might not work
+        setClientPartial(JSON.parse(localStorage.getItem('partialClient')))
+        if (clientPartial != undefined || clientPartial != null) {
+            document.getElementById('firstName').value = clientPartial.firstName
+            document.getElementById('lastName').value = clientPartial.lastName
+            document.getElementById('middleInitial').value = clientPartial.middleInitial
+            document.getElementById('dateOfBirth').value = clientPartial.dateOfBirth
+        }
+    }, [localStorage])
 
     return (
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
@@ -106,6 +128,12 @@ export default function newclient() {
                         </div>
                         <div className='divider my-0'></div>
                     </div>
+                    <div className="px-8 py-4 bg-gray-50 text-center space-x-8">
+                        <button type="submit" className="inline-flex justify-center py-4 px-8 border border-transparent shadow-sm font-bold rounded-md text-white bg-lime-600 hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save</button>
+                        <button onClick={()=> { submitForm(); checkinNewClient() }} className="inline-flex justify-center py-4 px-8 border border-transparent shadow-sm font-bold rounded-md text-white bg-lime-600 hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Save and Checkin</button>
+                        {/* <NavLink href= "/checkin" className="inline-flex justify-center py-4 px-8 border border-transparent shadow-sm font-bold rounded-md text-white bg-cyan-600 hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back</NavLink> */}
+                    </div>
+                </div>
             </form>
         </div>
     )

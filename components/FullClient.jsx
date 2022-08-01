@@ -1,11 +1,12 @@
-import { useRouter } from "next/router";
 import { useState } from "react";
 
 export default function FullClient({ client }) {
     // Use client[0] to get client obj
 
+    // Page state is for visit pages
     const [page, setPage] = useState(1)
 
+    // Takes in the total visit arrays and creates 'pages' - may not use later on
     const paginate = (visits) => {
         let pages = visits.length / 10
         let cumulative = []
@@ -22,7 +23,8 @@ export default function FullClient({ client }) {
     }
 
     let pages = paginate(client[0].visits)
-    
+   
+    // Creates mini components for the visits
     let mappedVisits = client[0].visits.map((visit) => {
         return (
             <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
@@ -37,6 +39,8 @@ export default function FullClient({ client }) {
             </div>
         )
     })
+
+    // Pagination w/o the above function
     let visitsPageOne = mappedVisits.splice(0, 10)
     let visitsPageTwo = mappedVisits.splice(10, 20)
     let visitsPageThree = mappedVisits.splice(20, 30)

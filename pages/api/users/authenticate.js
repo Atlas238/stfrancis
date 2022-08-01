@@ -10,6 +10,7 @@ const users = require('public/json/users.json');
 
 export default apiHandler(handler);
 
+// Authentication route - handles token signing and password checks
 function handler(req, res) {
     switch (req.method) {
         case 'POST':
