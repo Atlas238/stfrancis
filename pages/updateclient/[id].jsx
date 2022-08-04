@@ -50,6 +50,13 @@ export default function updateclient({ data }) {
         console.log(updateClient) //save to localstorage somehow?
         // let currentCheckedIn = JSON.parse(localStorage.getItem("checkedInClients") === null || undefined ? {} : localStorage.getItem('checkedInClients'))
     }
+    
+
+    const deleteClient = () => {
+        console.log("delete client " + id)
+        // if checked in, remove from checked in
+        // delete client by id (add route)
+    }
 
     // fill fields with current profile
     const fillFieldswithProfile = (profile) => {
@@ -145,6 +152,19 @@ export default function updateclient({ data }) {
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
                         <button onClick={()=> { submitForm(); checkinClient() }} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
+                    </div>
+                    <div className='card-actions justify-end my-0 py-0'>
+                        <label htmlFor="my-modal" className="btn modal-button btn-link text-warning-content">Delete Client</label>
+                        <input type="checkbox" id="my-modal" className="modal-toggle" />
+                        <label htmlFor="my-modal" className="modal cursor-pointer">                    
+                        <label className="modal-box relative" htmlFor="my-modal">
+                            <label htmlFor="my-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                            <h3 className="text-center text-lg font-bold">Some Message</h3>
+                            <div className="modal-action justify-center">
+                                <label onClick={()=> {deleteClient()}} htmlFor="my-modal" className="btn btn-sm btn-warning">DELETE</label>
+                            </div>
+                        </label>
+                        </label>
                     </div>
                     <div className='divider my-0'></div>
                 </div>
