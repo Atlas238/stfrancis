@@ -44,4 +44,3 @@ function Nav() {
         </div>
     )
 }
-mytheme.extend.color
