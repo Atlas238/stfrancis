@@ -6,7 +6,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+      'sfgold': 'B4975A',
+      'bluegray': '7C7E7F',
+    },},
   },
   plugins: [require('daisyui')],
   daisyui: {
@@ -23,13 +27,6 @@ module.exports = {
         sans: ['Spectral SC'],
         body: ['Spectral SC']
       },
-      extend: 
-      {
-        colors: {
-          'sfgold': 'B4975A',
-          'bluegray': '7C7E7F',
-        },
-      }
     }],
     base: true,
     utils: true,
