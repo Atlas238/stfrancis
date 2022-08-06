@@ -33,12 +33,12 @@ function Nav() {
     return (
         <div className="navbar bg-base-200 shadow-sm h-28">
             <div className="flex-1">
-                <NavLink href={"/"} className="btn btn-secondary h-24"><span><img src={"./sfhlogo.png"} className="w-28" /></span>Home</NavLink>
+                <NavLink href={"/"} className="btn btn-ghost h-24"><img src={"./sfhlogo.png"} className="w-52" /></NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
-                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-primary-content hover:bg-bluegray m-1">Checked In Clients</NavLink></li>
-                    <li><a onClick={logout} className="btn btn-accent text-primary-content  m-1">Logout</a></li>
+                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin hover:bg-bluegray m-2 p-2">Checked In Clients</NavLink></li>
+                    <li><a onClick={logout} className="btn btn-accent text-xl text-primary-content font-thin m-2 p-2">Logout</a></li>
                 </ul>
             </div>
         </div>

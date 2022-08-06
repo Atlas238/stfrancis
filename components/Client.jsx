@@ -28,7 +28,9 @@ export default function Client({ client }) {
         }
 
         // Create a visit with client ID
-        // let response = await fetch('', { method: 'POST', body: JSON.stringify(checkinModel) })
+
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.id}`, { method: 'POST', body: JSON.stringify(checkinModel) })
+        // response has visitID ?
 
         // Get already checked in clients from localstorage
         let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
