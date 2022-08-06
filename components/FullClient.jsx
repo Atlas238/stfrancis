@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useRouter } from "next/router"
 
 export default function FullClient({ client }) {
+    
+    const router = useRouter()
+
     // Use client[0] to get client obj
 
     // Page state is for visit pages
@@ -46,10 +50,19 @@ export default function FullClient({ client }) {
     let visitsPageThree = mappedVisits.splice(20, 30)
     let visitsPageFour = mappedVisits.splice(30, 40)
 
+    // Update profile function
+    const updateClientProfile = () => {
+        console.log(`/updateclient/${client[0].clientID}`)
+        router.push(`/updateclient/${client[0].clientID}`)
+    }
+
     return (
         <div className="container mt-20 card w-8/12 bg-base-300 shadow-xl mx-auto">
             <div className="card-body min-w-full">
-                <h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName}</h1>
+                <div className="grid grid-flow-col">
+                    <div><h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName}</h1></div>
+                    <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
+                </div>
                 <ul className="flex">
                     <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Gender:</span> {client[0].gender}</li>
