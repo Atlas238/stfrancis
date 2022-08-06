@@ -6,7 +6,11 @@ module.exports = {
     "./components/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+      'sfgold': 'B4975A',
+      'bluegray': '7C7E7F',
+    },},
   },
   plugins: [require('daisyui')],
   daisyui: {
@@ -16,9 +20,13 @@ module.exports = {
         primary: "#E4E0D9",
         secondary: "#8F8884",
         accent: "#B4975A",
-        neutral: "#BEB6AF",
+        neutral: "#fafafa",
         "base-100": "#E4E0D9",
-      }
+      },
+      fontFamily: {
+        sans: ['Spectral SC'],
+        body: ['Spectral SC']
+      },
     }],
     base: true,
     utils: true,
@@ -28,3 +36,4 @@ module.exports = {
     darkTheme: "dark"
   }
 }
+
