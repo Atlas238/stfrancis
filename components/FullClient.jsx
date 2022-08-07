@@ -37,7 +37,7 @@ export default function FullClient({ client }) {
                     <ul className="ml-3">
                         <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack.split("T")[0]}</li>
                         <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag.split("T")[0]}</li>
-                        <li><span className="font-semibold">Requests:</span> {visit.requests.split("T")[0]}</li>
+                        <li><span className="font-semibold">Requests:</span> {visit.request.split("T")[0]}</li>
                     </ul>
                 </div>
             </div>
