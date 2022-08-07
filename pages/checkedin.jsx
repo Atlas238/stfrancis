@@ -10,7 +10,7 @@ export default function checkedin() {
         // Create client component for each Client that is checked in 
         mapped = clients.map((client) => {
             if (client.firstName && client.lastName) {
-                return <Client client={client} key={client.id}/>
+                return <Client client={client} key={client.clientID}/>
             }
         })
     }

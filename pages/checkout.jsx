@@ -46,7 +46,7 @@ export default function checkout() {
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
         checkedInClients?.forEach(c => {
-            if (c.id !== client.id) updatedCheckedInClients.push(c)
+            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
         //Move them back to the checkedin page

@@ -11,25 +11,25 @@ export default function Client({ client }) {
 
     //Sends the user to the Checkout Page and provides the client id as a query parameter
     let handleCheckout = (e) => {
-        router.push(`/checkout?id=${client.id}`) 
+        router.push(`/checkout?id=${client.clientID}`) 
     }
 
     //Sends the user to the profile page for a Client providing the client id as a route parameter (nextjs)
     let goToProfile = (e) => {
-        router.push(`/profile/${client.id}`)
+        router.push(`/profile/${client.clientID}`)
     }
 
     //Checks in the given client, saving a basic object to localstorage to pass around as the user navigates pages
     let handleCheckin = async (e) => {
         // Convert client to checkin model ->
         let checkinModel = {
-            clientID: client.id,
+            clientID: client.clientID,
             checkinDate: new window.Date()
         }
 
         // Create a visit with client ID
 
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.id}`, { method: 'POST', body: JSON.stringify(checkinModel) })
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
         // response has visitID ?
 
         // Get already checked in clients from localstorage

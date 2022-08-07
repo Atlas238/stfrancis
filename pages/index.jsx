@@ -191,7 +191,7 @@ export default function Home() {
 
             {/* Render Client list - Select desired Client + Check them in */}
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
-                {dbClients ? dbClients.map(client => { return <Client client={client} key={client.id} />}) : <></>}
+                {dbClients ? dbClients.map(client => { return <Client client={client} key={client.clientID} />}) : <></>}
             </div>
 
         </div>
