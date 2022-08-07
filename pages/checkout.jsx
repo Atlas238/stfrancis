@@ -27,7 +27,7 @@ export default function checkout() {
     const [client, setClient] = useState(null)
 
     // Client ID from query parameters
-    const { id } = router.query
+    const [id, setClientID] = useState(null)
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
@@ -46,7 +46,7 @@ export default function checkout() {
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
         checkedInClients?.forEach(c => {
-            if (c.id !== client.id) updatedCheckedInClients.push(c)
+            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
         //Move them back to the checkedin page
@@ -55,13 +55,15 @@ export default function checkout() {
     }
 
     useEffect(() => {
+        if(!router.isReady) return;
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-
         checkedInClients?.forEach(client => {
-            if (client.id.toString() === id) setClient(client)
+            let {id} = router.query
+            setClientID(id)
+            if (client.clientID === Number(id)) setClient(client)
         })
-    }, [localStorage.getItem('checkedInClients')])
+    }, [router.isReady, localStorage.getItem('checkedInClients')])
 
     return (
        <div className="mt-20">
@@ -131,35 +133,35 @@ export default function checkout() {
                     <div className="collapse-content grid grid-cols-6 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
-                        {client?.eligibleItems.includes('Backpack') ? (
+                        {/* {client?.eligibleItems.includes('Backpack') ? ( */}
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
-                        ) : (
+                        {/* ) : (
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
-                        )}
+                        )} */}
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Bus Ticket</span> 
-                        {client?.eligibleItems.includes('Bus Ticket') ? (
+                        {/* {client?.eligibleItems.includes('Bus Ticket') ? ( */}
                             <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" />
-                        ) : (
+                        {/* ) : (
                             <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" disabled />
-                        )}
+                        )} */}
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Financial Assistance</span> 
-                        {client?.eligibleItems.includes('Financial Assistance') ? (
+                        {/* {client?.eligibleItems.includes('Financial Assistance') ? ( */}
                             <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" />
-                        ) : (
+                        {/* ) : (
                             <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" disabled />
-                        )}
+                        )} */}
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Sleeping Bag</span> 
-                        {client?.eligibleItems.includes('sleepingbag') ? (
+                        {/* {client?.eligibleItems.includes('sleepingbag') ? ( */}
                             <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
-                        ) : (
+                        {/* ) : (
                             <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
-                        )}
+                        )} */}
                         </label>
                     </div>
                 </div>

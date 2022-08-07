@@ -37,7 +37,7 @@ export default function FullClient({ client }) {
                     <ul className="ml-3">
                         <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack.split("T")[0]}</li>
                         <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag.split("T")[0]}</li>
-                        <li><span className="font-semibold">Requests:</span> {visit.requests.split("T")[0]}</li>
+                        <li><span className="font-semibold">Requests:</span> {visit.request.split("T")[0]}</li>
                     </ul>
                 </div>
             </div>
@@ -64,7 +64,7 @@ export default function FullClient({ client }) {
                     <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
                 </div>
                 <ul className="flex">
-                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday}</li>
+                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday.split(' ')[0]}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Gender:</span> {client[0].gender}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Race:</span> {client[0].race}</li>
                     <li className="p-1 text-xl"><span className="font-bold">ZipCode:</span> {client[0].zipCode}</li>
