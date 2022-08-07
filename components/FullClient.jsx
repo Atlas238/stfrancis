@@ -64,7 +64,7 @@ export default function FullClient({ client }) {
                     <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
                 </div>
                 <ul className="flex">
-                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday}</li>
+                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday.split(' ')[0]}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Gender:</span> {client[0].gender}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Race:</span> {client[0].race}</li>
                     <li className="p-1 text-xl"><span className="font-bold">ZipCode:</span> {client[0].zipCode}</li>
