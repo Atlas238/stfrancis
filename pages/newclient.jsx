@@ -9,7 +9,8 @@ const clientSchema = Yup.object().shape({
     firstName: Yup.string().required('*'),
     lastName: Yup.string().required('*'),
     middleInitial: Yup.string().notRequired().when('middleInitial', {is:(value) => value?.length, then:(rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().required('*').nullable().transform(v => (v instanceof Date && !isNaN(v) ? v : null)),
+    // dateOfBirth: Yup.date().required('*').nullable().transform(v => (v instanceof Date && !isNaN(v) ? v : null)),
+    dateOfBirth: Yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, {excludeEmptyString: true, message: '* wrong format'}),
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
@@ -33,8 +34,8 @@ export default function newclient() {
     const submitForm = async (data) => {
         console.log(data)
         setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth.toISOString().split('T')[0]}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
-
+        // let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth.toISOString().split('T')[0]}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
         // if successful
         if(response.ok && response.status===200){
             console.log("SUCCESS")
