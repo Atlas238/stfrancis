@@ -29,7 +29,7 @@ export default function FullClient({ client }) {
     let pages = paginate(client[0].visits)
    
     // Creates mini components for the visits
-    let mappedVisits = client[0].visits.map((visit) => {
+    let mappedVisits = client[0].visits.reverse().map((visit) => {
         return (
             <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
                 <div className=" card-body">
