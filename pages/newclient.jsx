@@ -30,12 +30,19 @@ export default function newclient() {
 
     const {errors} = formState;
 
-    const submitForm = (data) => {
+    const submitForm = async (data) => {
         console.log(data)
         setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth.toISOString().split('T')[0]}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
 
-        // ADD ROUTE
-
+        // if successful
+        if(response.ok && response.status===200){
+            console.log("SUCCESS")
+            alert("Successfully Saved")
+        }else{
+            // display unsuccessful popup
+            alert("Saving Failed")
+        }            
     }
 
     const checkinNewClient = () => {
