@@ -27,7 +27,7 @@ export default function checkout() {
     const [client, setClient] = useState(null)
 
     // Client ID from query parameters
-    const { id } = router.query
+    const [id, setClientID] = useState(null)
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
@@ -55,13 +55,15 @@ export default function checkout() {
     }
 
     useEffect(() => {
+        if(!router.isReady) return;
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-
         checkedInClients?.forEach(client => {
-            if (client.id.toString() === id) setClient(client)
+            let {id} = router.query
+            setClientID(id)
+            if (client.clientID === Number(id)) setClient(client)
         })
-    }, [localStorage.getItem('checkedInClients')])
+    }, [router.isReady, localStorage.getItem('checkedInClients')])
 
     return (
        <div className="mt-20">
