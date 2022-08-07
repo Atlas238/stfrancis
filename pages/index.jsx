@@ -12,10 +12,10 @@ import { useRouter } from 'next/router';
 
 // Validation Schema
 const clientLookupSchema = Yup.object().shape({
-    firstName: Yup.string().required(),
-    lastName: Yup.string().required(),
+    firstName: Yup.string(),
+    lastName: Yup.string(),
     middleInitial: Yup.string().notRequired().when('middleInitial', {is: (value) => value?.length, then: (rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().transform(parseDateString).required()
+    dateOfBirth: Yup.string()
 }, ['middleInitial', 'middleInitial'])
 
 // Utility Function
@@ -99,9 +99,8 @@ export default function Home() {
             dateOfBirth: null
         })
         setSubmitted(true)
-
         setLookupClient(data) //setLocally for easy tracking
-        let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
+        let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
         // let res = await fetch('/api/clients')
         let clients = await res.json()
         setDbClients(clients)
