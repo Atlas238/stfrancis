@@ -29,15 +29,15 @@ export default function FullClient({ client }) {
     let pages = paginate(client[0].visits)
    
     // Creates mini components for the visits
-    let mappedVisits = client[0].visits.map((visit) => {
+    let mappedVisits = client[0].visits.reverse().map((visit) => {
         return (
             <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
                 <div className=" card-body">
-                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visit.visitDate.split("T")[0]}</h3>
+                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visit.visitDate?.split("T")[0]}</h3>
                     <ul className="ml-3">
-                        <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack.split("T")[0]}</li>
-                        <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag.split("T")[0]}</li>
-                        <li><span className="font-semibold">Requests:</span> {visit.request.split("T")[0]}</li>
+                        <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack?.split("T")[0]}</li>
+                        <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag?.split("T")[0]}</li>
+                        <li><span className="font-semibold">Requests:</span> {visit.request?.split("T")[0]}</li>
                     </ul>
                 </div>
             </div>
