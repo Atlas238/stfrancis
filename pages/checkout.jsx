@@ -7,11 +7,15 @@ import * as Yup from 'yup';
 
 // form validation
 const checkoutSchema = Yup.object().shape({
-    menClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    womenClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    boyClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    girlClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    menClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    womenClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    boyClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    girlClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
     // soap: Yup.boolean(),
     // shampCondit: Yup.boolean(),    
     // lotion: Yup.boolean(),    
