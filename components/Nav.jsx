@@ -38,7 +38,7 @@ function Nav() {
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
                     <li><NavLink href={"/checkedin"} className="btn btn-primary text-primary-content hover:bg-bluegray m-1">Checked In Clients</NavLink></li>
-                    <li><a onClick={logout} className="btn btn-accent text-primary-content  m-1">Logout</a></li>
+                    <li><a onClick={logout} className="btn btn-accent text-primary-content m-1">Logout</a></li>
                 </ul>
             </div>
         </div>
