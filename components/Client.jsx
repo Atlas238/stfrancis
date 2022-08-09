@@ -20,34 +20,11 @@ export default function Client({ client }) {
     }
 
     //Checks in the given client, saving a basic object to localstorage to pass around as the user navigates pages
-    let handleCheckin = async (e) => {
-        // Convert client to checkin model ->
-        let checkinModel = {
-            clientID: client.clientID,
-            checkinDate: new window.Date()
-        }
+    let handleCheckin = (e) => {
 
-        // Create a visit with client ID
-
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
-        // response has visitID ?
-
-        // Get already checked in clients from localstorage
-        let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
-        if (checkedInClients === undefined || checkedInClients === null) {
-            let clientList = []
-            clientList.push(client) // Add client to the list if there was no list
-            localStorage.setItem("checkedInClients", JSON.stringify(clientList))
-        } else {
-            checkedInClients.forEach(checkedInClient => {
-                if (checkedInClient.id === client.id) {
-                    return // already checked in NOT WORKING ?
-                }
-            })
-            checkedInClients.push(client) // If client was not in list add them to it
-            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients)) // Store updated List
-        }
-        setCheckedIn(true)  
+        // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+        localStorage.setItem("tmpCheckinClient", JSON.stringify(client))
+        router.push(`/checkin?id=${client.clientID}`)
     }
 
     // Runs at page load + when dependencies are updated (in array at end)
