@@ -11,12 +11,12 @@ const checkoutSchema = Yup.object().shape({
     womenClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     boyClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     girlClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    soap: Yup.boolean(),
-    shampCondit: Yup.boolean(),    
-    lotion: Yup.boolean(),    
-    razoe: Yup.boolean(),    
-    toothPaste: Yup.boolean(),    
-    toothBrush: Yup.boolean(),
+    // soap: Yup.boolean(),
+    // shampCondit: Yup.boolean(),    
+    // lotion: Yup.boolean(),    
+    // razoe: Yup.boolean(),    
+    // toothPaste: Yup.boolean(),    
+    // toothBrush: Yup.boolean(),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
 },[]);
@@ -95,7 +95,7 @@ export default function checkout() {
                 </div>
 
                 {/* Household */}
-                <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                {/* <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
                     <div className="collapse-content flex-auto grid grid-cols-6 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
@@ -123,7 +123,7 @@ export default function checkout() {
                             <input type="checkbox" name="Umbrella" {...register('Umbrella')} className="checkbox checkbox-lg" />
                         </label>
                     </div>
-                </div>
+                </div> */}
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
