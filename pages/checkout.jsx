@@ -65,10 +65,11 @@ export default function checkout() {
 
     return (
        <div className="mt-20">
-            <div className="card mx-auto w-8/12">
-            <p className="card-title">Saint Francis Intake Form</p>
-            <p>Member: {id}</p>
+            <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
+                <h1 className="card-title">Saint Francis Intake Form</h1>
+                <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
+                <div className='divider my-0'></div>
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
@@ -168,6 +169,7 @@ export default function checkout() {
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
+                <div className='divider my-0'></div>
                 <div className="flex p-4">
                     <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>
                     <NavLink href= "/checkedin" className="btn btn-primary btn-sm w-1/2">Back</NavLink>  
