@@ -18,6 +18,7 @@ const checkoutSchema = Yup.object().shape({
     financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    notes: Yup.string(),
 },[]);
 
 // Main Checkout Page
@@ -33,8 +34,44 @@ export default function checkout() {
     });
     const {errors} = formState;
 
-    const submitForm = (data) => {
+    const submitForm = async (data) => {
+        // Convert client to checkin model ->
+        let checkinModel = {
+            clientID: client.clientID,
+            checkinDate: new window.Date()
+        }
         
+        // Create a visit with client ID // response has visitID ?
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
+        // if successful
+        if(response.ok && response.status===200){
+
+            // store client to chckedInClients localstorage
+            let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
+            if (checkedInClients === undefined || checkedInClients === null) {
+                checkedInClients = []
+                checkedInClients.push(client)
+            } else {
+                checkedInClients.push(client)
+            }
+            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
+
+            // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
+            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+            if (checkedInClientDict === undefined || checkedInClientDict === null) {
+                checkedInClientDict = {}
+                clientDict[client.clientID] = data
+            } else {
+                checkedInClientDict[client.clientID] = data
+            }
+            localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+
+            // redirect to home
+            router.push(`/`)
+
+        }else{
+            // failed to check in
+        }           
     }
 
     useEffect(() => {
@@ -123,7 +160,7 @@ export default function checkout() {
                 {/* Notes Section */}
                 <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
-                    <textarea placeholder= "Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
+                    <textarea name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
