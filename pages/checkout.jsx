@@ -11,6 +11,7 @@ const checkoutSchema = Yup.object().shape({
     womenClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     boyClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     girlClothing: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     // soap: Yup.boolean(),
     // shampCondit: Yup.boolean(),    
     // lotion: Yup.boolean(),    
@@ -68,7 +69,10 @@ export default function checkout() {
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Intake Form</h1>
-                <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
+                <div className="flex grid grid-cols-2">
+                    <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
+                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
+                </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
