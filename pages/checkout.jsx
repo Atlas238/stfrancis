@@ -24,6 +24,7 @@ const checkoutSchema = Yup.object().shape({
     // toothBrush: Yup.boolean(),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    notes: Yup.string(),
 },[]);
 
 // Main Checkout Page
@@ -54,8 +55,15 @@ export default function checkout() {
             if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-        //Move them back to the checkedin page
 
+        // Remove client from checkedInClientDict list
+        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+        if (client.clientID in checkedInClientDict){
+            delete checkedInClientDict[client.clientID]
+        }
+        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+
+        //Move them back to the checkedin page
         router.push('/checkedin');
     }
 
@@ -175,7 +183,7 @@ export default function checkout() {
                 {/* Notes Section */}
                 <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
-                    <textarea placeholder= "Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
+                    <textarea name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
