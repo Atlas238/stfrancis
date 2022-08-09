@@ -29,18 +29,28 @@ export default function Client({ client }) {
 
     // Runs at page load + when dependencies are updated (in array at end)
     // Checks where this component is being rendered and changes the view state accordingly
+    // useEffect(() => {
+    //     switch(window.location.pathname) {
+    //         case '/checkedin' :
+    //             setView(2)
+    //             break;
+    //         case '/': 
+    //             setView(1)
+    //             break;
+    //         default: 
+    //             setView(0)
+    //     }
+    // },[window.location.pathname])
+
     useEffect(() => {
-        switch(window.location.pathname) {
-            case '/checkedin' :
-                setView(2)
-                break;
-            case '/': 
-                setView(1)
-                break;
-            default: 
-                setView(0)
-        }
-    },[window.location.pathname])
+        // Check for clients on page load
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        setView(1)
+        checkedInClients?.forEach(c => {
+            if (c.clientID === client.clientID) setView(2)
+        })
+    }, [localStorage.getItem('checkedInClients')])
+
 
     // Easy way to return html elements from an array of anykind
     let mapped = client?.eligibleItems?.map(item => {
