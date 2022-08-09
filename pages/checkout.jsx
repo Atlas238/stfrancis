@@ -27,7 +27,7 @@ export default function checkout() {
     const [client, setClient] = useState(null)
 
     // Client ID from query parameters
-    const [id, setClientID] = useState(null)
+    const { id } = router.query
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
@@ -55,24 +55,20 @@ export default function checkout() {
     }
 
     useEffect(() => {
-        if(!router.isReady) return;
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         checkedInClients?.forEach(client => {
-            let {id} = router.query
-            setClientID(id)
+            console.log(typeof(client.clientID))
             if (client.clientID === Number(id)) setClient(client)
         })
-    }, [router.isReady, localStorage.getItem('checkedInClients')])
+    }, [localStorage.getItem('checkedInClients')])
 
     return (
        <div className="mt-20">
             <div className="card mx-auto w-8/12">
             <p className="card-title">Saint Francis Intake Form</p>
             <p>Member: {id}</p>
-
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
-
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
