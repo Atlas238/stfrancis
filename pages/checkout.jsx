@@ -170,8 +170,8 @@ export default function checkout() {
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
                 <div className="flex p-4">
-                    <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>
-                    <NavLink href= "/checkedin" className="btn btn-primary btn-sm w-1/2">Back</NavLink>  
+                    <button type="submit" className="btn bg-  btn-sm w-1/2">Checkout</button>
+                    <NavLink href= "/checkedin" className="btn bg-red-400/50 hover:bg-red-400 btn-sm w-1/2">Back</NavLink>  
                 </div>
             </form>
             </div>
