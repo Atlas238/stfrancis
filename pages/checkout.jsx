@@ -80,19 +80,19 @@ export default function checkout() {
                     <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Men</span> 
-                            <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/4 text-center" />
+                            <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Women</span> 
-                            <input type="text" name="womenClothing" placeholder="Qty" {...register('womenClothing')} className="input input-bordered w-1/4 text-center" />
+                            <input type="text" name="womenClothing" placeholder="Qty" {...register('womenClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Kids (Boy)</span> 
-                            <input type="text" name="boyClothing" placeholder="Qty" {...register('boyClothing')} className="input input-bordered w-1/4 text-center" />
+                            <input type="text" name="boyClothing" placeholder="Qty" {...register('boyClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                             <span className="label-text text-lg">Kids (Girl)</span> 
-                            <input type="text" name="girlClothing" placeholder="Qty" {...register('girlClothing')} className="input input-bordered w-1/4 text-center" />
+                            <input type="text" name="girlClothing" placeholder="Qty" {...register('girlClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
 
                     </div>
@@ -131,29 +131,13 @@ export default function checkout() {
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
-                    <div className="collapse-content grid grid-cols-6 gap-8 bg-white"> 
+                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
                         {/* {client?.eligibleItems.includes('Backpack') ? ( */}
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
                         {/* ) : (
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
-                        )} */}
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Bus Ticket</span> 
-                        {/* {client?.eligibleItems.includes('Bus Ticket') ? ( */}
-                            <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="Bus Ticket" name="Bus Ticket" {...register('Bus Ticket')} className="checkbox checkbox-lg" disabled />
-                        )} */}
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Financial Assistance</span> 
-                        {/* {client?.eligibleItems.includes('Financial Assistance') ? ( */}
-                            <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="Financial Assistance" name="Financial Assistance" {...register('Financial Assistance')} className="checkbox checkbox-lg" disabled />
                         )} */}
                         </label>
                         <label className="label cursor-pointer py-4">
@@ -164,12 +148,30 @@ export default function checkout() {
                             <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
                         )} */}
                         </label>
+                        <label></label>
+                        <label></label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Bus Ticket</span> 
+                            <input type="text" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Gift Card</span> 
+                            <input type="text" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Diaper</span> 
+                            <input type="text" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer py-4">
+                        <span className="label-text text-lg">Financial Assistance</span> 
+                            <input type="text" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
                     </div>
                 </div>
                 {/* Notes Section */}
                 <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
-                    <textarea placeholder= "Additional requests/needs.." className ="w-full h-24 px-1 py-1 text-base text-gray-700 placeholder-gray-600 border rounded-lg focus:shadow-outline"></textarea>
+                    <textarea placeholder= "Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
