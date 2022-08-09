@@ -73,9 +73,9 @@ export default function Client({ client }) {
                     : view === 1 
                     ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
                     : view === 2 
-                    ? <button className="btn btn-accent btn-sm" onClick={handleCheckout}>Checkout</button> 
+                    ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
                     : <></>}
-                    <button className="btn btn-accent btn-sm" onClick={goToProfile}>Profile</button>
+                    <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
                 </div>
             </div>
         </div>
