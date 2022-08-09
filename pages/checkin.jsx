@@ -76,18 +76,18 @@ export default function checkout() {
 
     useEffect(() => {
         // Check for clients on page load
-        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        checkedInClients?.forEach(client => {
-            console.log(typeof(client.clientID))
-            if (client.clientID === Number(id)) setClient(client)
-        })
-    }, [localStorage.getItem('checkedInClients')])
+        let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
+        if (checkinClient !== null){
+            setClient(checkinClient)
+            localStorage.removeItem('tmpCheckinClient');
+        }        
+    }, [localStorage.getItem('tmpCheckinClient')])
 
     return (
        <div className="mt-20">
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
-                <h1 className="card-title">Saint Francis Intake Form</h1>
+                <h1 className="card-title">Saint Francis Check-In Form</h1>
                 <div className="flex grid grid-cols-2">
                     <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
                     <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
