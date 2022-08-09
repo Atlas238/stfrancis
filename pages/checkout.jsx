@@ -126,7 +126,7 @@ export default function checkout() {
                 </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
-                    <div className={newFunction()}>Special Requests</div>
+                    <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
                     <div className="collapse-content grid grid-cols-6 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
@@ -178,8 +178,4 @@ export default function checkout() {
             </div>
         </div>
     )
-
-    function newFunction() {
-        return "collapse-title text-xl font-body bg-base-200";
-    }
 }
