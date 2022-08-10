@@ -60,7 +60,7 @@ export default function checkout() {
             let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
             if (checkedInClientDict === undefined || checkedInClientDict === null) {
                 checkedInClientDict = {}
-                clientDict[client.clientID] = data
+                checkedInClientDict[client.clientID] = data
             } else {
                 checkedInClientDict[client.clientID] = data
             }
