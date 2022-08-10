@@ -5,7 +5,6 @@ export default function Client({ client }) {
     // State variables used to control component render
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
     const [checkedIn, setCheckedIn] = useState(false) 
-    let banned = false // Temp Bool flag
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
@@ -60,7 +59,7 @@ export default function Client({ client }) {
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} {banned ? <span className="font-bold text-2xl">BANNED</span> : <></>} </h1>
+                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} {client?.banned ? <span className="font-bold text-2xl">BANNED</span> : <></>} </h1>
                 <p>Allowed this vist:</p>
                 <ul>
                     {mapped} 
