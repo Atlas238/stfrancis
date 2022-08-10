@@ -67,6 +67,18 @@ export default function checkout() {
         router.push('/checkedin');
     }
 
+    // fill fields with checkin info
+    const fillFieldswithCheckinInfo = (checkinData) => {
+        document.getElementById('familySize').value = checkinData.familySize
+        document.getElementById('backpack').checked = checkinData.backpack
+        document.getElementById('sleepingbag').checked = checkinData.sleepingbag
+        document.getElementById('busTicket').value = checkinData.busTicket
+        document.getElementById('giftCard').value = checkinData.giftCard
+        document.getElementById('diaper').value = checkinData.diaper
+        document.getElementById('financialAssistance').value = checkinData.financialAssistance
+        document.getElementById('notes').value = checkinData.notes
+    }
+
     useEffect(() => {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
@@ -74,7 +86,12 @@ export default function checkout() {
             console.log(typeof(client.clientID))
             if (client.clientID === Number(id)) setClient(client)
         })
-    }, [localStorage.getItem('checkedInClients')])
+
+        let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
+        if (checkedInClientDict && Number(id) in checkedInClientDict){
+            fillFieldswithCheckinInfo(checkedInClientDict[Number(id)])
+        }
+    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
 
     return (
        <div className="mt-20">
@@ -83,7 +100,7 @@ export default function checkout() {
                 <h1 className="card-title">Saint Francis Intake Form</h1>
                 <div className="flex grid grid-cols-2">
                     <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
+                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" id="familySize" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
@@ -147,7 +164,7 @@ export default function checkout() {
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
                         {/* {client?.eligibleItems.includes('Backpack') ? ( */}
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
+                            <input type="checkbox" id="backpack" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
                         {/* ) : (
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
                         )} */}
@@ -155,7 +172,7 @@ export default function checkout() {
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Sleeping Bag</span> 
                         {/* {client?.eligibleItems.includes('sleepingbag') ? ( */}
-                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
+                            <input type="checkbox" id="sleepingbag" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
                         {/* ) : (
                             <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
                         )} */}
@@ -164,26 +181,26 @@ export default function checkout() {
                         <label></label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Bus Ticket</span> 
-                            <input type="text" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
+                            <input type="text" id="busTicket" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Gift Card</span> 
-                            <input type="text" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
+                            <input type="text" id="giftCard" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Diaper</span> 
-                            <input type="text" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
+                            <input type="text" id="diaper" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Financial Assistance</span> 
-                            <input type="text" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
+                            <input type="text" id="financialAssistance" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                     </div>
                 </div>
                 {/* Notes Section */}
                 <div tabIndex="3" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
-                    <textarea name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
+                    <textarea id="notes" name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
