@@ -20,50 +20,37 @@ export default function Client({ client }) {
     }
 
     //Checks in the given client, saving a basic object to localstorage to pass around as the user navigates pages
-    let handleCheckin = async (e) => {
-        // Convert client to checkin model ->
-        let checkinModel = {
-            clientID: client.clientID,
-            checkinDate: new window.Date()
-        }
+    let handleCheckin = (e) => {
 
-        // Create a visit with client ID
-
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
-        // response has visitID ?
-
-        // Get already checked in clients from localstorage
-        let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
-        if (checkedInClients === undefined || checkedInClients === null) {
-            let clientList = []
-            clientList.push(client) // Add client to the list if there was no list
-            localStorage.setItem("checkedInClients", JSON.stringify(clientList))
-        } else {
-            checkedInClients.forEach(checkedInClient => {
-                if (checkedInClient.id === client.id) {
-                    return // already checked in NOT WORKING ?
-                }
-            })
-            checkedInClients.push(client) // If client was not in list add them to it
-            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients)) // Store updated List
-        }
-        setCheckedIn(true)  
+        // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+        localStorage.setItem("tmpCheckinClient", JSON.stringify(client))
+        router.push(`/checkin?id=${client.clientID}`)
     }
 
     // Runs at page load + when dependencies are updated (in array at end)
     // Checks where this component is being rendered and changes the view state accordingly
+    // useEffect(() => {
+    //     switch(window.location.pathname) {
+    //         case '/checkedin' :
+    //             setView(2)
+    //             break;
+    //         case '/': 
+    //             setView(1)
+    //             break;
+    //         default: 
+    //             setView(0)
+    //     }
+    // },[window.location.pathname])
+
     useEffect(() => {
-        switch(window.location.pathname) {
-            case '/checkedin' :
-                setView(2)
-                break;
-            case '/': 
-                setView(1)
-                break;
-            default: 
-                setView(0)
-        }
-    },[window.location.pathname])
+        // Check for clients on page load
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        setView(1)
+        checkedInClients?.forEach(c => {
+            if (c.clientID === client.clientID) setView(2)
+        })
+    }, [localStorage.getItem('checkedInClients')])
+
 
     // Easy way to return html elements from an array of anykind
     let mapped = client?.eligibleItems?.map(item => {
@@ -86,9 +73,9 @@ export default function Client({ client }) {
                     : view === 1 
                     ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
                     : view === 2 
-                    ? <button className="btn btn-accent btn-sm" onClick={handleCheckout}>Checkout</button> 
+                    ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
                     : <></>}
-                    <button className="btn btn-accent btn-sm" onClick={goToProfile}>Profile</button>
+                    <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
                 </div>
             </div>
         </div>
