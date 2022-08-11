@@ -42,7 +42,6 @@ export default function checkout() {
 
     // Submits form data to DB, updates VISIT record
     const submitForm = (data) => {
-        let updateVisitRoute = ""
         console.log(data)
 
         // Send data to DB!
