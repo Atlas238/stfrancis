@@ -21,3 +21,17 @@
 :root {
     font-family: 'Spectral SC';
 }
+
+
+.print {
+    display: none
+}
+
+@media print {
+    .screen {
+        display: none;
+    }
+    .print {
+        display: block;
+    }
+}
