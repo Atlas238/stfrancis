@@ -59,7 +59,8 @@ export default function Client({ client }) {
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} {client?.banned ? <span className="font-bold text-2xl">BANNED</span> : <></>} </h1>
+                {client?.banned ? <h1 className="mx-auto text-3xl">BANNED</h1> : <></>}
+                <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <p>Allowed this vist:</p>
                 <ul>
                     {mapped} 
@@ -69,9 +70,9 @@ export default function Client({ client }) {
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 
-                    : view === 1 
+                    : view === 1 && client?.banned === false 
                     ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
-                    : view === 2 
+                    : view === 2 && client?.banned === false
                     ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
                     : <></>}
                     <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
