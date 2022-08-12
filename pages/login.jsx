@@ -45,26 +45,27 @@ function Login() {
     }
 
     return (
-        <div className="hero min-h-screen bg-slate-300">
+        <div className="hero min-h-screen bg-neutral">
+            <img src={"./sfhlogo.png"} className="image-full w-96 fixed top-0 left-0 select-none" />
             <div className="hero-content flex-col lg:flex-row-reverse">
-                <div className="text-center lg:text-left text-black">
-                    <h1 className="text-5xl font-bold">Login to Continue</h1>
-                    <p className="py-6">Enter your issued username and password to sign into the main portal</p>
+                <div className="text-secondary text-center lg:text-left">
+                    <h1 className=" text-8xl font-bold select-none">Login to Continue</h1>
+                    <p className="py-6 text-3xl text-center select-none">Enter your issued username and password to sign into the main portal</p>
                 </div>
-                <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-slate-600">
+                <div className="card flex-shrink-0 w-full max-w-md mx-5 shadow-2xl bg-accent">
                     <form onSubmit={handleSubmit(onSubmit)} className="card-body">
                         <div className="form-control">
-                            <label className='label'>Username</label>
-                            <input name="username" type="text" {...register('username')} className={`form-control text-black ${errors.username ? 'is-invalid' : ''}`} />
+                            <label className='label text-neutral text-4xl'>Username</label>
+                            <input name="username" type="text" {...register('username')} className={`form-control rounded-sm h-8 text-black ${errors.username ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.username?.message}</div>
                         </div>
                         <div className="form-control">
-                            <label className='label'>Password</label>
-                            <input name="password" type="password" {...register('password')} className={`form-control text-black ${errors.password ? 'is-invalid' : ''}`} />
+                            <label className='label text-neutral text-4xl'>Password</label>
+                            <input name="password" type="password" {...register('password')} className={`form-control rounded-sm h-8 text-black ${errors.password ? 'is-invalid' : ''}`} />
                             <div className="invalid-feedback">{errors.password?.message}</div>
                         </div>
                         <div className='form-control mt-6'>
-                            <button disabled={formState.isSubmitting} className="btn btn-accent">
+                            <button disabled={formState.isSubmitting} className="btn btn-ghost text-neutral text-3xl">
                                 {formState.isSubmitting && <span className="spinner-border spinner-border-sm mr-1"></span>}
                                 Login
                             </button>

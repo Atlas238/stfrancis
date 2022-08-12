@@ -47,7 +47,7 @@ function App({ Component, pageProps }) {
     }
 
     return (
-        <div className="overflow-hidden">
+        <div className="overflow-hidden screen">
             <Head>
                 <title>St Francis House</title>
             </Head>

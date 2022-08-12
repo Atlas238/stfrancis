@@ -1,8 +1,11 @@
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useForm } from 'react-hook-form';
-import { NavLink } from '../components/NavLink.jsx';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm } from 'react-hook-form'
+
+import { NavLink } from '../components/NavLink.jsx'
+import Printout from "components/Printout.jsx"
+
+import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup';
 
 // form validation
@@ -25,16 +28,19 @@ const checkoutSchema = Yup.object().shape({
 export default function checkout() {
     const router = useRouter()
     const [client, setClient] = useState(null)
-
-    // Client ID from query parameters
-    const { id } = router.query
+    const [formData, setFormData] = useState(null)
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
     });
     const {errors} = formState;
 
+    const printForm = async () => {
+        window.print()
+    }
+
     const submitForm = async (data) => {
+        setFormData(data)
         // Convert client to checkin model ->
         let checkinModel = {
             clientID: client.clientID,
@@ -67,6 +73,9 @@ export default function checkout() {
             localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
 
             // redirect to home
+
+            printForm() // Print!
+
             router.push(`/`)
 
         }else{
@@ -76,11 +85,23 @@ export default function checkout() {
 
     useEffect(() => {
         // Check for clients on page load
+        async function getClientData(id) {
+            let res = await fetch(`https://stfrancisfront.herokuapp.com/home/getClientByID?clientID=${id}`)
+            let data = await res.json()
+            return data
+        }
         let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
-        if (checkinClient !== null){
+        
+        if (checkinClient != null | checkinClient != undefined){
             setClient(checkinClient)
             localStorage.removeItem('tmpCheckinClient');
-        }        
+        } else {
+            if (router.isReady) {
+                const { id } = router.query
+                setClient(getClientData(id))
+            }
+        }
+
     }, [localStorage.getItem('tmpCheckinClient')])
 
     return (
@@ -88,9 +109,10 @@ export default function checkout() {
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Check-In Form</h1>
-                <div className="flex grid grid-cols-2">
-                    <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
+                <div className="grid grid-cols-2">
+                    <h1 className="card-title text-3xl">{client?.firstName != undefined ? client?.firstName : "Who"} {client?.middleInitial === undefined ? "" : client?.middleInitial === "" ? "" : client?.middleInitial + '.'} {client?.lastName != undefined ? client?.lastName : "are you?"}</h1>
+                    {/* Think we only want this on newClient form? */}
+                    {/* <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label> */}
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
@@ -167,10 +189,12 @@ export default function checkout() {
                 <div className='divider my-0'></div>
                 <div className="flex p-4 gap-8">
                     <button type="submit" className="btn btn-accent btn-sm w-1/3">Check In</button>
-                    <button className="btn btn-accent btn-sm w-1/3">Print</button>
                     <NavLink href= "/" className="btn btn-primary btn-sm w-1/3">Back</NavLink>  
                 </div>
             </form>
+            </div>
+            <div>
+                <Printout formData={formData} client={client}/>
             </div>
         </div>
     )

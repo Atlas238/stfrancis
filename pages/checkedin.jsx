@@ -16,7 +16,7 @@ export default function checkedin() {
     }
 
     return (
-        <div className="mx-auto my-6 w-screen px-10">
+        <div className="mx-auto mt-40 w-screen px-10">
            <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
            <div className="divider"></div>
            <div className="flex">
