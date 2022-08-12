@@ -8,7 +8,7 @@ export default function Printout({ formData, client }) {
         <div className="">
             {/* Client Portion */}
             <div className="flex flex-col">
-                <h1>{client?.firstName} {client?.lastName} HELLO</h1>
+                <h1>{client?.firstName} {client?.lastName}'s Shopping List</h1>
                 <div className="divider horizontal"></div>
             </div>
             {/* Form Portion */}
