@@ -13,6 +13,8 @@ function Login() {
     const router = useRouter();
 
     useEffect(() => {
+        // Wake up DB server - We dont do anything with this, just ping the server so that if it is resting our login isn't delayed
+        let response = fetch('https://stfrancisone.herokuapp.com/home')
         // redirect to home if already logged in
         if (userService.userValue) {
             router.push('/');
