@@ -28,9 +28,10 @@
 }
 
 @media print {
-    .screen {
+    .hide {
         display: none;
     }
+    
     .print {
         display: block;
     }
