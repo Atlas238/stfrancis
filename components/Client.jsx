@@ -59,7 +59,7 @@ export default function Client({client}) {
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                {client?.banned ? <h1 className="mx-auto text-3xl">BANNED</h1> : <></>}
+                {client?.banned ? <h1 className="font-bold text-center text-lg bg-red-900 text-primary rounded-md px-4">BANNED</h1> : <></>}
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <p>Allowed this vist:</p>
                 <ul>
