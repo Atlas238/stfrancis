@@ -58,6 +58,11 @@ export default function updateclient({ data }) {
         // delete client by id (add route)
     }
 
+    const back = ()  => {
+        // go back to profile page 
+        router.push(`/profile/${id}`)
+    }
+
     const handleBanned = () => {
         let isChecked = document.getElementById('banned').checked
         setBanned(isChecked)
@@ -165,6 +170,7 @@ export default function updateclient({ data }) {
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
                         <button onClick={()=> { submitForm(); checkinClient() }} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
+                        <button onClick={()=> back()} className="btn btn-wide btn-secondary p-2 my-2 m-8">Back</button>
                     </div>
                     <div className='card-actions justify-end my-0 py-0'>
                         <label htmlFor="my-modal" className="btn modal-button btn-link text-warning-content">Delete Client</label>
