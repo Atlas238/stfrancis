@@ -36,14 +36,25 @@ export default function updateclient({ data }) {
         resolver: yupResolver(clientSchema)
     });
     const {errors} = formState;
-    
+    const [banned, setBanned] = useState(false)
 
-    const submitForm = (updateClient) => {
+    const submitForm = async (updateClient) => {
         console.log(updateClient)
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
-        // ADD ROUTE
+        // Update client request to DB
+        // let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${updateClient.clientID}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
+        // // if successful
+        // if(response.ok && response.status===200){
+        //     console.log("SUCCESS")
+        //     alert("Successfully Saved")
+        // }else{
+        //     // display unsuccessful popup
+        //     alert("Saving Failed")
+        // }
 
+        // go back to profile page
+        router.push(`/profile/${id}`)
     }
 
     const checkinClient = () => {
@@ -58,6 +69,16 @@ export default function updateclient({ data }) {
         // delete client by id (add route)
     }
 
+    const back = ()  => {
+        // go back to profile page 
+        router.push(`/profile/${id}`)
+    }
+
+    const handleBanned = () => {
+        let isChecked = document.getElementById('banned').checked
+        setBanned(isChecked)
+    }
+
     // fill fields with current profile
     const fillFieldswithProfile = (profile) => {
         document.getElementById('firstName').value = profile.firstName
@@ -67,6 +88,8 @@ export default function updateclient({ data }) {
         document.getElementById('gender').value = profile.gender === 'N/A' ? '' : profile.gender
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
         document.getElementById('postalCode').value = profile.zipCode === 'N/A' ? '' : profile.zipCode
+        document.getElementById('banned').checked = profile.banned
+        profile.banned ? handleBanned() : None
     }
 
     useEffect(() => {
@@ -82,7 +105,13 @@ export default function updateclient({ data }) {
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
             <form onSubmit={handleSubmit(submitForm)} className="card mt-28 mx-auto">
                 <div className='card-body min-w-full'>
-                    <h1 className='card-title my-0'>Update Client Form</h1>
+                    <div className="grid grid-flow-col">
+                        <h1 className='card-title my-0'>Update Client Form</h1>
+                        <div className="flex gap-2 justify-self-end place-items-center">
+                            <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
+                            <div><label className="block label-text text-center">Ban</label><input id="banned" onChange={handleBanned} type="checkbox" className="toggle center"/></div>
+                        </div>
+                    </div>
                     <div className='divider my-0'></div>
                     <div className="form-control flex-row grid grid-cols-4 gap-4">
 
@@ -152,6 +181,7 @@ export default function updateclient({ data }) {
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
                         <button onClick={()=> { submitForm(); checkinClient() }} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
+                        <button onClick={()=> back()} className="btn btn-wide btn-secondary p-2 my-2 m-8">Back</button>
                     </div>
                     <div className='card-actions justify-end my-0 py-0'>
                         <label htmlFor="my-modal" className="btn modal-button btn-link text-warning-content">Delete Client</label>
