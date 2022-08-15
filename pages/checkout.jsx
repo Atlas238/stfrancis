@@ -40,29 +40,38 @@ export default function checkout() {
     const {errors} = formState;
 
     // Submits form data to DB, updates VISIT record
-    const submitForm = (data) => {
+    const submitForm = async (data) => {
         console.log(data)
 
-        // Send data to DB!
-        // fetch(updateVisitRoute, { method: 'POST', body: data })
-        
-        // Remove client from checkedin list
-        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        let updatedCheckedInClients = []
-        checkedInClients?.forEach(c => {
-            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
-        })
-        localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-
-        // Remove client from checkedInClientDict list
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (client.clientID in checkedInClientDict){
-            delete checkedInClientDict[client.clientID]
+        // Convert client to checkin model ->
+        let checkinModel = {
+            clientID: client.clientID,
+            checkinDate: new window.Date()
         }
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+        console.log(checkinModel)
+        // Create a visit with client ID
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
+        if(response.ok && response.status===200){
+                    // Remove client from checkedin list
+            let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+            let updatedCheckedInClients = []
+            checkedInClients?.forEach(c => {
+                if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+            })
+            localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
-        //Move them back to the checkedin page
-        router.push('/checkedin');
+            // Remove client from checkedInClientDict list
+            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+            if (client.clientID in checkedInClientDict){
+                delete checkedInClientDict[client.clientID]
+            }
+            localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+
+            //Move them back to the checkedin page
+            router.push('/checkedin');
+
+        }
+
     }
 
     // fill fields with checkin info
