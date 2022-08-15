@@ -13,7 +13,8 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired()
+    familyId: Yup.string().notRequired(),
+    banned: Yup.bool()
 },
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
@@ -43,18 +44,17 @@ export default function updateclient({ data }) {
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
-        // let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${updateClient.clientID}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
-        // // if successful
-        // if(response.ok && response.status===200){
-        //     console.log("SUCCESS")
-        //     alert("Successfully Saved")
-        // }else{
-        //     // display unsuccessful popup
-        //     alert("Saving Failed")
-        // }
-
-        // go back to profile page
-        router.push(`/profile/${id}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
+        // if successful
+        if(response.ok && response.status===200){
+            console.log("SUCCESS")
+            alert("Successfully Saved")
+            // go back to profile page
+            router.push(`/profile/${id}`)
+        }else{
+            // display unsuccessful popup
+            alert("Saving Failed")
+        }
     }
 
     const checkinClient = () => {
@@ -89,7 +89,7 @@ export default function updateclient({ data }) {
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
         document.getElementById('postalCode').value = profile.zipCode === 'N/A' ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
-        profile.banned ? handleBanned() : None
+        profile.banned ? handleBanned() : null
     }
 
     useEffect(() => {
@@ -109,7 +109,7 @@ export default function updateclient({ data }) {
                         <h1 className='card-title my-0'>Update Client Form</h1>
                         <div className="flex gap-2 justify-self-end place-items-center">
                             <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
-                            <div><label className="block label-text text-center">Ban</label><input id="banned" onChange={handleBanned} type="checkbox" className="toggle center"/></div>
+                            <div><label className="block label-text text-center">Ban</label><input id="banned" {...register('banned')} onChange={handleBanned} type="checkbox" className="toggle center"/></div>
                         </div>
                     </div>
                     <div className='divider my-0'></div>
@@ -117,31 +117,31 @@ export default function updateclient({ data }) {
 
                         {/* First Name */}
                         <div className='p-2 w-60 flex flex-col'>
-                        <label className="label label-text">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
+                        <label className="label label-text text-xl">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
                         <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Last Name */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
+                        <label className="label label-text text-xl">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
                         <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Middle Initial */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text">Middle Initial</label>
+                        <label className="label label-text text-xl">Middle Initial</label>
                         <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Date of Birth */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
+                            <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
                             <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center"></input>
                         </div>
 
                         {/* Gender */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Gender</label>
+                            <label className="label label-text text-xl">Gender</label>
                             <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>F</option>
@@ -152,7 +152,7 @@ export default function updateclient({ data }) {
 
                         {/* Race */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Race</label>
+                            <label className="label label-text text-xl">Race</label>
                             <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>American Indian or Alaska Native</option>
@@ -167,13 +167,13 @@ export default function updateclient({ data }) {
 
                         {/* Zip Code */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
+                            <label className="label label-text text-xl">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
                             <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Family Id</label>
+                            <label className="label label-text text-xl"># People in Family</label>
                             <input id="familyId" type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
