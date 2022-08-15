@@ -45,41 +45,6 @@ export default function Home() {
         dateOfBirth: false
     })
 
-    // ***** FOR DEMO IF NEEDED, WEAK SIMULATION OF SQL LIKE STATEMENT
-    const fakeLookup = async (data) => {
-        // Intakes submitForm data param and uses that to query the super big old client list
-        let sublist = []
-        let clients = await require('../tempdata/Clients.json')
-        clients.forEach((client) => {
-            let searchClient = {
-                firstName: data.firstName.toUpperCase(),
-                lastName: data.lastName.toUpperCase(),
-                birthdate: data.birthdate
-            }
-            let dbClient = {
-                firstName: client.firstName.toUpperCase(),
-                lastName: client.lastName.toUpperCase(),
-                birthdate: client.birthdate
-            }
-            let reFirst = `^${searchClient.firstName[0]}.+`
-            let searchFirstName = new RegExp(reFirst, 'g')
-
-            if (dbClient.firstName.match(searchFirstName)) {
-                sublist.push(dbClient)
-            }
-            
-            let reLast = `^${searchClient.lastName[0]}.+`
-            let searchLastName = new RegExp(reLast, 'g')
-            if (dbClient.lastName.match(searchLastName)) {
-                sublist.push(dbClient)
-            }
-        })
-
-        let returnList = [...new Set(sublist)]
-
-        setDbClients(returnList)
-    }
-
     // Handled by YUP, sets any errors for custom display messages
     const submitForm = async (data) => {
         setDbClients(null)
@@ -97,6 +62,7 @@ export default function Home() {
         // let res = await fetch('/api/clients')
         let clients = await res.json()
         if (clients.length != 0) setDbClients(clients)
+        console.log(clients)
     }
 
     // Handled by YUP, transfers error from Yup to other state variable
