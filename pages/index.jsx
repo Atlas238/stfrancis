@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
-import { parse, isDate } from 'date-fns'
 import { userService } from '../services/user.service';
 
 import Client from '../components/Client'
@@ -12,19 +11,12 @@ import { useRouter } from 'next/router';
 
 // Validation Schema
 const clientLookupSchema = Yup.object().shape({
-    firstName: Yup.string().required(),
-    lastName: Yup.string().required(),
+    firstName: Yup.string(),
+    lastName: Yup.string(),
     middleInitial: Yup.string().notRequired().when('middleInitial', {is: (value) => value?.length, then: (rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().transform(parseDateString).required()
+    dateOfBirth: Yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, {excludeEmptyString: true}),
 }, ['middleInitial', 'middleInitial'])
 
-// Utility Function
-function parseDateString(value, originalValue) {
-    const parsedDate = isDate(originalValue)
-    ? originalValue
-    : parse(originalValue, "yyyy-MM-dd", new Date())
-    return parsedDate
-}
 
 // Main Landing Page
 export default function Home() {
@@ -39,36 +31,38 @@ export default function Home() {
     const [lookupClient, setLookupClient] = useState(null)
     const [dbClients, setDbClients] = useState(null)
     const [submitted, setSubmitted] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     const [submitErrors, setSubmitErrors] = useState({
         firstName: null,
         lastName: null,
-        middleInitial: null,
         dateOfBirth: null
     })
 
     const [touched, setTouched] = useState({
         firstName: false,
         lastName: false,
-        middleInitial: false,
         dateOfBirth: false
     })
 
     // Handled by YUP, sets any errors for custom display messages
     const submitForm = async (data) => {
+        setDbClients(null)
+        setSubmitted(false)
+        console.log("Form Submitted")
+        setLoading(true)
         setSubmitErrors({
             firstName: null,
             lastName: null,
-            middleInitial: null,
             dateOfBirth: null
         })
         setSubmitted(true)
-
         setLookupClient(data) //setLocally for easy tracking
-        // let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth.toISOString().split("T")[0]}`)
-        let res = await fetch('/api/clients')
-        let clients = JSON.parse(await res.json())
-        setDbClients(clients)
+        let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
+        // let res = await fetch('/api/clients')
+        let clients = await res.json()
+        if (clients.length != 0) setDbClients(clients)
+        console.log(clients)
     }
 
     // Handled by YUP, transfers error from Yup to other state variable
@@ -76,7 +70,6 @@ export default function Home() {
         setSubmitErrors({
             firstName: err.firstName,
             lastName: err.lastName,
-            middleInitial: err.middleInitial,
             dateOfBirth: err.dateOfBirth
         })
 
@@ -84,7 +77,6 @@ export default function Home() {
         setTouched({
             firstName: true,
             lastName: true,
-            middleInitial: true,
             dateOfBirth: true
         })
     }
@@ -94,7 +86,6 @@ export default function Home() {
         let basicInfo = {
             firstName: document.getElementById("firstName").value,
             lastName: document.getElementById("lastName").value,
-            middleInitial: document.getElementById("middleInitial").value,
             dateOfBirth: document.getElementById("dateOfBirth").value
         }
         console.log(basicInfo)
@@ -115,32 +106,26 @@ export default function Home() {
                     <div className='card-body min-w-full'>
                         <h1 className='card-title font-body text-sfgold ld my-0'>Lookup Client</h1>
                         <div className='divider my-0'></div>
-                        <div className="form-control flex-row">
-
+                        <div className="form-control flex-col">
+                        <div className="flex flex-row">
                             {/* First Name */}
                             <div className='p-2 w-60 flex flex-col'>
-                            <label className="label label-text">First name</label>
+                            <label className="label label-text text-xl">First name</label>
                             <input id="firstName" type="text" name="firstName" {...register('firstName')} onClick={() => setTouched({...touched, firstName: true})} className="input input-bordered min-w-sm  bg-white border-gray-400 p-2" />
                             {submitErrors.firstName && touched.firstName ? <label className='label-text-alt badge badge-error m-1'>required</label> : null}
                             </div>
 
                             {/* Last Name */}
                             <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Last name</label>
+                            <label className="label label-text text-xl">Last name</label>
                             <input id="lastName" type="text" name="lastName" {...register('lastName')} onClick={() => setTouched({...touched, lastName: true})} className="input input-bordered min-w-sm bg-white border-gray-400 p-2" />
                             {submitErrors.lastName && touched.lastName ? <label className="label-text-alt badge badge-error m-1">required</label> : null}
                             </div>
-
-                            {/* Middle Initial */}
-                            <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Middle Initial</label>
-                            <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} onClick={() => setTouched({...touched, middleInitial: true})} className="input input-bordered min-w-sm bg-white border-gray-400 p-2" />
-                            {submitErrors.middleInitial && touched.middleInitial ? <label className='label-text-alt badge badge-error'>Middle Initial must only be one letter</label> : null}
-                            </div>
+                        </div>
 
                             {/* Date of Birth */}
-                            <div className="p-2 w-64 flex flex-col">
-                                <label className="label label-text">Date of Birth</label>
+                            <div className="p-2 w-64 flex flex-col self-center">
+                                <label className="label label-text text-xl">Date of Birth</label>
                                 <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" onClick={() => setTouched({...touched, dateOfBirth: true})} className="input input-bordered min-w-sm  bg-white border-gray-400 p-2" />
                                 <label className={`label-text-alt badge badge-error m-1 ${submitErrors.dateOfBirth && touched.dateOfBirth ? "visible" : "hidden"}`}>required</label>
                             </div>
@@ -154,8 +139,9 @@ export default function Home() {
             </form>
 
             {/* Render Client list - Select desired Client + Check them in */}
+            <div className={`${loading ? "visible" : "hidden"}`}><div className="spinner"></div></div>
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
-                {dbClients ? dbClients.map(client => { return <Client client={client} key={client.id} />}) : <></>}
+                {dbClients?.length > 0 ? dbClients.map(client => { return <Client client={client} key={client.clientID} />}) : <div className={`flex flex-col ${loading ? "hidden" : 'visible'}`}><h3 className='text-3xl text-center p-4'>Whoops!</h3><p className="text-xl">Looks like we couldn't find anyone... Check the information entered and please try again!</p></div>}
             </div>
 
         </div>

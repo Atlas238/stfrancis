@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 
 import { NavLink } from './NavLink'
+import Image from "next/image";
 import { userService } from '../services/user.service'
-import themes from "daisyui/src/colors/themes";
+
+import logo from '../public/sfhlogo.png'
 
 export { Nav }
 
@@ -31,14 +33,14 @@ function Nav() {
     if (!user) return null
 
     return (
-        <div className="navbar bg-base-200 shadow-sm fixed z-10 h-28">
+        <div className="navbar bg-base-200 shadow-sm h-28 fixed z-50 hide">
             <div className="flex-1">
-                <NavLink href={"/"} className="btn btn-secondary h-24"><span><img src={"./sfhlogo.png"} className="w-28" /></span>Home</NavLink>
+                <NavLink href={"/"} className="btn btn-ghost h-24"><Image src={logo} width={200} height={90} priority={true}/></NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
-                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-primary-content hover:bg-bluegray m-1">Checked In Clients</NavLink></li>
-                    <li><a onClick={logout} className="btn btn-accent text-primary-content m-1">Logout</a></li>
+                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin m-2 mt-10">Checked In Clients</NavLink></li>
+                    <li><a onClick={logout} className="btn btn-accent text-xl text-primary-content font-thin m-2 mt-10">Logout</a></li>
                 </ul>
             </div>
         </div>

@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useRouter } from "next/router"
 
 export default function FullClient({ client }) {
+    
+    const router = useRouter()
+
     // Use client[0] to get client obj
 
     // Page state is for visit pages
@@ -25,15 +29,15 @@ export default function FullClient({ client }) {
     let pages = paginate(client[0].visits)
    
     // Creates mini components for the visits
-    let mappedVisits = client[0].visits.map((visit) => {
+    let mappedVisits = client[0].visits.reverse().map((visit) => {
         return (
             <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
                 <div className=" card-body">
-                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visit.visitDate.split("T")[0]}</h3>
+                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visit.visitDate?.split("T")[0]}</h3>
                     <ul className="ml-3">
-                        <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack.split("T")[0]}</li>
-                        <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag.split("T")[0]}</li>
-                        <li><span className="font-semibold">Requests:</span> {visit.requests.split("T")[0]}</li>
+                        <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack?.split("T")[0]}</li>
+                        <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag?.split("T")[0]}</li>
+                        <li><span className="font-semibold">Requests:</span> {visit.request?.split("T")[0]}</li>
                     </ul>
                 </div>
             </div>
@@ -46,12 +50,22 @@ export default function FullClient({ client }) {
     let visitsPageThree = mappedVisits.splice(20, 30)
     let visitsPageFour = mappedVisits.splice(30, 40)
 
+    // Update profile function
+    const updateClientProfile = () => {
+        console.log(`/updateclient/${client[0].clientID}`)
+        router.push(`/updateclient/${client[0].clientID}`)
+    }
+
     return (
         <div className="container mt-20 card w-8/12 bg-base-300 shadow-xl mx-auto">
             <div className="card-body min-w-full">
-                <h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName}</h1>
+                <div className="grid grid-flow-col">
+                    <div><h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName} {client[0].banned ?
+                        <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </h1></div>
+                    <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
+                </div>
                 <ul className="flex">
-                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday}</li>
+                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client[0].birthday.split(' ')[0]}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Gender:</span> {client[0].gender}</li>
                     <li className="p-1 text-xl"><span className="font-bold">Race:</span> {client[0].race}</li>
                     <li className="p-1 text-xl"><span className="font-bold">ZipCode:</span> {client[0].zipCode}</li>

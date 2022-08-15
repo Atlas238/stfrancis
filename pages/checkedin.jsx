@@ -10,16 +10,16 @@ export default function checkedin() {
         // Create client component for each Client that is checked in 
         mapped = clients.map((client) => {
             if (client.firstName && client.lastName) {
-                return <Client client={client} key={client.id}/>
+                return <Client client={client} key={client.clientID}/>
             }
         })
     }
 
     return (
-        <div className="mx-auto my-24 w-screen px-10">
-           <h1 className="text-3xl text-primary-content">Checked In Clients</h1>
+        <div className="mx-auto mt-40 w-screen px-10">
+           <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
            <div className="divider"></div>
-           <div className="flex">
+           <div className="flex mx-auto container flex-row flex-wrap justify-center">
             {mapped} 
            </div>
         </div>
