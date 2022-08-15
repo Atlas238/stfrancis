@@ -39,6 +39,7 @@ export default function FullClient({ client }) {
                         <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag?.split("T")[0]}</li>
                         <li><span className="font-semibold">Requests:</span> {visit.request?.split("T")[0]}</li>
                     </ul>
+                    <button>Delete</button>
                 </div>
             </div>
         )
