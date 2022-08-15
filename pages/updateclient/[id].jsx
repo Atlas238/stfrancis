@@ -44,18 +44,17 @@ export default function updateclient({ data }) {
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
-        // let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${updateClient.clientID}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
-        // // if successful
-        // if(response.ok && response.status===200){
-        //     console.log("SUCCESS")
-        //     alert("Successfully Saved")
-        // }else{
-        //     // display unsuccessful popup
-        //     alert("Saving Failed")
-        // }
-
-        // go back to profile page
-        router.push(`/profile/${id}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
+        // if successful
+        if(response.ok && response.status===200){
+            console.log("SUCCESS")
+            alert("Successfully Saved")
+            // go back to profile page
+            router.push(`/profile/${id}`)
+        }else{
+            // display unsuccessful popup
+            alert("Saving Failed")
+        }
     }
 
     const checkinClient = () => {
