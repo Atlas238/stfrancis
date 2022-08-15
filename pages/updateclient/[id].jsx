@@ -117,31 +117,31 @@ export default function updateclient({ data }) {
 
                         {/* First Name */}
                         <div className='p-2 w-60 flex flex-col'>
-                        <label className="label label-text">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
+                        <label className="label label-text text-xl">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
                         <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Last Name */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
+                        <label className="label label-text text-xl">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
                         <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Middle Initial */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text">Middle Initial</label>
+                        <label className="label label-text text-xl">Middle Initial</label>
                         <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Date of Birth */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
+                            <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
                             <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center"></input>
                         </div>
 
                         {/* Gender */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Gender</label>
+                            <label className="label label-text text-xl">Gender</label>
                             <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>F</option>
@@ -152,7 +152,7 @@ export default function updateclient({ data }) {
 
                         {/* Race */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Race</label>
+                            <label className="label label-text text-xl">Race</label>
                             <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>American Indian or Alaska Native</option>
@@ -167,13 +167,13 @@ export default function updateclient({ data }) {
 
                         {/* Zip Code */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
+                            <label className="label label-text text-xl">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
                             <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text">Family Id</label>
+                            <label className="label label-text text-xl"># People in Family</label>
                             <input id="familyId" type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
