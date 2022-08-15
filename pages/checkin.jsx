@@ -86,10 +86,12 @@ export default function checkout() {
     useEffect(() => {
         // Check for clients on page load
         async function getClientData(id) {
-            let res = await fetch(`https://stfrancisfront.herokuapp.com/home/getClientByID?clientID=${id}`)
+            let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByID?clientID=${id}`)
             let data = await res.json()
-            return data
+
+            return await data
         }
+
         let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
         
         if (checkinClient != null | checkinClient != undefined){
