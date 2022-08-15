@@ -1,16 +1,16 @@
-import { useRouter } from "next/router"
-import { useEffect, useState } from "react"
+import {useRouter} from "next/router"
+import {useEffect, useState} from "react"
 
-export default function Client({ client }) {
+export default function Client({client}) {
     // State variables used to control component render
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
-    const [checkedIn, setCheckedIn] = useState(false) 
+    const [checkedIn, setCheckedIn] = useState(false)
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
     //Sends the user to the Checkout Page and provides the client id as a query parameter
     let handleCheckout = (e) => {
-        router.push(`/checkout?id=${client.clientID}`) 
+        router.push(`/checkout?id=${client.clientID}`)
     }
 
     //Sends the user to the profile page for a Client providing the client id as a route parameter (nextjs)
@@ -67,14 +67,14 @@ export default function Client({ client }) {
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                {client?.banned ? <h1 className="mx-auto text-3xl">BANNED</h1> : <></>}
+                {client?.banned ? <h1 className="font-bold text-center text-lg bg-red-900 text-primary rounded-md px-4">BANNED</h1> : <></>}
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <p>Allowed this vist:</p>
                 <ul>
-                    {mapped} 
+                    {mapped}
                 </ul>
                 <label>Last Visit Notes:</label>
-                    <p></p>
+                <p></p>
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 
@@ -87,5 +87,5 @@ export default function Client({ client }) {
                 </div>
             </div>
         </div>
-    ) 
+    )
 }

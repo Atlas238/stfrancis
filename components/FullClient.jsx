@@ -60,7 +60,8 @@ export default function FullClient({ client }) {
         <div className="container mt-20 card w-8/12 bg-base-300 shadow-xl mx-auto">
             <div className="card-body min-w-full">
                 <div className="grid grid-flow-col">
-                    <div><h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName}</h1></div>
+                    <div><h1 className="card-title text-5xl">{client[0].firstName} {client[0].middleInitial}. {client[0].lastName} {client[0].banned ?
+                        <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </h1></div>
                     <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
                 </div>
                 <ul className="flex">

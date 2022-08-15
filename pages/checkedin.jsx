@@ -19,7 +19,7 @@ export default function checkedin() {
         <div className="mx-auto mt-40 w-screen px-10">
            <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
            <div className="divider"></div>
-           <div className="flex">
+           <div className="flex mx-auto container flex-row flex-wrap justify-center">
             {mapped} 
            </div>
         </div>
