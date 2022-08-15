@@ -13,7 +13,8 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired()
+    familyId: Yup.string().notRequired(),
+    banned: Yup.bool()
 },
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
@@ -109,7 +110,7 @@ export default function updateclient({ data }) {
                         <h1 className='card-title my-0'>Update Client Form</h1>
                         <div className="flex gap-2 justify-self-end place-items-center">
                             <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
-                            <div><label className="block label-text text-center">Ban</label><input id="banned" onChange={handleBanned} type="checkbox" className="toggle center"/></div>
+                            <div><label className="block label-text text-center">Ban</label><input id="banned" {...register('banned')} onChange={handleBanned} type="checkbox" className="toggle center"/></div>
                         </div>
                     </div>
                     <div className='divider my-0'></div>
