@@ -88,8 +88,7 @@ export default function checkout() {
         async function getClientData(id) {
             let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByID?clientID=${id}`)
             let data = await res.json()
-
-            return await data
+            setClient(data[0])
         }
 
         let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
@@ -100,7 +99,7 @@ export default function checkout() {
         } else {
             if (router.isReady) {
                 const { id } = router.query
-                setClient(getClientData(id))
+                getClientData(id)
             }
         }
 
