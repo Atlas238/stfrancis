@@ -43,9 +43,11 @@ function Login() {
                 setError('apiError', { message: error.message || error });
             });
     }
-
     return (
-        <div className="hero min-h-screen bg-slate-300">
+        <div className=" bg-slate-300">
+            <div className = "flex-row w-50 h-28 bg-red-300">
+                <image src="./sfhpries.jpg" alt="priest" />
+            </div>
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="text-center lg:text-left text-black">
                     <h1 className="text-5xl font-bold">Login to Continue</h1>
