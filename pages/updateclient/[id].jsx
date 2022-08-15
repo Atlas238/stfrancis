@@ -89,7 +89,7 @@ export default function updateclient({ data }) {
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
         document.getElementById('postalCode').value = profile.zipCode === 'N/A' ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
-        profile.banned ? handleBanned() : None
+        profile.banned ? handleBanned() : null
     }
 
     useEffect(() => {
