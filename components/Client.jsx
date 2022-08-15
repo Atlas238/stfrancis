@@ -74,7 +74,7 @@ export default function Client({client}) {
                     {mapped}
                 </ul>
                 <label>Last Visit Notes:</label>
-                <p></p>
+                <p>{client?.clientNote}</p>
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 
