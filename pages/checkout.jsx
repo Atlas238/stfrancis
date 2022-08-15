@@ -34,7 +34,6 @@ export default function checkout() {
 
     // Client ID from query parameters
     const { id } = router.query
-
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
     });
@@ -68,7 +67,6 @@ export default function checkout() {
 
     // fill fields with checkin info
     const fillFieldswithCheckinInfo = (checkinData) => {
-        document.getElementById('familySize').value = checkinData.familySize
         document.getElementById('backpack').checked = checkinData.backpack
         document.getElementById('sleepingbag').checked = checkinData.sleepingbag
         document.getElementById('busTicket').value = checkinData.busTicket
@@ -97,9 +95,9 @@ export default function checkout() {
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Intake Form</h1>
-                <div className="grid-cols-2">
+                <div className="grid grid-cols-2">
                     <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" id="familySize" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label>
+                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size: 1</label>
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
