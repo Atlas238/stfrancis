@@ -53,7 +53,7 @@ export default function Client({client}) {
     }
 
     // Easy way to return html elements from an array of anykind
-    let eligibleItems = client?.visits.map((visit) => {
+    let eligibleItems = client?.visits?.map((visit) => {
         //compare lastBackpack Date to Date.now
         let rightNow = Date.now()
         let diff = getDateDifference()
