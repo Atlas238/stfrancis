@@ -90,6 +90,7 @@ export default function checkout() {
             let data = await res.json()
             setClient(data[0])
         }
+
         let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
         
         if (checkinClient != null | checkinClient != undefined){
@@ -106,7 +107,7 @@ export default function checkout() {
 
     return (
        <div className="mt-20">
-            <div className="card mx-auto w-10/12">
+            <div className="card mx-auto w-10/12 hide">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Check-In Form</h1>
                 <div className="grid grid-cols-2">
