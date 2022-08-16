@@ -27,18 +27,17 @@ export default function checkedin() {
 
     return (
         <div className="mx-auto mt-40 w-screen px-10">
-            {loading ? 
-            <div>
+            <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
+            <div className="divider"></div>
+            {
+            loading ? 
+            <div className="w-fit mx-auto px-10">
                 <BallTriangle color="#000000" width={100} height={100} timeout={3000} />
             </div>
             :  
-            <>
-                <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
-                <div className="divider"></div>
-                <div className="flex mx-auto container flex-row flex-wrap justify-center">
-                    {mapped} 
-                </div>  
-           </>
+            <div className="flex mx-auto container flex-row flex-wrap justify-center">
+                {mapped} 
+            </div>  
            }
         </div>
     )
