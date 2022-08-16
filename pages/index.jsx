@@ -1,5 +1,5 @@
-
 import { useState, useEffect } from 'react';
+import { BallTriangle } from 'react-loader-spinner'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import { userService } from '../services/user.service';
@@ -63,6 +63,7 @@ export default function Home() {
         let clients = await res.json()
         if (clients.length != 0) setDbClients(clients)
         console.log(clients)
+        setLoading(false)
     }
 
     // Handled by YUP, transfers error from Yup to other state variable
@@ -88,7 +89,6 @@ export default function Home() {
             lastName: document.getElementById("lastName").value,
             dateOfBirth: document.getElementById("dateOfBirth").value
         }
-        console.log(basicInfo)
         localStorage.setItem('partialClient', JSON.stringify(basicInfo))
         
         router.push('/newclient')
@@ -139,7 +139,7 @@ export default function Home() {
             </form>
 
             {/* Render Client list - Select desired Client + Check them in */}
-            <div className={`${loading ? "visible" : "hidden"}`}><div className="spinner"></div></div>
+            <div className={`${loading ? "visible" : "hidden"} mx-auto`}><BallTriangle color="#000000" height={100} width={100} timeout={3000} /></div>
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
                 {dbClients?.length > 0 ? dbClients.map(client => { return <Client client={client} key={client.clientID} />}) : <div className={`flex flex-col ${loading ? "hidden" : 'visible'}`}><h3 className='text-3xl text-center p-4'>Whoops!</h3><p className="text-xl">Looks like we couldn't find anyone... Check the information entered and please try again!</p></div>}
             </div>
