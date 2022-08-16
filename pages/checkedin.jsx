@@ -23,6 +23,7 @@ export default function checkedin() {
             }
             setLoading(false)
         }
+        getClients()
     },[])
 
     return (
