@@ -93,7 +93,7 @@ export default function Client({client}) {
                 <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
 
                 <label>Last Visit Notes:</label>
-                <p>{client?.visits ? client?.visits[0].request : ""}</p>
+                <p>{client?.visits ? client?.visits[0]?.request : ""}</p>
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 
@@ -116,7 +116,7 @@ export default function Client({client}) {
                     <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
 
                     <label>Last Visit Notes:</label>
-                    <p>{client?.visits ? client?.visits[0].request : ""}</p>
+                    <p>{client?.visits ? client?.visits[0]?.request : ""}</p>
                     <div className="card-actions justify-end">
                         { view === 0 || checkedIn === true 
                         ? <></> 
