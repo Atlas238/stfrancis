@@ -117,7 +117,7 @@ export default function updateclient({ data }) {
         document.getElementById('dateOfBirth').valueAsDate = new Date(profile.birthday)
         document.getElementById('gender').value = profile.gender === 'N/A' ? '' : profile.gender
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
-        document.getElementById('postalCode').value = profile.zipCode === 'N/A' ? '' : profile.zipCode
+        document.getElementById('postalCode').value = profile.zipCode === 0 ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
         profile.banned ? handleBanned() : null
     }
