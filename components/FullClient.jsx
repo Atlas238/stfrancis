@@ -72,7 +72,7 @@ export default function FullClient({ client }) {
             <div className="card-body min-w-full">
                 <div className="grid grid-flow-col">
                     <div>
-                        <h1 className="card-title text-5xl">{client?.firstName} {client?.middleInitial}. {client?.lastName} {client?.banned ?
+                        <h1 className="card-title text-5xl">{client?.firstName} {client?.middleInitial===undefined || client?.middleInitial==='' ? '' : client?.middleInitial + '.'} {client?.lastName} {client?.banned ?
                             <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} 
                         </h1>
                     </div>
