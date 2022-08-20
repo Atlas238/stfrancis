@@ -63,10 +63,40 @@ export default function updateclient({ data }) {
     }
     
 
-    const deleteClient = () => {
-        console.log("delete client " + id)
-        // if checked in, remove from checked in
+    const deleteClient = async () => {
+        console.log(id)
+        console.log(typeof(id))
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+        console.log(checkedInClients)
+        console.log(checkedInClientDict)
         // delete client by id (add route)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteClientByID?clientID=${id}`)
+        // if successful
+        if(response.ok && response.status===200){
+            // if checked in, remove from checkedInClients list
+            let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+            let updatedCheckedInClients = []
+            checkedInClients?.forEach(c => {
+                if (c.clientID !== Number(id)) updatedCheckedInClients.push(c)
+            })
+            localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
+
+            // if checked in, remove client from checkedInClientDict list
+            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+            if (Number(id) in checkedInClientDict){
+                delete checkedInClientDict[Number(id)]
+                localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+            } 
+
+            // display successful popup
+            alert("Successfully Deleted")
+            // go back to index page
+            router.push(`/`)
+        }else{
+            // display unsuccessful alert
+            alert("Deleting Failed")
+        }
     }
 
     const back = ()  => {
@@ -189,7 +219,7 @@ export default function updateclient({ data }) {
                         <label htmlFor="my-modal" className="modal cursor-pointer">                    
                         <label className="modal-box relative" htmlFor="my-modal">
                             <label htmlFor="my-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                            <h3 className="text-center text-lg font-bold">Some Message</h3>
+                            <h3 className="text-center text-lg font-bold">Delete this profile?</h3>
                             <div className="modal-action justify-center">
                                 <label onClick={()=> {deleteClient()}} htmlFor="my-modal" className="btn btn-sm btn-warning">DELETE</label>
                             </div>
