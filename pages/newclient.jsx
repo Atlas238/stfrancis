@@ -45,12 +45,14 @@ export default function newclient() {
             if (goToCheckin) {
                 // get json data from server
                 let res = await response.json()
-                // add clientID to data object
-                data.clientID = res?.clientID
-                // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
-                localStorage.setItem("tmpCheckinClient", JSON.stringify(data))
-                // go to checkin page
-                router.push(`/checkin?id=${id}`)
+                if(res.length > 0){
+                    // add clientID to data object
+                    data.clientID = res[0].clientID
+                    // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data))
+                    // go to checkin page
+                    router.push(`/checkin?id=${data.clientID}`)
+                }
             }
             else{
                 // go back to index page
