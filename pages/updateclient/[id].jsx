@@ -38,6 +38,7 @@ export default function updateclient({ data }) {
     });
     const {errors} = formState;
     const [banned, setBanned] = useState(false)
+    const [isCheckedIn, setIsCheckedIn] = useState(false)
     const [goToCheckin, setGoToCheckin] = useState(false)
 
     const submitForm = async (updateClient) => {
@@ -129,6 +130,12 @@ export default function updateclient({ data }) {
     }
 
     useEffect(() => {
+        // get checkedInClients from localstorage
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        // if client is checked in, set isCheckedIn to true
+        if (checkedInClients?.some(c => c.clientID === Number(id))) {
+            setIsCheckedIn(true)
+        }
         
         if(data.length !== 0) {
             fillFieldswithProfile(data[0])
@@ -216,7 +223,7 @@ export default function updateclient({ data }) {
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
-                        <button type="submit" onClick={()=> {checkinClient()}} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
+                        {isCheckedIn? <></> : <button type="submit" onClick={()=> {checkinClient()}} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>}
                         <button onClick={()=> back()} className="btn btn-wide btn-secondary p-2 my-2 m-8">Back</button>
                     </div>
                     <div className='card-actions justify-end my-0 py-0'>
