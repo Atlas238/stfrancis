@@ -30,8 +30,7 @@ export default function FullClient({ client }) {
 
     const deleteVisit = async () => {
         let visitID = document.getElementById('visitDelete').value
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/?visitID=${visitID}`)
-        let data = await response.json()
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteVisitByID?visitID=${visitID}`)
 
         window.location.reload()
     }
