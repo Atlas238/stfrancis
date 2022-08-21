@@ -41,46 +41,31 @@ export default function checkout() {
 
     const submitForm = async (data) => {
         setFormData(data)
-        // Convert client to checkin model ->
-        let checkinModel = {
-            clientID: client.clientID,
-            checkinDate: new window.Date()
+
+        // store client to chckedInClients localstorage
+        let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
+        if (checkedInClients === undefined || checkedInClients === null) {
+            checkedInClients = []
+            checkedInClients.push(client)
+        } else {
+            checkedInClients.push(client)
         }
+        localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
+
+        // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
+        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+        if (checkedInClientDict === undefined || checkedInClientDict === null) {
+            checkedInClientDict = {}
+            checkedInClientDict[client.clientID] = data
+        } else {
+            checkedInClientDict[client.clientID] = data
+        }
+        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
         
-        // Create a visit with client ID // response has visitID ?
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
-        // if successful
-        if(response.ok && response.status===200){
-
-            // store client to chckedInClients localstorage
-            let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
-            if (checkedInClients === undefined || checkedInClients === null) {
-                checkedInClients = []
-                checkedInClients.push(client)
-            } else {
-                checkedInClients.push(client)
-            }
-            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
-
-            // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
-            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-            if (checkedInClientDict === undefined || checkedInClientDict === null) {
-                checkedInClientDict = {}
-                checkedInClientDict[client.clientID] = data
-            } else {
-                checkedInClientDict[client.clientID] = data
-            }
-            localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-
-            // redirect to home
-
-            printForm() // Print!
-
-            router.push(`/`)
-
-        }else{
-            // failed to check in
-        }           
+        printForm() // Print!
+        
+        // redirect to home
+        router.push(`/`)           
     }
 
     useEffect(() => {
