@@ -38,19 +38,26 @@ export default function updateclient({ data }) {
     });
     const {errors} = formState;
     const [banned, setBanned] = useState(false)
+    const [goToCheckin, setGoToCheckin] = useState(false)
 
     const submitForm = async (updateClient) => {
-        console.log(updateClient)
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
         // if successful
         if(response.ok && response.status===200){
-            console.log("SUCCESS")
             alert("Successfully Saved")
-            // go back to profile page
-            router.push(`/profile/${id}`)
+            if (goToCheckin) {
+                // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+                localStorage.setItem("tmpCheckinClient", JSON.stringify(updateClient))
+                // go to checkin page
+                router.push(`/checkin?id=${id}`)
+            }
+            else{
+                // go back to profile page
+                router.push(`/profile/${id}`)
+            }
         }else{
             // display unsuccessful popup
             alert("Saving Failed")
@@ -58,8 +65,7 @@ export default function updateclient({ data }) {
     }
 
     const checkinClient = () => {
-        console.log(updateClient) //save to localstorage somehow?
-        // let currentCheckedIn = JSON.parse(localStorage.getItem("checkedInClients") === null || undefined ? {} : localStorage.getItem('checkedInClients'))
+        setGoToCheckin(true)
     }
     
 
@@ -210,7 +216,7 @@ export default function updateclient({ data }) {
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
-                        <button onClick={()=> { submitForm(); checkinClient() }} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
+                        <button type="submit" onClick={()=> {checkinClient()}} className="btn btn-wide btn-secondary p-2 my-2 m-8">Update and Checkin</button>
                         <button onClick={()=> back()} className="btn btn-wide btn-secondary p-2 my-2 m-8">Back</button>
                     </div>
                     <div className='card-actions justify-end my-0 py-0'>
