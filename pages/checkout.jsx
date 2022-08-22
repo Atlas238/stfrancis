@@ -43,34 +43,40 @@ export default function checkout() {
     const submitForm = async (data) => {
         console.log(data)
 
-        // Convert client to checkin model ->
-        let checkinModel = {
-            clientID: client.clientID,
-            checkinDate: new window.Date()
-        }
-        console.log(checkinModel)
-        // Create a visit with client ID
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
-        if(response.ok && response.status===200){
-                    // Remove client from checkedin list
-            let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-            let updatedCheckedInClients = []
-            checkedInClients?.forEach(c => {
-                if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
-            })
-            localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-
-            // Remove client from checkedInClientDict list
-            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-            if (client.clientID in checkedInClientDict){
-                delete checkedInClientDict[client.clientID]
+        // Create visit record and check out record when client received items, if not, visit will not be created
+        if (data.menClothing || data.womenClothing || data.boyClothing || data.girlClothing || data.busTicket || data.giftCard || data.diaper || data.financialAssistance || data.backpack || data.sleeingbag || data.notes!=="") {
+            // Create a visit record with client ID
+            let visitID = null
+            let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`)
+            if(response.ok && response.status===200){
+                console.log("Visit created")
+                let data = await response.json()
+                visitID = data
             }
-            localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-
-            //Move them back to the checkedin page
-            router.push('/checkedin');
-
+            // Create a check out record with visit ID and form data
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}`)
+            if(response.ok && response.status===200){
+                console.log("Checkout record created")
+            }
         }
+
+        // Remove client from checkedin list
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        let updatedCheckedInClients = []
+        checkedInClients?.forEach(c => {
+            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+        })
+        localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
+
+        // Remove client from checkedInClientDict list
+        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+        if (client.clientID in checkedInClientDict){
+            delete checkedInClientDict[client.clientID]
+        }
+        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+
+        //Move them back to the checkedin page
+        router.push('/checkedin');
 
     }
 
@@ -83,6 +89,13 @@ export default function checkout() {
         document.getElementById('diaper').value = checkinData.diaper
         document.getElementById('financialAssistance').value = checkinData.financialAssistance
         document.getElementById('notes').value = checkinData.notes
+        document.getElementById('backpack').focus()
+        document.getElementById('sleepingbag').focus()
+        document.getElementById('busTicket').focus()
+        document.getElementById('giftCard').focus()
+        document.getElementById('diaper').focus()
+        document.getElementById('financialAssistance').focus()
+        document.getElementById('notes').focus()
     }
 
     useEffect(() => {

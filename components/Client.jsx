@@ -60,6 +60,27 @@ export default function Client({client}) {
             }
         }
 
+        // Set eligible items to client object
+        client.eligibleItems = []
+        if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+            let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+            let today = new Date(Date.now())
+            const diffTime = Math.abs(today - lastBackpack)
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            if (diffDays > 30) {    // backpack every 30 days
+                client.eligibleItems.push('Backpack')
+            }
+        }
+        if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+            let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+            let today = new Date(Date.now())
+            const diffTime = Math.abs(today - lastSleepingBag)
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            if (diffDays > 30*6) {  // sleeping bag every 6 months
+                client.eligibleItems.push('Sleeping Bag')
+            }
+        }
+
     }, [localStorage.getItem('checkedInClients'), window.location.pathname])
 
 
@@ -79,7 +100,8 @@ export default function Client({client}) {
                 {client?.banned ? <h1 className="font-bold text-center text-lg bg-red-900 text-primary rounded-md px-4">BANNED</h1> : <></>}
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <div className="divider"></div>
-                {isEarly ? <><h4 className="text-xl text-center font-bold">Early!</h4><p className="text-center text-lg">Last Visit was {daysAgo} days ago.</p></> :
+                {isEarly ? <><h4 className="text-xl text-center font-bold">Early!</h4><p className="text-center text-lg">Last Visit was {daysAgo} days ago.</p>
+                <div className="card-actions justify-end"><button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button></div></> :
                 daysAgo > 25 ? 
                 <>
                 <h4 className="text-xl text-center font-bold">Early!</h4><p className="text-center text-lg">Last Visit was {daysAgo} days ago.</p>
@@ -92,7 +114,7 @@ export default function Client({client}) {
                 <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
 
                 <label>Last Visit Notes:</label>
-                <p>{client?.visits ? client?.visits[0].request : ""}</p>
+                <p>{client?.visits ? client?.visits[0]?.request : ""}</p>
                 <div className="card-actions justify-end">
                     { view === 0 || checkedIn === true 
                     ? <></> 
@@ -115,7 +137,7 @@ export default function Client({client}) {
                     <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
 
                     <label>Last Visit Notes:</label>
-                    <p>{client?.visits ? client?.visits[0].request : ""}</p>
+                    <p>{client?.visits ? client?.visits[0]?.request : ""}</p>
                     <div className="card-actions justify-end">
                         { view === 0 || checkedIn === true 
                         ? <></> 
