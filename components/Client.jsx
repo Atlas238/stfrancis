@@ -60,6 +60,27 @@ export default function Client({client}) {
             }
         }
 
+        // Set eligible items to client object
+        client.eligibleItems = []
+        if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+            let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+            let today = new Date(Date.now())
+            const diffTime = Math.abs(today - lastBackpack)
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            if (diffDays > 30) {    // backpack every 30 days
+                client.eligibleItems.push('Backpack')
+            }
+        }
+        if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+            let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+            let today = new Date(Date.now())
+            const diffTime = Math.abs(today - lastSleepingBag)
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            if (diffDays > 30*6) {  // sleeping bag every 6 months
+                client.eligibleItems.push('Sleeping Bag')
+            }
+        }
+
     }, [localStorage.getItem('checkedInClients'), window.location.pathname])
 
 
