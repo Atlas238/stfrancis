@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useRouter } from "next/router"
+import Visit from "./Visit";
 
 export default function FullClient({ client }) {
     
     const router = useRouter()
 
     // Use client[0] to get client obj
+
+    // TODO: See All Visits Button - changes view and displays all pages of visits
+    // OTHERWISE just displays the 10 recieved from Client
 
     // Page state is for visit pages
     const [page, setPage] = useState(1)
@@ -39,19 +43,7 @@ export default function FullClient({ client }) {
     // Creates mini components for the visits
     let mappedVisits = client?.visits?.map((visit) => {
         return (
-            <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
-                <div className="card-body">
-                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visit.visitDate?.split("T")[0]}</h3>
-                    <div className="flex flex-row justify-between">
-                    <ul className="ml-3">
-                        <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack?.split("T")[0]}</li>
-                        <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag?.split("T")[0]}</li>
-                        <li><span className="font-semibold">Requests:</span> {visit.request?.split("T")[0]}</li>
-                    </ul>
-                    <button id="visitDelete" value={visit.visitID} onClick={deleteVisit} className="btn btn-ghost">Delete</button>
-                    </div>
-                </div>
-            </div>
+            <Visit visit={visit} />
         )
     })
 
@@ -63,7 +55,6 @@ export default function FullClient({ client }) {
 
     // Update profile function
     const updateClientProfile = () => {
-        console.log(`/updateclient/${client?.clientID}`)
         router.push(`/updateclient/${client?.clientID}`)
     }
 
@@ -86,10 +77,15 @@ export default function FullClient({ client }) {
                 </ul>
                 <div className="divider"></div>
                 <ul>
-                    {page === 1 ? visitsPageOne : 
-                    page === 2 ? visitsPageTwo : 
-                    page === 3 ? visitsPageThree : 
-                    page === 4 ? visitsPageFour : <></>}
+                    {page === 1 ? 
+                      visitsPageOne 
+                    : page === 2 ? 
+                      visitsPageTwo 
+                    : page === 3 ? 
+                      visitsPageThree 
+                    : page === 4 ? 
+                      visitsPageFour 
+                    : null}
                     <div className="btn-group justify-center">
                         { visitsPageTwo?.length > 0 ? <button className={`btn ${page == 1 ? "btn-active" : ""}`} onClick={()=>{setPage(1)}}>1</button> : <></>}
                         { visitsPageTwo?.length > 0 ? <button className={`btn ${page == 2 ? "btn-active" : ""}`} onClick={()=>{setPage(2)}}>2</button> : <></>}
