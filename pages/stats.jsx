@@ -1,18 +1,58 @@
+import { useEffect, useState } from "react"
+
 export default function stats() {
     // Todays Date for future use...
-    const currentDate = Date.now()
+    const [today, setToday] = useState(null)
+    const [monthPrior, setMonthPrior] = useState(null)
+    const [yearPrior, setYearPrior] = useState(null)
 
+    const [statsData, setStatsData] = useState(null)
+
+    const subtractMonths = (numMonths, date) => {
+        date.setMonth(date.getMonth() - numMonths)
+
+        return date
+    }
+
+    useEffect(() => {
+        // Get all Dates set
+        let dateToday = new Date(Date.now())
+        setToday(dateToday)
+        setMonthPrior(subtractMonths(1, dateToday))
+        setYearPrior(subtractMonths(12, dateToday))
+    },[])
+
+    // Update with routes
     const getSummaryStats = async () => {
         // Fetch Total Clients Served in the last month
+        let totalClientsResponse = await fetch()
+        let totalClientsData = await totalClientsResponse.json()
 
         // Fetch Total New Clients in the last month
+        let newClientsResponse = await fetch()
+        let newClientsData = await newClientsResponse.json()
 
         // Fetch Total Visits in the last month
+        let totalVisitResponse = await fetch()
+        let totalVisitData = await totalVisitResponse.json()
 
         // Fetch Total FAMILIES served in the last month
             // count of clients with family size > 0 + lastVisitDate sooner than 30Days before today
+        let totalFamiliesResponse = await fetch()
+        let totalFamiliesData = await totalFamiliesResponse.json()
 
         // Demographics of Clients Served in the last month
+        let clientsServedByDemoResponse = await fetch()
+        let clientsServedByDemoData = await clientsServedByDemoResponse.json()
+
+
+        setStatsData({
+            totalClients: totalClientsData,
+            newClients: newClientsData,
+            totalVisits: totalVisitData,
+            totalFamilies: totalFamiliesData,
+            demographics: clientsServedByDemoData
+        })
     }
 
     return (
