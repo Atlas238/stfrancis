@@ -11,6 +11,8 @@ export default function stats() {
 
         // Fetch Total FAMILIES served in the last month
             // count of clients with family size > 0 + lastVisitDate sooner than 30Days before today
+
+        // Demographics of Clients Served in the last month
     }
 
     return (
