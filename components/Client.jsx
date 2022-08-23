@@ -1,5 +1,8 @@
 import {useRouter} from "next/router"
 import {useEffect, useState} from "react"
+import Banned from "./Banned"
+import ClientBody from "./ClientBody"
+import Early from "./Early"
 
 export default function Client({client}) {
     // State variables used to control component render
@@ -28,6 +31,16 @@ export default function Client({client}) {
         router.push(`/checkin?id=${client.clientID}`)
     }
 
+    function getDateDifference(rightNow, compareDate) {
+        let diff = Math.abs(rightNow - compareDate)
+        let daysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24))
+        return daysDiff
+    }
+
+    let mapped = client?.eligibleItems?.map(item => {
+        return <li key={item}>{item}</li>
+    })
+
     useEffect(() => {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
@@ -51,8 +64,7 @@ export default function Client({client}) {
 
             let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
             let today = new Date(Date.now())
-            const diffTime = Math.abs(today - lastVisit)
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+            const diffDays = getDateDifference(today, lastVisit)
 
             if (diffDays < 30) {
                 setIsEarly(true)
@@ -62,72 +74,44 @@ export default function Client({client}) {
 
     }, [localStorage.getItem('checkedInClients'), window.location.pathname])
 
-
-    function getDateDifference(rightNow, compareDate) {
-        let diff = Math.abs(rightNow - compareDate)
-        let daysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24))
-        return daysDiff
-    }
-
-    let mapped = client?.eligibleItems?.map(item => {
-        return <li key={item}>{item}</li>
-    })
-
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
             <div className="card-body">
-                {client?.banned ? <h1 className="font-bold text-center text-lg bg-red-900 text-primary rounded-md px-4">BANNED</h1> : <></>}
+
+                {client?.banned ? 
+                  <Banned />
+                : null }
+
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <div className="divider"></div>
-                {isEarly ? <><h4 className="text-xl text-center font-bold">Early!</h4><p className="text-center text-lg">Last Visit was {daysAgo} days ago.</p></> :
-                daysAgo > 25 ? 
-                <>
-                <h4 className="text-xl text-center font-bold">Early!</h4><p className="text-center text-lg">Last Visit was {daysAgo} days ago.</p>
-                <p>Allowed this vist:</p>
-                <ul>
-                    {mapped}
-                </ul>
-                <label>Client Notes:</label>
-                {/* Roy Williams has notes */}
-                <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
 
-                <label>Last Visit Notes:</label>
-                <p>{client?.visits ? client?.visits[0].request : ""}</p>
-                <div className="card-actions justify-end">
-                    { view === 0 || checkedIn === true 
-                    ? <></> 
-                    : view === 1 && client?.banned === false 
-                    ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
-                    : view === 2 && client?.banned === false
-                    ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
-                    : <></>}
-                    <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
-                </div>
+                {isEarly ? 
+                    <Early daysAgo={daysAgo} />
+                : daysAgo > 25 ? 
+                <>
+                    <Early daysAgo={daysAgo} />
+                    <ClientBody
+                        client={client} 
+                        mapped={mapped} 
+                        view={view} 
+                        checkedIn={checkedIn} 
+                        handleCheckin={handleCheckin} 
+                        handleCheckout={handleCheckout} 
+                        goToProfile={goToProfile} 
+                    />
                 </>
                 :
-                <>
-                    <p>Allowed this vist:</p>
-                    <ul>
-                        {mapped}
-                    </ul>
-                    <label>Client Notes:</label>
-                    {/* Roy Williams has notes */}
-                    <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
-
-                    <label>Last Visit Notes:</label>
-                    <p>{client?.visits ? client?.visits[0].request : ""}</p>
-                    <div className="card-actions justify-end">
-                        { view === 0 || checkedIn === true 
-                        ? <></> 
-                        : view === 1 && client?.banned === false 
-                        ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
-                        : view === 2 && client?.banned === false
-                        ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
-                        : <></>}
-                        <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
-                    </div>
-                </>
+                <ClientBody 
+                    client={client} 
+                    mapped={mapped} 
+                    view={view} 
+                    checkedIn={checkedIn} 
+                    handleCheckin={handleCheckin} 
+                    handleCheckout={handleCheckout} 
+                    goToProfile={goToProfile} 
+                />
                 }
+
             </div>
         </div>
     )
