@@ -10,6 +10,7 @@ export default function Client({client}) {
     const [checkedIn, setCheckedIn] = useState(false)
     const [isEarly, setIsEarly] = useState(null)
     const [daysAgo, setDaysAgo] = useState(0)
+    const [settings, setSettings] = useState(null)
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
@@ -58,21 +59,29 @@ export default function Client({client}) {
         checkedInClients?.forEach(c => {
             if (c.clientID === client.clientID) setView(2)
         })
-        console.log(client)
+
+        async function getSettings() {
+            let res = await fetch('/api/settings', { method: 'GET' })
+            let data = await res.json()
+            setSettings(data)
+        }
+
 
         if (client.visits != null || client.visits != undefined) {
+
+            getSettings()
 
             let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
             let today = new Date(Date.now())
             const diffDays = getDateDifference(today, lastVisit)
 
-            if (diffDays < 30) {
+            if (diffDays > settings?.daysEarlyThreshold) {
                 setIsEarly(true)
                 setDaysAgo(diffDays)
             }
         }
 
-    }, [localStorage.getItem('checkedInClients'), window.location.pathname])
+    }, [localStorage.getItem('checkedInClients'), window.location.pathname, settings])
 
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
@@ -85,9 +94,7 @@ export default function Client({client}) {
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <div className="divider"></div>
 
-                {isEarly ? 
-                    <Early daysAgo={daysAgo} />
-                : daysAgo > 25 ? 
+                {daysAgo < settings?.daysEarlyThreshold ? 
                 <>
                     <Early daysAgo={daysAgo} />
                     <ClientBody
