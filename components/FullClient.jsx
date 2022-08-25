@@ -43,7 +43,7 @@ export default function FullClient({ client }) {
     // Creates mini components for the visits
     let mappedVisits = client?.visits?.map((visit) => {
         return (
-            <Visit visit={visit} />
+            <Visit visit={visit} deleteVisit={deleteVisit}/>
         )
     })
 
