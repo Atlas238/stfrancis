@@ -1,6 +1,7 @@
 import * as Yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 
+import { useState } from 'react'
 import { useForm } from "react-hook-form"
 
 const clientLookupSchema = Yup.object().shape({
