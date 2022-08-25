@@ -1,11 +1,9 @@
-import { RiSearchLine } from 'react-icons/ri'
-import { useState } from "react"
-import { useForm } from "react-hook-form"
-
 import * as Yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useRouter } from "next/router"
 
+import { useState } from 'react'
+import { useForm } from "react-hook-form"
 
 const clientLookupSchema = Yup.object().shape({
     firstName: Yup.string(),
