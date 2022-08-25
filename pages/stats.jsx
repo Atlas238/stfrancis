@@ -4,7 +4,10 @@ export default function stats() {
     // Todays Date for future use...
     const [today, setToday] = useState(null)
     const [monthPrior, setMonthPrior] = useState(null)
+    const [sixMonthPrior, setSixMonthPrior] = useState(null)
     const [yearPrior, setYearPrior] = useState(null)
+
+    const [range, setRange] = useState('Month')
 
     const [statsData, setStatsData] = useState(null)
 
@@ -19,6 +22,7 @@ export default function stats() {
         let dateToday = new Date(Date.now())
         setToday(dateToday)
         setMonthPrior(subtractMonths(1, dateToday))
+        setSixMonthPrior(subtractMonths(6, dateToday))
         setYearPrior(subtractMonths(12, dateToday))
     },[])
 
@@ -56,8 +60,10 @@ export default function stats() {
     }
 
     return (
-        <div>
+        <div className="py-40">
             {/* Summary Stats - Total Clients Serviced (Last Month)*/}
+            <h1>In the last {range}...</h1>
+
             <div class="stats shadow">
                 <div class="stat">
                     <div class="stat-figure text-primary">
@@ -76,7 +82,6 @@ export default function stats() {
                     <div class="stat-value text-secondary">2.6M</div>
                     <div class="stat-desc">21% more than last month</div>
                 </div>
-  
             </div>
         </div>
     )
