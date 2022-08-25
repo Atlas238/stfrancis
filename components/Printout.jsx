@@ -54,6 +54,17 @@ export default function Printout({ formData, client }) {
                 :
                 <></>}
 
+                {formData.household ? 
+                <div className="flex flex-col mt-5">
+                    <h2 className="text-xl pl-10 font-semibold">Houshold</h2>
+                    <div className="p-2">
+                        <div className="border border-black border-sold w-10 h-10 p-4 ml-5"></div>
+                    </div>
+                </div>
+                :
+                <></>
+                }
+
                 {/* Special Requests */}
                 {formData.sleepingbag | formData.backpack | formData.busTicket | formData.giftCard ?  
                 <div className='flex flex-col mt-5'>
