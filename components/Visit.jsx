@@ -1,4 +1,4 @@
-export default function Visit({ visit }) {
+export default function Visit({ visit, deleteVisit }) {
     return (
         <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
             <div className="card-body">
