@@ -6,6 +6,7 @@ import Client from '../components/Client'
 import Loading from '../components/Loading';
 import SearchForm from '../components/SearchForm';
 import SearchError from '../components/SearchError';
+import { render } from 'react-dom';
 
 // Main Landing Page
 export default function Home() {
@@ -14,10 +15,28 @@ export default function Home() {
     const [users, setUsers] = useState(null)
     const [dbClients, setDbClients] = useState(null)
     const [submitted, setSubmitted] = useState(false)
+    const [lastClients, setLastClients] = useState(null)
     const [loading, setLoading] = useState(false)
 
     // Subscribes to the loggedin user
     useEffect(() => {
+        if (localStorage.getItem('lastClients') != undefined) {
+            setLastClients(JSON.parse(localStorage.getItem('lastClients')))
+        } else {
+            setLastClients(null)
+        }
+        let history = JSON.parse(localStorage.getItem('history'))
+        if (history.length > 3) {
+            history = history.splice(1, 3)
+            localStorage.setItem('history', JSON.stringify(history))
+        }
+        if (history[0] === '/' && history[1] === '/' && history[2] === '/') {
+            console.log('here')
+            setLastClients(null)
+            localStorage.setItem('lastClients', undefined)
+        }
+        
+
         const subscription = userService.user.subscribe(x => setUsers(x));
         return () => subscription.unsubscribe()
     }, []);
@@ -28,6 +47,7 @@ export default function Home() {
             <SearchForm 
                 setDbClients={setDbClients} 
                 setSubmitted={setSubmitted} 
+                setLastClients={setLastClients}
                 setLoading={setLoading}
             />
 
@@ -42,6 +62,16 @@ export default function Home() {
                 : 
                 <SearchError loading={loading} />
                 }
+            </div>
+            <div className='mx-auto container flex flex-row flex-wrap justify-center'>
+
+               {
+               JSON.parse(localStorage.getItem('history'))[-0] === JSON.parse(localStorage.getItem('history'))[-1]  ?
+               <></>
+               :
+               lastClients?.map((client) => {
+                    return <Client key={client.clientID} client={client} />
+                })}
             </div>
         </div>
     )
