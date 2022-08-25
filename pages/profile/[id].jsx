@@ -28,9 +28,9 @@ export default function profile() {
     return (
         <div className="py-20">
             {loading ? 
-              <Loading loading={loading} /> 
+              <Loading loading={loading} options={'py-10 mx-auto w-3/12'} />
             : 
-              <FullClient client={client} />
+              <FullClient key={client.clientID} client={client} />
             }
         </div>
     )
