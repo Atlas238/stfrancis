@@ -21,6 +21,7 @@ const checkoutSchema = Yup.object().shape({
     financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    household: Yup.string(),
     notes: Yup.string(),
 },[]);
 
@@ -124,7 +125,11 @@ export default function checkout() {
 
                     </div>
                 </div>
-
+                {/* Household */}
+                <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                    <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
+                    <textarea id="household" name="household" {...register('household')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
+                </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
