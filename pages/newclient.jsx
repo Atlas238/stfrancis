@@ -15,7 +15,7 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired()
+    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null)
 },
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
@@ -146,7 +146,7 @@ export default function newclient() {
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl"># People in Family</label>
-                            <input type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                     </div>

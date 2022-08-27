@@ -13,7 +13,7 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired(),
+    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     banned: Yup.bool()
 },
 // add cyclic dependencies for requiring itself
@@ -45,7 +45,7 @@ export default function updateclient({ data }) {
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&suffix=""&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
         // if successful
         if(response.ok && response.status===200){
             alert("Successfully Saved")
@@ -217,7 +217,7 @@ export default function updateclient({ data }) {
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl"># People in Family</label>
-                            <input id="familyId" type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input id="familySize" type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                     </div>
