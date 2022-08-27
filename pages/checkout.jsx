@@ -16,14 +16,9 @@ const checkoutSchema = Yup.object().shape({
     giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
-    // soap: Yup.boolean(),
-    // shampCondit: Yup.boolean(),    
-    // lotion: Yup.boolean(),    
-    // razoe: Yup.boolean(),    
-    // toothPaste: Yup.boolean(),    
-    // toothBrush: Yup.boolean(),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    household: Yup.string(),
     notes: Yup.string(),
 },[]);
 
@@ -88,6 +83,7 @@ export default function checkout() {
         document.getElementById('giftCard').value = checkinData.giftCard
         document.getElementById('diaper').value = checkinData.diaper
         document.getElementById('financialAssistance').value = checkinData.financialAssistance
+        document.getElementById('household').value = checkinData.household
         document.getElementById('notes').value = checkinData.notes
         document.getElementById('backpack').focus()
         document.getElementById('sleepingbag').focus()
@@ -95,6 +91,7 @@ export default function checkout() {
         document.getElementById('giftCard').focus()
         document.getElementById('diaper').focus()
         document.getElementById('financialAssistance').focus()
+        document.getElementById('household').focus()
         document.getElementById('notes').focus()
     }
 
@@ -147,35 +144,10 @@ export default function checkout() {
                 </div>
 
                 {/* Household */}
-                {/* <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
-                    <div className="collapse-content flex-auto grid grid-cols-6 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Bed Sets</span> 
-                            <input type="checkbox" name="Bed Sets" {...register('Bed Sets')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Cleaning Supplies</span> 
-                            <input type="checkbox" name="Cleaning Supplies" {...register('Cleaning Supplies')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Diapers</span> 
-                            <input type="checkbox" name="Diapers" {...register('Diapers')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Hygiene Kit</span> 
-                            <input type="checkbox" name="Hygiene Kit" {...register('Hygiene Kit')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Kitchenware</span> 
-                            <input type="checkbox" name="Kitchenware" {...register('Kitchenware')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Umbrella</span> 
-                            <input type="checkbox" name="Umbrella" {...register('Umbrella')} className="checkbox checkbox-lg" />
-                        </label>
-                    </div>
-                </div> */}
+                    <textarea id="household" name="household" {...register('household')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
+                </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
