@@ -45,7 +45,7 @@ export default function updateclient({ data }) {
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numFamily=${updateClient.familySize}`)
         // if successful
         if(response.ok && response.status===200){
             alert("Successfully Saved")
@@ -126,6 +126,7 @@ export default function updateclient({ data }) {
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
         document.getElementById('postalCode').value = profile.zipCode === 0 ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
+        document.getElementById('familySize').value = profile.numFamily
         profile.banned ? handleBanned() : null
     }
 
