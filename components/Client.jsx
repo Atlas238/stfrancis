@@ -67,18 +67,22 @@ export default function Client({client}) {
             let today = new Date(Date.now())
             const diffTime = Math.abs(today - lastBackpack)
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-            if (diffDays > 30) {    // backpack every 30 days
+            if (diffDays > 91) {    // backpack every 3 months
                 client.eligibleItems.push('Backpack')
             }
+        } else {
+            client.eligibleItems.push('Backpack')
         }
         if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
             let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
             let today = new Date(Date.now())
             const diffTime = Math.abs(today - lastSleepingBag)
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-            if (diffDays > 30*6) {  // sleeping bag every 6 months
+            if (diffDays > 182) {  // sleeping bag every 6 months
                 client.eligibleItems.push('Sleeping Bag')
             }
+        } else {
+            client.eligibleItems.push('Sleeping Bag')
         }
 
     }, [localStorage.getItem('checkedInClients'), window.location.pathname])

@@ -16,14 +16,9 @@ const checkoutSchema = Yup.object().shape({
     giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
-    // soap: Yup.boolean(),
-    // shampCondit: Yup.boolean(),    
-    // lotion: Yup.boolean(),    
-    // razoe: Yup.boolean(),    
-    // toothPaste: Yup.boolean(),    
-    // toothBrush: Yup.boolean(),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    household: Yup.string(),
     notes: Yup.string(),
 },[]);
 
@@ -31,6 +26,7 @@ const checkoutSchema = Yup.object().shape({
 export default function checkout() {
     const router = useRouter()
     const [client, setClient] = useState(null)
+    const [banned, setBanned] = useState(false)
 
     // Client ID from query parameters
     const { id } = router.query
@@ -57,6 +53,13 @@ export default function checkout() {
             response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}`)
             if(response.ok && response.status===200){
                 console.log("Checkout record created")
+            }
+            // Update banned status if client is banned
+            if(banned){
+                response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${client.clientID}&banned=${banned}`)
+                if(response.ok && response.status===200){
+                    console.log("Banned status updated")
+                }
             }
         }
 
@@ -88,6 +91,7 @@ export default function checkout() {
         document.getElementById('giftCard').value = checkinData.giftCard
         document.getElementById('diaper').value = checkinData.diaper
         document.getElementById('financialAssistance').value = checkinData.financialAssistance
+        document.getElementById('household').value = checkinData.household
         document.getElementById('notes').value = checkinData.notes
         document.getElementById('backpack').focus()
         document.getElementById('sleepingbag').focus()
@@ -95,7 +99,13 @@ export default function checkout() {
         document.getElementById('giftCard').focus()
         document.getElementById('diaper').focus()
         document.getElementById('financialAssistance').focus()
+        document.getElementById('household').focus()
         document.getElementById('notes').focus()
+    }
+    
+    const handleBanned = () => {
+        let isChecked = document.getElementById('banned').checked
+        setBanned(isChecked)
     }
 
     useEffect(() => {
@@ -117,9 +127,15 @@ export default function checkout() {
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Intake Form</h1>
-                <div className="grid grid-cols-2">
-                    <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size: 1</label>
+                <div className="grid grid-flow-col">
+                    <div>
+                        <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
+                        <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
+                    </div>
+                    <div className="flex gap-2 justify-self-end place-items-center">
+                        <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
+                        <div><label className="block label-text text-center">Ban</label><input id="banned" {...register('banned')} onChange={handleBanned} type="checkbox" className="toggle center"/></div>
+                    </div>
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
@@ -147,35 +163,10 @@ export default function checkout() {
                 </div>
 
                 {/* Household */}
-                {/* <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
-                    <div className="collapse-content flex-auto grid grid-cols-6 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Bed Sets</span> 
-                            <input type="checkbox" name="Bed Sets" {...register('Bed Sets')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Cleaning Supplies</span> 
-                            <input type="checkbox" name="Cleaning Supplies" {...register('Cleaning Supplies')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Diapers</span> 
-                            <input type="checkbox" name="Diapers" {...register('Diapers')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Hygiene Kit</span> 
-                            <input type="checkbox" name="Hygiene Kit" {...register('Hygiene Kit')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Kitchenware</span> 
-                            <input type="checkbox" name="Kitchenware" {...register('Kitchenware')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Umbrella</span> 
-                            <input type="checkbox" name="Umbrella" {...register('Umbrella')} className="checkbox checkbox-lg" />
-                        </label>
-                    </div>
-                </div> */}
+                    <textarea id="household" name="household" {...register('household')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
+                </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
@@ -224,7 +215,7 @@ export default function checkout() {
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
                 <div className='divider my-0'></div>
-                <div className="flex p-4">
+                <div className="flex p-4 gap-8">
                     <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>
                     <NavLink href= "/checkedin" className="btn btn-primary btn-sm w-1/2">Back</NavLink>  
                 </div>

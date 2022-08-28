@@ -50,6 +50,7 @@ function App({ Component, pageProps }) {
         <div className="overflow-hidden screen">
             <Head>
                 <title>St Francis House</title>
+                <link rel="icon" href="/favicon.ico" />
             </Head>
 
             <div className="overflow-hidden">

@@ -15,7 +15,7 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired()
+    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null)
 },
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
@@ -36,7 +36,7 @@ export default function newclient() {
 
     const submitForm = async (data) => {
         setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}&numFamily=${data.familySize}`)
         // if successful
         if(response.ok && response.status===200){
             // display successful popup
@@ -146,7 +146,7 @@ export default function newclient() {
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl"># People in Family</label>
-                            <input type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                     </div>
