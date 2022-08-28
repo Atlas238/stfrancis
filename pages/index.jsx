@@ -20,22 +20,13 @@ export default function Home() {
 
     // Subscribes to the loggedin user
     useEffect(() => {
-        if (localStorage.getItem('lastClients') != undefined) {
-            setLastClients(JSON.parse(localStorage.getItem('lastClients')))
+        let stored = localStorage.getItem('lastClients')
+
+        if (stored === undefined | stored === "undefined") {
+            setLastClients(null)
         } else {
-            setLastClients(null)
+            setLastClients(JSON.parse(localStorage.getItem('lastClients')))
         }
-        let history = JSON.parse(localStorage.getItem('history'))
-        if (history.length > 3) {
-            history = history.splice(1, 3)
-            localStorage.setItem('history', JSON.stringify(history))
-        }
-        if (history[0] === '/' && history[1] === '/' && history[2] === '/') {
-            console.log('here')
-            setLastClients(null)
-            localStorage.setItem('lastClients', undefined)
-        }
-        
 
         const subscription = userService.user.subscribe(x => setUsers(x));
         return () => subscription.unsubscribe()
@@ -63,15 +54,20 @@ export default function Home() {
                 <SearchError loading={loading} />
                 }
             </div>
+            {lastClients ? <a 
+                className='btn btn-primary' 
+                onClick={()=>{ 
+                    setLastClients(null) 
+                    localStorage.setItem('lastClients', undefined)}
+                    }>Clear</a> 
+                    : null
+            }
             <div className='mx-auto container flex flex-row flex-wrap justify-center'>
-
-               {
-               JSON.parse(localStorage.getItem('history'))[-0] === JSON.parse(localStorage.getItem('history'))[-1]  ?
-               <></>
-               :
+                {
                lastClients?.map((client) => {
                     return <Client key={client.clientID} client={client} />
-                })}
+                })
+                }
             </div>
         </div>
     )
