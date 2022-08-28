@@ -50,7 +50,7 @@ export default function checkout() {
                 visitID = data
             }
             // Create a check out record with visit ID and form data
-            response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}`)
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}&houseHoldItems=${data.household}`)
             if(response.ok && response.status===200){
                 console.log("Checkout record created")
             }
