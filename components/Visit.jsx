@@ -12,6 +12,7 @@ export default function Visit({ visit, deleteVisit }) {
                     <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag?.split("T")[0]}</li>
                     {visit.busTicket > 0 ? <li><span className="font-semibold">Bus Ticket:</span> {visit.busTicket}</li> : <></>}
                     {visit.giftCard > 0 ? <li><span className="font-semibold">Gift Card:</span> {visit.giftCard}</li> : <></>}
+                    {visit.HouseHoldItems ? <li><span className="font-semibold">Household Items:</span> {visit.HouseHoldItems}</li> : <></>}
                     <li><span className="font-semibold">Requests:</span> {visit.request?.split("T")[0]}</li>
                 </ul>
                 <button id="visitDelete" value={visit.visitID} onClick={deleteVisit} className="btn btn-ghost">Delete</button>
