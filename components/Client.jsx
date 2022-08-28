@@ -1,5 +1,6 @@
 import {useRouter} from "next/router"
 import {useEffect, useState} from "react"
+import { last } from "rxjs"
 import Banned from "./Banned"
 import ClientBody from "./ClientBody"
 import Early from "./Early"
@@ -31,16 +32,6 @@ export default function Client({client}) {
         localStorage.setItem("tmpCheckinClient", JSON.stringify(client))
         router.push(`/checkin?id=${client.clientID}`)
     }
-
-    function getDateDifference(rightNow, compareDate) {
-        let diff = Math.abs(rightNow - compareDate)
-        let daysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24))
-        return daysDiff
-    }
-
-    let mapped = client?.eligibleItems?.map(item => {
-        return <li key={item}>{item}</li>
-    })
 
     useEffect(() => {
         // Check for clients on page load
@@ -75,13 +66,46 @@ export default function Client({client}) {
             let today = new Date(Date.now())
             const diffDays = getDateDifference(today, lastVisit)
 
-            if (diffDays > settings?.daysEarlyThreshold) {
+            if (diffDays < 30) {
                 setIsEarly(true)
                 setDaysAgo(diffDays)
             }
         }
 
-    }, [localStorage.getItem('checkedInClients'), window.location.pathname, settings])
+        client.eligibleItems = []
+        if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+            let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+            let today = new Date(Date.now())
+            let daysDiff = getDateDifference(today, lastBackpack)
+            if (daysDiff > 91) {
+                client.eligibleItems.push('Backpack')
+            }
+        } else {
+            client.eligibleItems.push('Backpack')
+        }
+        if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+            let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+            let today = new Date(Date.now())
+            let diffDays = getDateDifference(today, lastSleepingBag)
+            if (diffDays > 182) {
+                client.eligibleItems.push('Sleeping Bag')
+            }
+        } else {
+            client.eligibleItems.push('Sleeping Bag')
+        }
+
+    }, [localStorage.getItem('checkedInClients'), window.location.pathname])
+
+
+    function getDateDifference(rightNow, compareDate) {
+        let diff = Math.abs(rightNow - compareDate)
+        let daysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24))
+        return daysDiff
+    }
+
+    let mapped = client?.eligibleItems?.map(item => {
+        return <li key={item}>{item}</li>
+    })
 
     return (
         <div className="card bg-base-200 max-w-md p-3 m-3">
@@ -93,33 +117,31 @@ export default function Client({client}) {
 
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <div className="divider"></div>
-
-                {daysAgo < settings?.daysEarlyThreshold ? 
+                { daysAgo < settings?.daysEarlyThreshold ? 
                 <>
-                    <Early daysAgo={daysAgo} />
-                    <ClientBody
-                        client={client} 
-                        mapped={mapped} 
-                        view={view} 
-                        checkedIn={checkedIn} 
-                        handleCheckin={handleCheckin} 
-                        handleCheckout={handleCheckout} 
-                        goToProfile={goToProfile} 
+                <Early daysAgo={daysAgo} />
+                <ClientBody
+                    client={client}
+                    mapped={mapped}
+                    view={view}
+                    checkedIn={checkedIn}
+                    handleCheckin={handleCheckin}
+                    handleCheckout={handleCheckout}
+                    goToProfile={goToProfile}
                     />
                 </>
                 :
-                <ClientBody 
-                    client={client} 
-                    mapped={mapped} 
-                    view={view} 
-                    checkedIn={checkedIn} 
-                    handleCheckin={handleCheckin} 
-                    handleCheckout={handleCheckout} 
-                    goToProfile={goToProfile} 
-                />
+                <ClientBody
+                    client={client}
+                    mapped={mapped}
+                    view={view}
+                    checkedIn={checkedIn}
+                    handleCheckin={handleCheckin}
+                    handleCheckout={handleCheckout}
+                    goToProfile={goToProfile}
+                    />
                 }
-
-            </div>
         </div>
+    </div>
     )
 }

@@ -1,4 +1,5 @@
 import { NavLink } from '../components/NavLink.jsx';
+import {useRouter} from "next/router"
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -14,7 +15,7 @@ const clientSchema = Yup.object().shape({
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familyId: Yup.string().notRequired()
+    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null)
 },
 // add cyclic dependencies for requiring itself
 [['middleInitial', 'middleInitial'],['postalCode', 'postalCode']]);
@@ -22,8 +23,10 @@ const clientSchema = Yup.object().shape({
 // Main Page to add a new Form
 export default function newclient() {
 
+    const router = useRouter()
     const [clientPartial, setClientPartial] = useState(null)
     const [newClient, setNewClient] = useState(null)
+    const [goToCheckin, setGoToCheckin] = useState(false)
 
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(clientSchema)
@@ -32,23 +35,37 @@ export default function newclient() {
     const {errors} = formState;
 
     const submitForm = async (data) => {
-        console.log(data)
         setNewClient(data) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
-        // let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth.toISOString().split('T')[0]}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/PostClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&middleInitial=${data.middleInitial}&suffix=""&birthdate=${data.dateOfBirth}&gender=${data.gender}&race=${data.race}&zipcode=${data.postalCode}&numFamily=${data.familySize}`)
         // if successful
         if(response.ok && response.status===200){
-            console.log("SUCCESS")
+            // display successful popup
             alert("Successfully Saved")
+
+            if (goToCheckin) {
+                // get json data from server
+                let res = await response.json()
+                if(res.length > 0){
+                    // add clientID to data object
+                    data.clientID = res[0].clientID
+                    // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data))
+                    // go to checkin page
+                    router.push(`/checkin?id=${data.clientID}`)
+                }
+            }
+            else{
+                // go back to index page
+                router.push(`/`)
+            }
         }else{
             // display unsuccessful popup
             alert("Saving Failed")
         }            
     }
 
-    const checkinNewClient = () => {
-        console.log(newClient) //save to localstorage somehow?
-        // let currentCheckedIn = JSON.parse(localStorage.getItem("checkedInClients") === null || undefined ? {} : localStorage.getItem('checkedInClients'))
+    let checkinNewClient = () => {
+        setGoToCheckin(true)
     }
 
     useEffect(()=> {
@@ -129,13 +146,13 @@ export default function newclient() {
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl"># People in Family</label>
-                            <input type="text" name="familyId" {...register('familyId')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Save</button>
-                        <button onClick={()=> { submitForm(); checkinNewClient() }} className="btn btn-wide btn-secondary p-2 my-2 m-8">Save and Checkin</button>
+                        <button type="submit" onClick={()=> {checkinNewClient()}} className="btn btn-wide btn-secondary p-2 my-2 m-8">Save and Checkin</button>
                     </div>
                     <div className='divider my-0'></div>
                 </div>
