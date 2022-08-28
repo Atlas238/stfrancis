@@ -26,6 +26,7 @@ const checkoutSchema = Yup.object().shape({
 export default function checkout() {
     const router = useRouter()
     const [client, setClient] = useState(null)
+    const [banned, setBanned] = useState(false)
 
     // Client ID from query parameters
     const { id } = router.query
@@ -52,6 +53,13 @@ export default function checkout() {
             response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}`)
             if(response.ok && response.status===200){
                 console.log("Checkout record created")
+            }
+            // Update banned status if client is banned
+            if(banned){
+                response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${client.clientID}&banned=${banned}`)
+                if(response.ok && response.status===200){
+                    console.log("Banned status updated")
+                }
             }
         }
 
@@ -94,6 +102,11 @@ export default function checkout() {
         document.getElementById('household').focus()
         document.getElementById('notes').focus()
     }
+    
+    const handleBanned = () => {
+        let isChecked = document.getElementById('banned').checked
+        setBanned(isChecked)
+    }
 
     useEffect(() => {
         // Check for clients on page load
@@ -114,9 +127,15 @@ export default function checkout() {
             <div className="card mx-auto w-10/12">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Intake Form</h1>
-                <div className="grid grid-cols-2">
-                    <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                    <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size: 1</label>
+                <div className="grid grid-flow-col">
+                    <div>
+                        <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
+                        <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
+                    </div>
+                    <div className="flex gap-2 justify-self-end place-items-center">
+                        <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
+                        <div><label className="block label-text text-center">Ban</label><input id="banned" {...register('banned')} onChange={handleBanned} type="checkbox" className="toggle center"/></div>
+                    </div>
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
@@ -196,7 +215,7 @@ export default function checkout() {
                 <p>{errors.menClothing?.message}</p>
                 <p>{errors.womenClothing?.message}</p>
                 <div className='divider my-0'></div>
-                <div className="flex p-4">
+                <div className="flex p-4 gap-8">
                     <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>
                     <NavLink href= "/checkedin" className="btn btn-primary btn-sm w-1/2">Back</NavLink>  
                 </div>
