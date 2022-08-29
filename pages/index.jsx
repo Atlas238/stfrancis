@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { userService } from '../services/user.service';
 
+import DBClients from 'components/DBClients';
 import Client from '../components/Client'
 import Loading from '../components/Loading';
 import SearchForm from '../components/SearchForm';
@@ -44,12 +45,10 @@ export default function Home() {
             <Loading loading={loading} />
 
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
-                {dbClients?.length > 0 ? 
-                    dbClients.map((client) => { 
-                        return <Client key={client.clientID} client={client} />
-                    }) 
-                : 
-                <SearchError loading={loading} />
+                {dbClients?.length > 0 ?
+                <DBClients dbclients={dbClients} loading={loading} />
+                :
+                <SearchError loading={loading}/>
                 }
             </div>
 
@@ -63,10 +62,10 @@ export default function Home() {
                     : null
             }
             <div className='mx-auto container flex flex-row flex-wrap justify-center'>
-                {
-               lastClients?.map((client) => {
-                    return <Client key={client.clientID} client={client} />
-                })
+                {lastClients ? 
+                <DBClients dbclients={lastClients} />
+                : 
+                null
                 }
             </div>
         </div>

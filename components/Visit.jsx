@@ -2,6 +2,7 @@ export default function Visit({ visit }) {
 
     const deleteVisit = async () => {
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteVisitByID?visitID=${visit.visitID}`)
+        localStorage.setItem('lastClients', null)
         window.location.reload()
     }
     return (
