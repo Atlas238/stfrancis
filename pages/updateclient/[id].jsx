@@ -217,7 +217,7 @@ export default function updateclient({ data }) {
 
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl"># People in Family</label>
+                            <label className="label label-text text-xl">Number of Kids</label>
                             <input id="familySize" type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
                         </div>
 
