@@ -127,7 +127,7 @@ export default function Client({client}) {
                 <RiCake2Fill />
                 <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
                 </div>
-                <div className="divider"></div>
+                <div className="divider my-0"></div>
                 { isEarly && 
                     daysAgo < settings.daysEarlyThreshold ? 
                 <>
