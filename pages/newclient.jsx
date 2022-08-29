@@ -89,32 +89,32 @@ export default function newclient() {
 
                         {/* First Name */}
                         <div className='p-2 w-60 flex flex-col'>
-                        <label className="label label-text text-xl">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
-                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <label className="label label-text text-xl">First Name <span className="text-orange-700">{errors.firstName?.message}</span></label>
+                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Last Name */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text text-xl">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
-                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <label className="label label-text text-xl">Last Name <span className="text-orange-700">{errors.lastName?.message}</span></label>
+                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Middle Initial */}
                         <div className="p-2 w-60 flex flex-col">
                         <label className="label label-text text-xl">Middle Initial</label>
-                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Date of Birth */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
-                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center"></input>
+                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center bg-white"></input>
                         </div>
 
                         {/* Gender */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Gender</label>
-                            <select name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>F</option>
                                 <option>M</option>
@@ -125,7 +125,7 @@ export default function newclient() {
                         {/* Race */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Race</label>
-                            <select name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>American Indian or Alaska Native</option>
                                 <option>Asian</option>
@@ -139,14 +139,14 @@ export default function newclient() {
 
                         {/* Zip Code */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
-                            <input type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <label className="label label-text text-xl">Postal Code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
+                            <input type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl"># People in Family</label>
-                            <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <label className="label label-text text-xl">Family Size</label>
+                            <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                     </div>
