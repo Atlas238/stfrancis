@@ -13,6 +13,7 @@ export default function Client({client}) {
     const [overrideEarly, setOverrideEarly] = useState(false)
     const [daysAgo, setDaysAgo] = useState(0)
     const [settings, setSettings] = useState(null)
+    const [loading, setLoading] = useState(null)
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
@@ -65,6 +66,7 @@ export default function Client({client}) {
             getSettings()
 
             if (settings) {
+                setLoading(true)
                 let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
                 const diffDays = getDateDifference(today, lastVisit)
                 if (diffDays < settings.daysEarlyThreshold) {
@@ -74,6 +76,7 @@ export default function Client({client}) {
                     setIsEarly(false)
                 }
             setEligibleItems()
+            setLoading(false)
             }
         }
     }, [localStorage.getItem('checkedInClients'), window.location.pathname, settings])
@@ -116,6 +119,7 @@ export default function Client({client}) {
 
     return (
         <div className="card bg-base-200 max-w-lg m-3">
+            {!loading ? 
             <div className="card-body flex items-center">
 
                 {client?.banned ? 
@@ -153,6 +157,8 @@ export default function Client({client}) {
                     />
                 }
         </div>
+        :
+        null}
     </div>
     )
 }
