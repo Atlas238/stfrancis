@@ -88,13 +88,14 @@ export default function FullClient({ client }) {
                     <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
                 </div>
                 <ul className="flex">
-                    <li className="p-1 text-xl"><span className="font-bold">Birthday:</span> {client?.birthday.split(' ')[0]}</li>
-                    <li className="p-1 text-xl"><span className="font-bold">Gender:</span> {client?.gender}</li>
-                    <li className="p-1 text-xl"><span className="font-bold">Race:</span> {client?.race}</li>
-                    <li className="p-1 text-xl"><span className="font-bold">ZipCode:</span> {client?.zipCode}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Birthday:</span> {client?.birthday.split(' ')[0]}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Gender:</span> {client?.gender}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Race:</span> {client?.race}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">ZipCode:</span> {client?.zipCode}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Family Size:</span> {client?.numFamily}</li>
                 </ul>
                 {oldestVisit ? 
-                        <h3 className="card-title text-xl pt-1 pl-1">
+                        <h3 className="card-title text-xl pt-1 pl-2">
                             Client since {new Date(oldestVisit.visitDate).toDateString()}
                         </h3>
                         : null}
