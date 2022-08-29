@@ -30,31 +30,11 @@ function Nav() {
     return (
         <div className="navbar bg-base-200 shadow-sm h-28 fixed z-50 hide">
             <div className="flex-1">
-                <NavLink href={"/"} className="btn btn-ghost h-24"><Image src={logo} width={200} height={90} priority={true} onClick={()=>{
-                    let history = JSON.parse(localStorage.getItem('history'))
-                    if (history) {
-                        history.push("/")
-                        localStorage.setItem('history', JSON.stringify(history))
-                    } else {
-                        let history = []
-                        history.push("/")
-                        localStorage.setItem('history', JSON.stringify(history))
-                    }
-                }}/></NavLink>
+                <NavLink href={"/"} className="btn btn-ghost h-24"><Image src={logo} width={200} height={90} priority={true} /></NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
-                    <li onClick={()=>{
-                        let history = JSON.parse(localStorage.getItem('history'))
-                        if (history) {
-                            history.push('/checkedin')
-                            localStorage.setItem('history', JSON.stringify(history))
-                        } else {
-                            let history = []
-                            history.push("/checkedin")
-                            localStorage.setItem('history', JSON.stringify(history))
-                        }
-                    }}><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin m-2 mt-7">Checked In Clients</NavLink></li>
+                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin m-2 mt-7">Checked In Clients</NavLink></li>
                     <li><a onClick={logout} className="btn btn-accent text-xl text-primary-content font-thin m-2 mt-7">Logout</a></li>
                 </ul>
                 <NavLink href={"/settings"} className="fixed top-2 right-2 opacity-60 hover:opacity-100 hover:cursor-pointer hover:rotate-180 hover:scale-125 transition-all" ><RiSettings4Line /></NavLink>
