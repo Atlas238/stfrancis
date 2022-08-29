@@ -1,6 +1,6 @@
 import {useRouter} from "next/router"
 import {useEffect, useState} from "react"
-import { last } from "rxjs"
+import { RiCake2Fill } from "react-icons/ri"
 import Banned from "./Banned"
 import ClientBody from "./ClientBody"
 import Early from "./Early"
@@ -34,6 +34,7 @@ export default function Client({client}) {
     }
 
     useEffect(() => {
+        let today = new Date(Date.now())
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         switch(window.location.pathname) {
@@ -62,39 +63,44 @@ export default function Client({client}) {
 
             getSettings()
 
-            let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
-            let today = new Date(Date.now())
-            const diffDays = getDateDifference(today, lastVisit)
-
-            if (diffDays < 30) {
-                setIsEarly(true)
-                setDaysAgo(diffDays)
+            if (settings) {
+                let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
+                const diffDays = getDateDifference(today, lastVisit)
+                if (diffDays < settings.daysEarlyThreshold) {
+                    setIsEarly(true)
+                    setDaysAgo(diffDays)
+                } else {
+                    setIsEarly(false)
+                }
+            setEligibleItems()
             }
         }
+    }, [localStorage.getItem('checkedInClients'), window.location.pathname, settings])
 
+    function setEligibleItems() {
+        let today = new Date(Date.now())
         client.eligibleItems = []
-        if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
-            let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
-            let today = new Date(Date.now())
-            let daysDiff = getDateDifference(today, lastBackpack)
-            if (daysDiff > 91) {
+
+            if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+                let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+                let daysDiff = getDateDifference(today, lastBackpack)
+                if (daysDiff > settings.backpackThreshold) {
+                    client.eligibleItems.push('Backpack')
+                }
+            } else {
                 client.eligibleItems.push('Backpack')
             }
-        } else {
-            client.eligibleItems.push('Backpack')
-        }
-        if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
-            let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
-            let today = new Date(Date.now())
-            let diffDays = getDateDifference(today, lastSleepingBag)
-            if (diffDays > 182) {
+
+            if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+                let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+                let diffDays = getDateDifference(today, lastSleepingBag)
+                if (diffDays > settings.sleepingbagThreshold) {
+                    client.eligibleItems.push('Sleeping Bag')
+                }
+            } else {
                 client.eligibleItems.push('Sleeping Bag')
             }
-        } else {
-            client.eligibleItems.push('Sleeping Bag')
-        }
-
-    }, [localStorage.getItem('checkedInClients'), window.location.pathname])
+    }
 
 
     function getDateDifference(rightNow, compareDate) {
@@ -103,26 +109,26 @@ export default function Client({client}) {
         return daysDiff
     }
 
-    let mapped = client?.eligibleItems?.map(item => {
-        return <li key={item}>{item}</li>
-    })
-
     return (
-        <div className="card bg-base-200 max-w-md p-3 m-3">
-            <div className="card-body">
+        <div className="card bg-base-200 max-w-lg m-3">
+            <div className="card-body flex items-center">
 
                 {client?.banned ? 
                   <Banned />
                 : null }
 
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
+                <div className="flex flex-row items-center">
+                <RiCake2Fill />
+                <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
+                </div>
                 <div className="divider"></div>
-                { daysAgo < settings?.daysEarlyThreshold ? 
+                { isEarly && 
+                    daysAgo < settings.daysEarlyThreshold ? 
                 <>
                 <Early daysAgo={daysAgo} />
                 <ClientBody
                     client={client}
-                    mapped={mapped}
                     view={view}
                     checkedIn={checkedIn}
                     handleCheckin={handleCheckin}
@@ -133,7 +139,6 @@ export default function Client({client}) {
                 :
                 <ClientBody
                     client={client}
-                    mapped={mapped}
                     view={view}
                     checkedIn={checkedIn}
                     handleCheckin={handleCheckin}
