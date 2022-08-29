@@ -8,7 +8,8 @@ export default function SettingForm() {
     const [settings, setSettings] = useState({
         daysEarlyThreshold: 25,
         backpackThreshold: 91,
-        sleepingbagThreshold: 181
+        sleepingbagThreshold: 181,
+        override: false
     })
 
 
@@ -61,6 +62,14 @@ export default function SettingForm() {
         })
     }
 
+    const invertOverride = () => {
+        let curr = settings.override
+        setSettings({
+            ...settings,
+            override: !curr
+        })
+    }
+
     const saveSettings = async () => {
         let res = await fetch('/api/settings', { method: 'POST', body: JSON.stringify(settings) })
         let data = await res.json()
@@ -94,6 +103,7 @@ export default function SettingForm() {
                 value={settings.daysEarlyThreshold}
                 valueTitle={"Days"}
             />
+            <div className="divider w-4/12"></div>
             <Setting
                 name={"Backpack Threshold"}
                 description={"The number of days a client must wait before being eligible to get another backpack"}
@@ -102,6 +112,7 @@ export default function SettingForm() {
                 value={settings.backpackThreshold}
                 valueTitle={"Days"}
             />
+            <div className="divider w-4/12"></div>
             <Setting  
                 name={"Sleeping Bag Threshold"}
                 description={"The number of days a client must wait before being eligible to get another Sleeping Bag"}
@@ -109,6 +120,13 @@ export default function SettingForm() {
                 decrementor={decrementDaysSleepingbag}
                 value={settings.sleepingbagThreshold}
                 valueTitle={"Days"}
+            />
+            <div className="divider w-4/12"></div>
+            <Setting
+                name={"Early Override"}
+                description={"Allows a user to get rid of an early warning and check in an early client"}
+                value={settings.override}
+                inverter={invertOverride}
             />
             <button onClick={saveSettings} type="button" className="text-3xl p-8 w-fit self-end hover:scale-110 hover:underline active:scale-75 transition-all">Save</button>
         </form>
