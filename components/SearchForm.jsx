@@ -5,6 +5,7 @@ import { useRouter } from "next/router"
 
 import { useState } from 'react'
 import { useForm } from "react-hook-form"
+import { getDate } from 'date-fns'
 
 const clientLookupSchema = Yup.object().shape({
     firstName: Yup.string(),
@@ -48,12 +49,22 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
         // let res = await fetch('/api/clients')
         let clients = await res.json()
+
         if (clients.length != 0) {
             clients.forEach((client) => {
                 setEligibleItems(client)
+                
+                let clientsLastVisit = new Date(client.visits[0]?.visitDate)
+                const diffDays = getDateDifference(new Date(Date.now()), clientsLastVisit)
+                if (diffDays < settings.daysEarlyThreshold) {
+                    client.isEarly = true
+                } else {
+                    client.isEarly = false
+                }
             })
             setDbClients(clients)
         }
+
         localStorage.setItem('lastClients', JSON.stringify(clients))
 
         setLoading(false)

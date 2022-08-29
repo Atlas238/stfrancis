@@ -131,8 +131,7 @@ export default function Client({client}) {
                 <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
                 </div>
                 <div className="divider my-0"></div>
-                { isEarly && 
-                    daysAgo < settings.daysEarlyThreshold ? 
+                { settings && client.isEarly ?
                 <>
                 <Early daysAgo={daysAgo} override={override} overrideOn={settings.override}/>
                 <ClientBody
@@ -142,7 +141,6 @@ export default function Client({client}) {
                     handleCheckin={handleCheckin}
                     handleCheckout={handleCheckout}
                     goToProfile={goToProfile}
-                    isEarly={isEarly}
                     />
                 </>
                 :
