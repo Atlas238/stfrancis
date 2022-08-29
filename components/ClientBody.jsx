@@ -1,17 +1,25 @@
-export default function ClientBody({ client, mapped, view, checkedIn, handleCheckin, handleCheckout, goToProfile }) {
+export default function ClientBody({ client, view, checkedIn, handleCheckin, handleCheckout, goToProfile }) {
     return (
         <>
-            <p>Allowed this vist:</p>
-            <ul>
-                {mapped}
+            {client.eligibleItems?.length > 0 ? 
+            <div>
+            <p className="font-semibold">Allowed this visit: </p>
+            <ul className="flex">
+                {client.eligibleItems.map((item) => {
+                    return <li className="p-2" key={item}>{item}</li>
+                })}
             </ul>
-            {/* dont render if nothing here? */}
-            <label>Client Notes:</label>
-            <p>{client?.clientNote ? client?.clientNote : "Looks like there's nothing here..."}</p>
+            </div>
+            : 
+            <>
+            <p className="font-semibold">No Backpack or Sleeping Bag</p>
+            </>
+            }
 
-            <label>Last Visit Notes:</label>
-            {/* IF THIS REQUEST IS THE WORD NONE DONT RENDER */}
-            <p>{client?.visits ? client?.visits[0].request : ""}</p>
+            {client.clientNote === 'none' ? null : <><label className="font-semibold">Client Note:</label><p className="text-center">{client.clientNote}</p></> }
+
+            {client.visits && client.visits[0]?.request === 'none' ? null : <><label className="font-semibold">Last Visit Notes: </label><p className="text-center">{client.visits[0]?.request}</p></>}
+
             <div className="card-actions justify-end">
                 { view === 0 || checkedIn === true 
                     ? <></> 
