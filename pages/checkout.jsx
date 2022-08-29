@@ -130,7 +130,7 @@ export default function checkout() {
                 <div className="grid grid-flow-col">
                     <div>
                         <h1 className="card-title text-3xl">{client?.firstName} {client?.middleInitial === ""? "" : client?.middleInitial + '.'} {client?.lastName}</h1>
-                        <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
+                        <p className="text-base">Number of Kids: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
                     </div>
                     <div className="flex gap-2 justify-self-end place-items-center">
                         <p>{banned ? <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} </p>
