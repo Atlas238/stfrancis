@@ -16,6 +16,7 @@ export default function Home() {
     const [dbClients, setDbClients] = useState(null)
     const [submitted, setSubmitted] = useState(false)
     const [lastClients, setLastClients] = useState(null)
+    const [settings, setSettings] = useState(null)
     const [loading, setLoading] = useState(false)
 
     // Subscribes to the loggedin user
@@ -27,6 +28,14 @@ export default function Home() {
         } else {
             setLastClients(JSON.parse(localStorage.getItem('lastClients')))
         }
+
+        async function getSettings() {
+            let res = await fetch('/api/settings', { method: 'GET' })
+            let data = await res.json()
+            setSettings(data)
+        }
+
+        getSettings()
 
         const subscription = userService.user.subscribe(x => setUsers(x));
         return () => subscription.unsubscribe()
@@ -40,6 +49,7 @@ export default function Home() {
                 setSubmitted={setSubmitted} 
                 setLastClients={setLastClients}
                 setLoading={setLoading}
+                settings={settings}
             />
 
             <Loading loading={loading} />

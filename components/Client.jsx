@@ -75,7 +75,6 @@ export default function Client({client}) {
                 } else {
                     setIsEarly(false)
                 }
-            setEligibleItems()
             setLoading(false)
             }
         }
