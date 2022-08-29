@@ -10,6 +10,7 @@ export default function Client({client}) {
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
     const [checkedIn, setCheckedIn] = useState(false)
     const [isEarly, setIsEarly] = useState(null)
+    const [overrideEarly, setOverrideEarly] = useState(false)
     const [daysAgo, setDaysAgo] = useState(0)
     const [settings, setSettings] = useState(null)
 
@@ -109,6 +110,10 @@ export default function Client({client}) {
         return daysDiff
     }
 
+    function override() {
+        setOverrideEarly(true)
+    }
+
     return (
         <div className="card bg-base-200 max-w-lg m-3">
             <div className="card-body flex items-center">
@@ -126,7 +131,7 @@ export default function Client({client}) {
                 { isEarly && 
                     daysAgo < settings.daysEarlyThreshold ? 
                 <>
-                <Early daysAgo={daysAgo} />
+                <Early daysAgo={daysAgo} override={override} overrideOn={settings.override}/>
                 <ClientBody
                     client={client}
                     view={view}
@@ -134,6 +139,7 @@ export default function Client({client}) {
                     handleCheckin={handleCheckin}
                     handleCheckout={handleCheckout}
                     goToProfile={goToProfile}
+                    isEarly={isEarly}
                     />
                 </>
                 :
