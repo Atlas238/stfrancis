@@ -73,7 +73,7 @@ export default function FullClient({ client }) {
                     <li className="p-2 text-xl"><span className="font-bold">Gender:</span> {client?.gender}</li>
                     <li className="p-2 text-xl"><span className="font-bold">Race:</span> {client?.race}</li>
                     <li className="p-2 text-xl"><span className="font-bold">ZipCode:</span> {client?.zipCode}</li>
-                    <li className="p-2 text-xl"><span className="font-bold">Family Size:</span> {client?.numFamily}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Number of Kids:</span> {client?.numFamily}</li>
                 </ul>
                 {oldestVisit ? 
                         <h3 className="card-title text-xl pt-1 pl-2">
