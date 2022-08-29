@@ -25,8 +25,8 @@ const checkoutSchema = Yup.object().shape({
     notes: Yup.string(),
 },[]);
 
-// Main Checkout Page
-export default function checkout() {
+// Main Checkin Page
+export default function checkin() {
     const router = useRouter()
     const [client, setClient] = useState(null)
     const [formData, setFormData] = useState(null)
@@ -62,11 +62,12 @@ export default function checkout() {
             checkedInClientDict[client.clientID] = data
         }
         localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-        
-        printForm() // Print!
-        
-        // redirect to home
-        router.push(`/`)           
+
+        setTimeout(function () {
+            printForm() // Print!
+            // redirect to home
+            router.push(`/`)
+          }, 0);
     }
 
     useEffect(() => {

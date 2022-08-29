@@ -15,7 +15,7 @@ const checkoutSchema = Yup.object().shape({
     busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
+    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
     household: Yup.string(),
@@ -50,7 +50,7 @@ export default function checkout() {
                 visitID = data
             }
             // Create a check out record with visit ID and form data
-            response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}`)
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/checkout?visitID=${visitID}&mens=${data.menClothing}&womens=${data.womenClothing}&kids=${data.girlClothing+data.boyClothing}&backpack=${data.backpack}&sleepingbag=${data.sleepingbag}&request=${data.notes}&houseHoldItems=${data.household}&financialAid=${data.financialAssistance}&diapers=${data.diaper}&giftCard=${data.giftCard}&busTicket=${data.busTicket}`)
             if(response.ok && response.status===200){
                 console.log("Checkout record created")
             }
