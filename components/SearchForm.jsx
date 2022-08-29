@@ -13,7 +13,7 @@ const clientLookupSchema = Yup.object().shape({
     dateOfBirth: Yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, {excludeEmptyString: true}),
 }, ['middleInitial', 'middleInitial'])
 
-export default function SearchForm({ setDbClients, setSubmitted, setLoading, setLastClients }) {
+export default function SearchForm({ setDbClients, setSubmitted, setLoading, setLastClients, settings }) {
     const router = useRouter()
     // State Variables
     const [submitErrors, setSubmitErrors] = useState({
@@ -48,8 +48,14 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
         // let res = await fetch('/api/clients')
         let clients = await res.json()
-        if (clients.length != 0) setDbClients(clients)
+        if (clients.length != 0) {
+            clients.forEach((client) => {
+                setEligibleItems(client)
+            })
+            setDbClients(clients)
+        }
         localStorage.setItem('lastClients', JSON.stringify(clients))
+
         setLoading(false)
 
         // Can move or change?
@@ -57,6 +63,37 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         document.getElementById('lastName').value = ""
         document.getElementById('dateOfBirth').value = ""
     }   
+
+    function setEligibleItems(client) {
+        let today = new Date(Date.now())
+        client.eligibleItems = []
+
+            if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+                let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+                let daysDiff = getDateDifference(today, lastBackpack)
+                if (daysDiff > settings.backpackThreshold) {
+                    client.eligibleItems.push('Backpack')
+                }
+            } else {
+                client.eligibleItems.push('Backpack')
+            }
+
+            if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+                let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+                let diffDays = getDateDifference(today, lastSleepingBag)
+                if (diffDays > settings.sleepingbagThreshold) {
+                    client.eligibleItems.push('Sleeping Bag')
+                }
+            } else {
+                client.eligibleItems.push('Sleeping Bag')
+            }
+    }
+
+    function getDateDifference(rightNow, compareDate) {
+        let diff = Math.abs(rightNow - compareDate)
+        let daysDiff = Math.ceil(diff / (1000 * 60 * 60 * 24))
+        return daysDiff
+    }
 
     // Handled by YUP, transfers error from Yup to other state variable
     const handleError = (err) => {
