@@ -15,7 +15,7 @@ const checkoutSchema = Yup.object().shape({
     busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
+    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
     household: Yup.string(),
