@@ -18,7 +18,7 @@ export default function ClientBody({ client, view, checkedIn, handleCheckin, han
 
             {client.clientNote === 'none' ? null : <><label className="font-semibold">Client Note:</label><p className="text-center">{client.clientNote}</p></> }
 
-            {client.visits && client.visits[0]?.request === 'none' ? null : <><label className="font-semibold">Last Visit Notes: </label><p className="text-center">{client.visits[0]?.request}</p></>}
+            {(client.visits === null || client.visits[0]?.request === 'none') ? null : <><label className="font-semibold">Last Visit Notes: </label><p className="text-center">{client.visits[0]?.request}</p></>}
 
             <div className="card-actions justify-end">
                 { view === 0 || checkedIn === true 
