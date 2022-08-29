@@ -21,8 +21,8 @@ export default function handler(req, res) {
         let jsonDir = path.join(process.cwd(), 'public') + '/json/settings.json'
         fs.writeFile(jsonDir, updated, { flag: 'w+' }, function (err, file) {
             if (err) throw err
-            res.status(200).json(JSON.parse(file))
+
+            res.status(200)
         })
-        
     }
 }

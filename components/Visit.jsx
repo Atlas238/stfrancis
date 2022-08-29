@@ -5,10 +5,12 @@ export default function Visit({ visit }) {
         localStorage.setItem('lastClients', null)
         window.location.reload()
     }
+
+    let visitDate = new Date(visit.visitDate)
     return (
         <li key={visit.visitID} className="card bg-base-100 shadow-md m-2">
             <div className="card-body">
-                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {new Date(visit.visitDate).toDateString()}</h3>
+                <h3 className="card-title font-bold underline underline-offset-1">Visit Date: {visitDate.toLocaleTimeString()}, {visitDate.toDateString()}</h3>
                 <div className="flex flex-row justify-between">
                 <ul className="ml-3">
                     {/* clothing */}
