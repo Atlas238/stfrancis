@@ -53,13 +53,15 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         if (clients.length != 0) {
             clients.forEach((client) => {
                 setEligibleItems(client)
-                
-                let clientsLastVisit = new Date(client.visits[0]?.visitDate)
-                const diffDays = getDateDifference(new Date(Date.now()), clientsLastVisit)
-                if (diffDays < settings.daysEarlyThreshold) {
-                    client.isEarly = true
-                } else {
-                    client.isEarly = false
+
+                if (client.visits) {
+                    let clientsLastVisit = new Date(client?.visits[0]?.visitDate)
+                    const diffDays = getDateDifference(new Date(Date.now()), clientsLastVisit)
+                    if (diffDays < settings.daysEarlyThreshold) {
+                        client.isEarly = true
+                    } else {
+                        client.isEarly = false
+                    }    
                 }
             })
             setDbClients(clients)
