@@ -6,7 +6,6 @@ import Client from '../components/Client'
 import Loading from '../components/Loading';
 import SearchForm from '../components/SearchForm';
 import SearchError from '../components/SearchError';
-import { render } from 'react-dom';
 
 // Main Landing Page
 export default function Home() {
@@ -42,7 +41,6 @@ export default function Home() {
                 setLoading={setLoading}
             />
 
-            {/* Render Client list - Select desired Client + Check them in */}
             <Loading loading={loading} />
 
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
@@ -54,6 +52,8 @@ export default function Home() {
                 <SearchError loading={loading} />
                 }
             </div>
+
+            {/* Saved clients from last search */}
             {lastClients ? <a 
                 className='btn btn-primary' 
                 onClick={()=>{ 
