@@ -94,7 +94,7 @@ export default function FullClient({ client }) {
                     <li className="p-1 text-xl"><span className="font-bold">ZipCode:</span> {client?.zipCode}</li>
                 </ul>
                 {oldestVisit ? 
-                        <h3 className="card-title text-xl pt-1 pl-4">
+                        <h3 className="card-title text-xl pt-1 pl-1">
                             Client since {new Date(oldestVisit.visitDate).toDateString()}
                         </h3>
                         : null}
