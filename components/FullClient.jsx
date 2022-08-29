@@ -14,6 +14,7 @@ export default function FullClient({ client }) {
     // Page state is for visit pages
     const [page, setPage] = useState(1)
     const [oldestVisit, setOldestVisit] = useState(null)
+    const [mappedVisits, setMappedVisits] = useState(null)
 
     // Takes in the total visit arrays and creates 'pages' - may not use later on
     const paginate = (visits) => {
@@ -31,22 +32,6 @@ export default function FullClient({ client }) {
         return pages
     }
 
-    // let pages = paginate(client[0].visits)
-
-    const deleteVisit = async () => {
-        let visitID = document.getElementById('visitDelete').value
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteVisitByID?visitID=${visitID}`)
-
-        window.location.reload()
-    }
-   
-    // Creates mini components for the visits
-    let mappedVisits = client?.visits?.map((visit) => {
-        return (
-            <Visit key={visit.visitID} visit={visit} />
-        )
-    })
-
     const findOldestVisit = () => {
         let minID
 
@@ -54,18 +39,11 @@ export default function FullClient({ client }) {
             if (minID === undefined) minID = visit.visitID
             if (visit.visitID < minID) minID = visit.visitID
         })
-        console.log(minID)
 
         client?.visits?.forEach((visit) => {
             if (visit.visitID === minID) setOldestVisit(visit)
         })
     }
-
-    // Pagination w/o the above function
-    let visitsPageOne = mappedVisits?.splice(0, 10)
-    let visitsPageTwo = mappedVisits?.splice(10, 20)
-    let visitsPageThree = mappedVisits?.splice(20, 30)
-    let visitsPageFour = mappedVisits?.splice(30, 40)
 
     // Update profile function
     const updateClientProfile = () => {
@@ -74,6 +52,9 @@ export default function FullClient({ client }) {
 
     useEffect(()=> {
         findOldestVisit()
+        setMappedVisits(client.visits.reverse().map((visit) => {
+            return <Visit key={visit.visitID} visit={visit} />
+        }))
     },[oldestVisit])
 
     return (
@@ -81,7 +62,7 @@ export default function FullClient({ client }) {
             <div className="card-body min-w-full">
                 <div className="grid grid-flow-col">
                     <div>
-                        <h1 className="card-title text-5xl">{client?.firstName} {client?.middleInitial===undefined || client?.middleInitial==='' ? '' : client?.middleInitial + '.'} {client?.lastName} {client?.banned ?
+                        <h1 className="card-title text-5xl">{client?.firstName} {client?.middleInitial===undefined || client?.middleInitial==='' || client?.middleInitial === 'none' ? '' : client?.middleInitial + '.'} {client?.lastName} {client?.banned ?
                             <span className="font-bold text-lg bg-red-900 text-primary rounded-md px-4">BANNED</span> : <></>} 
                         </h1>
                     </div>
@@ -102,21 +83,7 @@ export default function FullClient({ client }) {
 
                 <div className="divider"></div>
                 <ul>
-                    {page === 1 ? 
-                      visitsPageOne 
-                    : page === 2 ? 
-                      visitsPageTwo 
-                    : page === 3 ? 
-                      visitsPageThree 
-                    : page === 4 ? 
-                      visitsPageFour 
-                    : null}
-                    <div className="btn-group justify-center">
-                        { visitsPageTwo?.length > 0 ? <button className={`btn ${page == 1 ? "btn-active" : ""}`} onClick={()=>{setPage(1)}}>1</button> : <></>}
-                        { visitsPageTwo?.length > 0 ? <button className={`btn ${page == 2 ? "btn-active" : ""}`} onClick={()=>{setPage(2)}}>2</button> : <></>}
-                        { visitsPageThree?.length > 0 ? <button className={`btn ${page == 3 ? "btn-active" : ""}`} onClick={()=>{setPage(3)}}>3</button> : <></>}
-                        { visitsPageFour?.length > 0 ? <button className={`btn ${page == 4 ? "btn-active" : ""}`} onClick={()=>{setPage(4)}}>4</button> : <></>}
-                    </div>
+                    {mappedVisits === null ? null : mappedVisits.reverse()}
                 </ul>
             </div>
         </div>
