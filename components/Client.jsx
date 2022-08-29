@@ -1,10 +1,17 @@
 import {useRouter} from "next/router"
 import {useEffect, useState} from "react"
+import { RiCake2Fill } from "react-icons/ri"
+import Banned from "./Banned"
+import ClientBody from "./ClientBody"
+import Early from "./Early"
 
 export default function Client({client}) {
     // State variables used to control component render
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
     const [checkedIn, setCheckedIn] = useState(false)
+    const [isEarly, setIsEarly] = useState(null)
+    const [daysAgo, setDaysAgo] = useState(0)
+    const [settings, setSettings] = useState(null)
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
@@ -27,6 +34,7 @@ export default function Client({client}) {
     }
 
     useEffect(() => {
+        let today = new Date(Date.now())
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         switch(window.location.pathname) {
@@ -43,7 +51,56 @@ export default function Client({client}) {
         checkedInClients?.forEach(c => {
             if (c.clientID === client.clientID) setView(2)
         })
-    }, [localStorage.getItem('checkedInClients'), window.location.pathname])
+
+        async function getSettings() {
+            let res = await fetch('/api/settings', { method: 'GET' })
+            let data = await res.json()
+            setSettings(data)
+        }
+
+
+        if (client.visits != null || client.visits != undefined) {
+
+            getSettings()
+
+            if (settings) {
+                let lastVisit = new Date(client.visits[0]?.visitDate.split('T')[0])
+                const diffDays = getDateDifference(today, lastVisit)
+                if (diffDays < settings.daysEarlyThreshold) {
+                    setIsEarly(true)
+                    setDaysAgo(diffDays)
+                } else {
+                    setIsEarly(false)
+                }
+            setEligibleItems()
+            }
+        }
+    }, [localStorage.getItem('checkedInClients'), window.location.pathname, settings])
+
+    function setEligibleItems() {
+        let today = new Date(Date.now())
+        client.eligibleItems = []
+
+            if (client.mostRecentBackpack != null || client.mostRecentBackpack != undefined) {
+                let lastBackpack = new Date(client.mostRecentBackpack.split('T')[0])
+                let daysDiff = getDateDifference(today, lastBackpack)
+                if (daysDiff > settings.backpackThreshold) {
+                    client.eligibleItems.push('Backpack')
+                }
+            } else {
+                client.eligibleItems.push('Backpack')
+            }
+
+            if (client.mostRecentSleepingBag != null || client.mostRecentSleepingBag != undefined) {
+                let lastSleepingBag = new Date(client.mostRecentSleepingBag.split('T')[0])
+                let diffDays = getDateDifference(today, lastSleepingBag)
+                if (diffDays > settings.sleepingbagThreshold) {
+                    client.eligibleItems.push('Sleeping Bag')
+                }
+            } else {
+                client.eligibleItems.push('Sleeping Bag')
+            }
+    }
 
 
     function getDateDifference(rightNow, compareDate) {
@@ -52,40 +109,44 @@ export default function Client({client}) {
         return daysDiff
     }
 
-    // Easy way to return html elements from an array of anykind
-    let eligibleItems = client?.visits?.map((visit) => {
-        //compare lastBackpack Date to Date.now
-        let rightNow = Date.now()
-        let diff = getDateDifference()
-
-        return <li key={visit.visitID}></li>
-    })
-    let mapped = client?.eligibleItems?.map(item => {
-        return <li key={item}>{item}</li>
-    })
-
     return (
-        <div className="card bg-base-200 max-w-md p-3 m-3">
-            <div className="card-body">
-                {client?.banned ? <h1 className="font-bold text-center text-lg bg-red-900 text-primary rounded-md px-4">BANNED</h1> : <></>}
+        <div className="card bg-base-200 max-w-lg m-3">
+            <div className="card-body flex items-center">
+
+                {client?.banned ? 
+                  <Banned />
+                : null }
+
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
-                <p>Allowed this vist:</p>
-                <ul>
-                    {mapped}
-                </ul>
-                <label>Last Visit Notes:</label>
-                <p>{client?.clientNote}</p>
-                <div className="card-actions justify-end">
-                    { view === 0 || checkedIn === true 
-                    ? <></> 
-                    : view === 1 && client?.banned === false 
-                    ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
-                    : view === 2 && client?.banned === false
-                    ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
-                    : <></>}
-                    <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
+                <div className="flex flex-row items-center">
+                <RiCake2Fill />
+                <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
                 </div>
-            </div>
+                <div className="divider"></div>
+                { isEarly && 
+                    daysAgo < settings.daysEarlyThreshold ? 
+                <>
+                <Early daysAgo={daysAgo} />
+                <ClientBody
+                    client={client}
+                    view={view}
+                    checkedIn={checkedIn}
+                    handleCheckin={handleCheckin}
+                    handleCheckout={handleCheckout}
+                    goToProfile={goToProfile}
+                    />
+                </>
+                :
+                <ClientBody
+                    client={client}
+                    view={view}
+                    checkedIn={checkedIn}
+                    handleCheckin={handleCheckin}
+                    handleCheckout={handleCheckout}
+                    goToProfile={goToProfile}
+                    />
+                }
         </div>
+    </div>
     )
 }

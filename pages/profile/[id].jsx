@@ -1,26 +1,37 @@
+import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+
 import FullClient from "components/FullClient"
+import Loading from "components/Loading"
 
 // Client Profile Page - Offloads client data to FullClient Component
-export default function profile({ data }) {
-    console.log(data)
+export default function profile() {
+    const router = useRouter()
+    const [client, setClient] = useState(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        async function getClient() {
+            setLoading(true)
+            if (router.isReady) {
+                let { id } = router.query
+                let response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
+                let data = await response.json()
+                setClient(data[0])
+                setLoading(false)
+            }
+        }
+
+        getClient()
+    }, [])
+
     return (
         <div className="py-20">
-            <FullClient client={data} />
+            {loading ? 
+              <Loading loading={loading} options={'py-10 mx-auto w-3/12'} />
+            : 
+              <FullClient key={client.clientID} client={client} />
+            }
         </div>
     )
-}
-
-// Fetches client data - All Visits right now
-export async function getServerSideProps(context) {
-    let id = context.params.id
-    let regex = new RegExp(/\d+/g)
-    if (id.match(regex)) {
-        
-        const res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
-        const data = await res.json()
-
-        return { props: { data } }
-    }
-
-    return { props: { undefined }}
 }

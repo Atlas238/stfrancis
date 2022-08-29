@@ -21,6 +21,7 @@ const checkoutSchema = Yup.object().shape({
     financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
+    household: Yup.string(),
     notes: Yup.string(),
 },[]);
 
@@ -41,46 +42,31 @@ export default function checkout() {
 
     const submitForm = async (data) => {
         setFormData(data)
-        // Convert client to checkin model ->
-        let checkinModel = {
-            clientID: client.clientID,
-            checkinDate: new window.Date()
+
+        // store client to chckedInClients localstorage
+        let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
+        if (checkedInClients === undefined || checkedInClients === null) {
+            checkedInClients = []
+            checkedInClients.push(client)
+        } else {
+            checkedInClients.push(client)
         }
+        localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
+
+        // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
+        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
+        if (checkedInClientDict === undefined || checkedInClientDict === null) {
+            checkedInClientDict = {}
+            checkedInClientDict[client.clientID] = data
+        } else {
+            checkedInClientDict[client.clientID] = data
+        }
+        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
         
-        // Create a visit with client ID // response has visitID ?
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`, { method: 'POST', body: JSON.stringify(checkinModel) })
-        // if successful
-        if(response.ok && response.status===200){
-
-            // store client to chckedInClients localstorage
-            let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
-            if (checkedInClients === undefined || checkedInClients === null) {
-                checkedInClients = []
-                checkedInClients.push(client)
-            } else {
-                checkedInClients.push(client)
-            }
-            localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
-
-            // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
-            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-            if (checkedInClientDict === undefined || checkedInClientDict === null) {
-                checkedInClientDict = {}
-                checkedInClientDict[client.clientID] = data
-            } else {
-                checkedInClientDict[client.clientID] = data
-            }
-            localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-
-            // redirect to home
-
-            printForm() // Print!
-
-            router.push(`/`)
-
-        }else{
-            // failed to check in
-        }           
+        printForm() // Print!
+        
+        // redirect to home
+        router.push(`/`)           
     }
 
     useEffect(() => {
@@ -110,8 +96,11 @@ export default function checkout() {
             <div className="card mx-auto w-10/12 hide">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Check-In Form</h1>
-                <div className="grid grid-cols-2">
-                    <h1 className="card-title text-3xl">{client?.firstName != undefined ? client?.firstName : "Who"} {client?.middleInitial === undefined ? "" : client?.middleInitial === "" ? "" : client?.middleInitial + '.'} {client?.lastName != undefined ? client?.lastName : "are you?"}</h1>
+                <div className="grid grid-flow-col">
+                    <div>
+                        <h1 className="card-title text-3xl">{client?.firstName != undefined ? client?.firstName : "Who"} {client?.middleInitial === undefined ? "" : client?.middleInitial === "" ? "" : client?.middleInitial + '.'} {client?.lastName != undefined ? client?.lastName : "are you?"}</h1>
+                        <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
+                    </div>
                     {/* Think we only want this on newClient form? */}
                     {/* <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label> */}
                 </div>
@@ -139,7 +128,11 @@ export default function checkout() {
 
                     </div>
                 </div>
-
+                {/* Household */}
+                <div tabIndex="1" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
+                    <div className="collapse-title flex-auto text-xl font-body bg-base-200">Household</div>
+                    <textarea id="household" name="household" {...register('household')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
+                </div>
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
@@ -189,8 +182,8 @@ export default function checkout() {
                 <p>{errors.womenClothing?.message}</p>
                 <div className='divider my-0'></div>
                 <div className="flex p-4 gap-8">
-                    <button type="submit" className="btn btn-accent btn-sm w-1/3">Check In</button>
-                    <NavLink href= "/" className="btn btn-primary btn-sm w-1/3">Back</NavLink>  
+                    <button type="submit" className="btn btn-accent btn-sm w-1/2">Check In</button>
+                    <NavLink href= "/" className="btn btn-primary btn-sm w-1/2">Back</NavLink>  
                 </div>
             </form>
             </div>
