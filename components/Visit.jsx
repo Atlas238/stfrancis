@@ -1,4 +1,9 @@
-export default function Visit({ visit, deleteVisit }) {
+export default function Visit({ visit }) {
+
+    const deleteVisit = async () => {
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteVisitByID?visitID=${visit.visitID}`)
+        window.location.reload()
+    }
     return (
         <div key={visit.visitID} className="card bg-base-100 shadow-md m-2">
             <div className="card-body">
