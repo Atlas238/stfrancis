@@ -1,7 +1,6 @@
+import Loading from "components/Loading"
 import { useEffect, useState } from "react"
-import { BallTriangle } from "react-loader-spinner"
 import Client from "../components/Client"
-
 
 // Shows all currently checked in Clients
 export default function checkedin() {
@@ -32,9 +31,7 @@ export default function checkedin() {
             <div className="divider"></div>
             {
             loading ? 
-            <div className="w-fit mx-auto px-10">
-                <BallTriangle color="#000000" width={100} height={100} timeout={3000} />
-            </div>
+            <Loading loading={loading} />
             :  
             <div className="flex mx-auto container flex-row flex-wrap justify-center">
                 {mapped} 

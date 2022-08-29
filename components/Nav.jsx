@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import { RiSettings4Line } from 'react-icons/ri'
+
 import { NavLink } from './NavLink'
 import Image from "next/image";
 import { userService } from '../services/user.service'
@@ -10,7 +12,7 @@ export { Nav }
 
 function Nav() {
     const [user, setUser] = useState(null)
-    
+
     // Subscribes to the loggedin user via userService
     useEffect(() => {
         const subscription = userService.user.subscribe(x => setUser(x))
@@ -22,26 +24,40 @@ function Nav() {
         userService.logout()
     }
 
-    // Sets the theme
-    function setThemeDark() {
-        let html = document.getElementById('html')
-        html.setAttribute("data-theme", "dark")
-    }
-    
-
     // Only show Nav if logged in - can be done in any page or component as long as you copy useEffect + user state variable
     if (!user) return null
 
     return (
         <div className="navbar bg-base-200 shadow-sm h-28 fixed z-50 hide">
             <div className="flex-1">
-                <NavLink href={"/"} className="btn btn-ghost h-24"><Image src={logo} width={200} height={90} priority={true}/></NavLink>
+                <NavLink href={"/"} className="btn btn-ghost h-24"><Image src={logo} width={200} height={90} priority={true} onClick={()=>{
+                    let history = JSON.parse(localStorage.getItem('history'))
+                    if (history) {
+                        history.push("/")
+                        localStorage.setItem('history', JSON.stringify(history))
+                    } else {
+                        let history = []
+                        history.push("/")
+                        localStorage.setItem('history', JSON.stringify(history))
+                    }
+                }}/></NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal p-0">
-                    <li><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin m-2 mt-10">Checked In Clients</NavLink></li>
-                    <li><a onClick={logout} className="btn btn-accent text-xl text-primary-content font-thin m-2 mt-10">Logout</a></li>
+                    <li onClick={()=>{
+                        let history = JSON.parse(localStorage.getItem('history'))
+                        if (history) {
+                            history.push('/checkedin')
+                            localStorage.setItem('history', JSON.stringify(history))
+                        } else {
+                            let history = []
+                            history.push("/checkedin")
+                            localStorage.setItem('history', JSON.stringify(history))
+                        }
+                    }}><NavLink href={"/checkedin"} className="btn btn-primary text-xl text-primary-content font-thin m-2 mt-7">Checked In Clients</NavLink></li>
+                    <li><a onClick={logout} className="btn btn-accent text-xl text-primary-content font-thin m-2 mt-7">Logout</a></li>
                 </ul>
+                <NavLink href={"/settings"} className="fixed top-2 right-2 opacity-60 hover:opacity-100 hover:cursor-pointer hover:rotate-180 hover:scale-125 transition-all" ><RiSettings4Line /></NavLink>
             </div>
         </div>
     )

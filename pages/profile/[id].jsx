@@ -1,7 +1,8 @@
-import FullClient from "components/FullClient"
-import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { BallTriangle } from "react-loader-spinner"
+import { useRouter } from "next/router"
+
+import FullClient from "components/FullClient"
+import Loading from "components/Loading"
 
 // Client Profile Page - Offloads client data to FullClient Component
 export default function profile() {
@@ -27,10 +28,10 @@ export default function profile() {
     return (
         <div className="py-20">
             {loading ? 
-            <div className={`w-fit mx-auto mt-20 ${loading ? 'visible' : 'hidden'}`}>
-                <BallTriangle color="#000000" height={100} width={100} timeout={3000} />
-            </div> : 
-            <FullClient client={client} />}
+              <Loading loading={loading} options={'py-10 mx-auto w-3/12'} />
+            : 
+              <FullClient key={client.clientID} client={client} />
+            }
         </div>
     )
 }
