@@ -47,7 +47,6 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         })
         setSubmitted(true)
         let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
-        // let res = await fetch('/api/clients')
         let clients = await res.json()
 
         if (clients.length != 0) {
@@ -59,9 +58,12 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
                     const diffDays = getDateDifference(new Date(Date.now()), clientsLastVisit)
                     if (diffDays < settings.daysEarlyThreshold) {
                         client.isEarly = true
+                        client.daysEarly = diffDays
                     } else {
                         client.isEarly = false
                     }    
+                } else {
+                    client.isEarly = false
                 }
             })
             setDbClients(clients)
@@ -125,14 +127,7 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
     }
 
     // Utility Function - Saves partial Client and moves to newclient page
-    const newClient = (e) => {
-        let basicInfo = {
-            firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value,
-            dateOfBirth: document.getElementById("dateOfBirth").value
-        }
-        localStorage.setItem('partialClient', JSON.stringify(basicInfo))
-        
+    const newClient = () => {
         router.push('/newclient')
     }
 
