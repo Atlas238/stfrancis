@@ -51,6 +51,11 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         if (clients.length != 0) setDbClients(clients)
         localStorage.setItem('lastClients', JSON.stringify(clients))
         setLoading(false)
+
+        // Can move or change?
+        document.getElementById('firstName').value = ""
+        document.getElementById('lastName').value = ""
+        document.getElementById('dateOfBirth').value = ""
     }   
 
     // Handled by YUP, transfers error from Yup to other state variable
