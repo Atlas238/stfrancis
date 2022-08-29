@@ -1,4 +1,4 @@
-export default function ClientBody({ client, view, checkedIn, handleCheckin, handleCheckout, goToProfile, isEarly }) {
+export default function ClientBody({ client, view, checkedIn, handleCheckin, handleCheckout, goToProfile }) {
     return (
         <>
             {client.eligibleItems?.length > 0 ? 
@@ -21,7 +21,7 @@ export default function ClientBody({ client, view, checkedIn, handleCheckin, han
             {(client.visits === null || client.visits[0]?.request === 'none') ? null : <><label className="font-semibold">Last Visit Notes: </label><p className="text-center">{client.visits[0]?.request}</p></>}
 
             <div className="card-actions justify-end">
-                { view === 0 || checkedIn === true || isEarly === true
+                { view === 0 || checkedIn === true || client.isEarly === true
                     ? <></> 
                     : view === 1 && client?.banned === false 
                     ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
