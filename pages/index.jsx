@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { userService } from '../services/user.service';
 
 import DBClients from 'components/DBClients';
-import Client from '../components/Client'
 import Loading from '../components/Loading';
 import SearchForm from '../components/SearchForm';
 import SearchError from '../components/SearchError';
@@ -56,7 +55,7 @@ export default function Home() {
 
             <div className={`${submitted ? "visible" : "hidden"} mx-auto container flex flex-row flex-wrap justify-center`}>
                 {dbClients?.length > 0 ?
-                <DBClients dbclients={dbClients} loading={loading} />
+                <DBClients dbclients={dbClients} loading={loading} settings={settings} />
                 :
                 <SearchError loading={loading}/>
                 }
@@ -73,7 +72,7 @@ export default function Home() {
             }
             <div className='mx-auto container flex flex-row flex-wrap justify-center'>
                 {lastClients ? 
-                <DBClients dbclients={lastClients} />
+                <DBClients dbclients={lastClients} settings={settings} />
                 : 
                 null
                 }
