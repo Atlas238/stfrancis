@@ -1,15 +1,15 @@
+import PrintBox from "./PrintBox"
+
 export default function Printout({ formData, client }) {
 
-    if (client === undefined && formData === undefined) return null
-
-    if (client === undefined) return null
+    if (client === undefined || client === null || formData === undefined || formData === null) return null
     
     return (
         <div className="z-50 m-auto print">
 
             {/* Client Portion */}
             <div className="flex justify-center border-b-black border-b-2">
-                <h1 className="text-2xl font-bold pt-5 pl-5 pr-24">{client?.firstName} {client?.lastName}'s Shopping List</h1>
+                <h1 className="text-2xl font-bold pt-5 pl-5 pr-24">{client.firstName} {client.lastName}'s Shopping List</h1>
                 <h1 className="text-2xl font-bold pt-5">{new Date(Date.now()).toDateString()}</h1>
             </div>
 
@@ -17,15 +17,12 @@ export default function Printout({ formData, client }) {
             <div>
 
                 {/* Clothing  */}
-                {formData?.menClothing | formData?.womenClothing | formData?.boyClothing | formData?.girlClothing ?
+                {formData.menClothing | formData.womenClothing | formData.boyClothing | formData.girlClothing ?
                 <div className="flex flex-col">
                     <h2 className="text-xl font-semibold pl-10">Clothing</h2>
                     <div className="flex pl-10 text-sm">
                         {formData?.menClothing ? 
-                        <div className="p-2">
-                            <label className="p-4">Mens</label>
-                            <div className="border border-solid border-black w-10 h-10 p-4 ml-4"></div>
-                        </div>
+                        <PrintBox title={"Mens"} />
                         :
                         <></>}
                         {formData?.womenClothing ?
@@ -55,7 +52,7 @@ export default function Printout({ formData, client }) {
                 <></>}
 
                 {/* Special Requests */}
-                {formData?.sleepingbag | formData?.backpack | formData?.busTicket | formData?.giftCard ?  
+                {formData.sleepingbag || formData.backpack || formData.busTicket || formData.giftCard ?  
                 <div className='flex flex-col mt-5'>
                     <h2 className='text-xl pl-10 font-semibold'>Special Requests</h2>
                     <div className='flex pl-10 text-sm'>
@@ -87,14 +84,12 @@ export default function Printout({ formData, client }) {
                     </div>
                     :
                     <></>}
-                    <div className="p-2">
-                        <label className="p-3">Diaper</label>
-                        <div className="border border-black border-solid w-10 h-10 p-4 ml-5"></div>
-                    </div>
+                    {formData.financialAssistance != null && formData.financialAssistance > 0 ? 
                     <div className="p-2">
                         <label>Financial Assistance</label>
                         <div className="border border-black border-solid w-10 h-10 p-4 ml-5"></div>
                     </div>
+                    : <></>}
                 </div>
                 </div>
                 :
