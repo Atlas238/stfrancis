@@ -1,15 +1,14 @@
 import {useRouter} from "next/router"
 import {useEffect, useState} from "react"
 import { RiCake2Fill } from "react-icons/ri"
+
 import Banned from "./Banned"
 import ClientBody from "./ClientBody"
-import Early from "./Early"
 
 export default function Client({client, settings }) {
     // State variables used to control component render
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
     const [checkedIn, setCheckedIn] = useState(false)
-    const [loading, setLoading] = useState(null)
 
     const router = useRouter() // Next Router - lets you send the user somewhere
 
@@ -28,10 +27,6 @@ export default function Client({client, settings }) {
         // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
         localStorage.setItem("tmpCheckinClient", JSON.stringify(client))
         router.push(`/checkin?id=${client.clientID}`)
-    }
-
-    function override() {
-        setOverrideEarly(true)
     }
 
     useEffect(() => {
@@ -58,45 +53,27 @@ export default function Client({client, settings }) {
 
     return (
         <div className="card bg-base-200 max-w-lg w-80 m-3">
-            {!loading ? 
-            <div className="card-body p-5 pb-10 flex items-center">
-
+            <div className="card-body p-5 pb-10 flex items-center justify-evenly">
                 {client?.banned ? 
                   <Banned />
                 : <Banned hidden={true} /> }
 
                 <h1 className="card-title mx-auto text-2xl">{client?.firstName} {client?.lastName} </h1>
                 <div className="flex flex-row items-center">
-                <RiCake2Fill />
-                <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
+                  <RiCake2Fill />
+                  <h2 className="card-tite mx-auto text-xl pl-1">{new Date(client.birthday).toDateString()}</h2>
                 </div>
                 <div className="divider my-0"></div>
-                {
-                client.isEarly ?
-                <>
-                <Early daysAgo={client.daysEarly} override={override} overrideOn={settings.override}/>
-                <ClientBody
+                <ClientBody 
                     client={client}
                     view={view}
                     checkedIn={checkedIn}
+                    settings={settings}
                     handleCheckin={handleCheckin}
                     handleCheckout={handleCheckout}
-                    goToProfile={goToProfile}
-                    />
-                </>
-                :
-                <ClientBody
-                    client={client}
-                    view={view}
-                    checkedIn={checkedIn}
-                    handleCheckin={handleCheckin}
-                    handleCheckout={handleCheckout}
-                    goToProfile={goToProfile}
-                    />
-                }
-        </div>
-        :
-        null}
+                    goToProfile={goToProfile} 
+                />
+            </div>
     </div>
     )
 }
