@@ -24,7 +24,7 @@ const clientSchema = Yup.object().shape({
 export default function newclient() {
 
     const router = useRouter()
-    const [clientPartial, setClientPartial] = useState(null)
+
     const [newClient, setNewClient] = useState(null)
     const [goToCheckin, setGoToCheckin] = useState(false)
 
@@ -67,17 +67,6 @@ export default function newclient() {
     let checkinNewClient = () => {
         setGoToCheckin(true)
     }
-
-    useEffect(()=> {
-        // Trying things to get partial form from index page into this form.. might not work
-        setClientPartial(JSON.parse(localStorage.getItem('partialClient')))
-        if (clientPartial != undefined || clientPartial != null) {
-            document.getElementById('firstName').value = clientPartial.firstName
-            document.getElementById('lastName').value = clientPartial.lastName
-            document.getElementById('middleInitial').value = clientPartial.middleInitial
-            document.getElementById('dateOfBirth').value = clientPartial.dateOfBirth
-        }
-    }, [localStorage])
 
     return (
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
@@ -145,7 +134,7 @@ export default function newclient() {
 
                         {/* Family */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Family Size</label>
+                            <label className="label label-text text-xl">Number of Kids</label>
                             <input type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 

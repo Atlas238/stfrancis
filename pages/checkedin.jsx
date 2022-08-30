@@ -1,34 +1,38 @@
 import Loading from "components/Loading"
+import Printout from "components/Printout"
 import { useEffect, useState } from "react"
 import Client from "../components/Client"
 
 // Shows all currently checked in Clients
 export default function checkedin() {
     const [loading, setLoading] = useState(false)
+    const [settings, setSettings] = useState(null)
     const [mapped, setMapped] = useState(null)
+    const [reprint, setReprint] = useState({
+        form: null,
+        client: null
+    })
 
     useEffect(() => {
-        async function getClients() {
-            setLoading(true)
-            let clients = JSON.parse(localStorage.getItem('checkedInClients'))
-            let mappedClients
-            if (clients != null || clients != undefined) {
-                mappedClients = clients.map((client) => {
-                    if (client.firstName && client.lastName) {
-                        return <Client client={client} key={client.clientID}/>
-                    }
-                })
-                setMapped(mappedClients)
-            }
-            setLoading(false)
+        async function getSettings() {
+            let response = await fetch('/api/settings', { method: 'GET' })
+            let data = await response.json()
+            setSettings(data)
         }
-        getClients()
-    },[])
+        getSettings()
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        if (checkedInClients) {
+            setMapped(checkedInClients.map((data) => {
+                return <Client key={data.client.clientID} client={data.client} settings={settings} setReprint={setReprint} />
+            }))
+        }
+    },[settings])
 
     return (
-        <div className="mx-auto mt-40 w-screen px-10">
+        <>
+        <div className="mx-auto mt-40 w-screen px-10 hide">
             <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
-            <div className="divider"></div>
+            <div className="divider hide"></div>
             {
             loading ? 
             <Loading loading={loading} />
@@ -36,7 +40,9 @@ export default function checkedin() {
             <div className="flex mx-auto container flex-row flex-wrap justify-center">
                 {mapped} 
             </div>  
-           }
+            }
         </div>
+        <Printout formData={reprint.form} client={reprint.client} />
+        </>
     )
 }

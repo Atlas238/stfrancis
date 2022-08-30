@@ -3,10 +3,12 @@ import { useEffect, useState } from "react"
 import { useForm } from 'react-hook-form'
 
 import { NavLink } from '../components/NavLink.jsx'
+import CheckinError from "components/CheckinError.jsx"
 import Printout from "components/Printout.jsx"
 
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as Yup from 'yup';
+import Loading from "components/Loading.jsx"
 
 // form validation
 const checkoutSchema = Yup.object().shape({
@@ -28,7 +30,10 @@ const checkoutSchema = Yup.object().shape({
 // Main Checkin Page
 export default function checkin() {
     const router = useRouter()
+
     const [client, setClient] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [abort, setAbort] = useState(false)
     const [formData, setFormData] = useState(null)
 
     const { register, handleSubmit, formState } = useForm({
@@ -47,9 +52,14 @@ export default function checkin() {
         let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
         if (checkedInClients === undefined || checkedInClients === null) {
             checkedInClients = []
-            checkedInClients.push(client)
+            checkedInClients.push({ client: client, form: data })
         } else {
-            checkedInClients.push(client)
+            checkedInClients.forEach((client) => {
+                if (client.clientID === data.clientID) {
+                    return 
+                }
+            })
+            checkedInClients.push({ client: client, form: data })
         }
         localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
 
@@ -71,6 +81,7 @@ export default function checkin() {
     }
 
     useEffect(() => {
+        setLoading(true)
         // Check for clients on page load
         async function getClientData(id) {
             let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByID?clientID=${id}`)
@@ -78,22 +89,33 @@ export default function checkin() {
             setClient(data[0])
         }
 
-        let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
-        
-        if (checkinClient != null | checkinClient != undefined){
-            setClient(checkinClient)
-            localStorage.removeItem('tmpCheckinClient');
+        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        if (checkedInClients != null || checkedInClients != undefined) {
+            if (router.isReady) {
+                const { id } = router.query
+                checkedInClients.forEach((c) => {
+                    if (c.clientID == id) {
+                        setAbort(true)
+                    }
+                })
+                if (!abort) getClientData(id)
+                setLoading(false)
+            }
         } else {
             if (router.isReady) {
                 const { id } = router.query
                 getClientData(id)
+                setLoading(false)
             }
         }
 
-    }, [localStorage.getItem('tmpCheckinClient')])
+    }, [localStorage])
 
     return (
        <div className="mt-20">
+        {loading 
+        ? <Loading loading={loading} /> :
+            abort ? <CheckinError /> : 
             <div className="card mx-auto w-10/12 hide">
             <form className="card-body" onSubmit={handleSubmit(submitForm)}>
                 <h1 className="card-title">Saint Francis Check-In Form</h1>
@@ -102,8 +124,6 @@ export default function checkin() {
                         <h1 className="card-title text-3xl">{client?.firstName != undefined ? client?.firstName : "Who"} {client?.middleInitial === undefined ? "" : client?.middleInitial === "" ? "" : client?.middleInitial + '.'} {client?.lastName != undefined ? client?.lastName : "are you?"}</h1>
                         <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
                     </div>
-                    {/* Think we only want this on newClient form? */}
-                    {/* <label htmlFor="familySize" className="justify-self-end text-xl cursor-pointer">Family Size:  <input type="text" name="familySize" placeholder="" {...register('familySize')} className="input input-sm w-16 input-bordered text-lg text-center" /></label> */}
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
@@ -140,22 +160,12 @@ export default function checkin() {
                     <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Backpack</span> 
-                        {/* {client?.eligibleItems.includes('Backpack') ? ( */}
                             <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
-                        )} */}
                         </label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Sleeping Bag</span> 
-                        {/* {client?.eligibleItems.includes('sleepingbag') ? ( */}
                             <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
-                        )} */}
                         </label>
-                        <label></label>
-                        <label></label>
                         <label className="label cursor-pointer py-4">
                         <span className="label-text text-lg">Bus Ticket</span> 
                             <input type="text" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
@@ -188,9 +198,8 @@ export default function checkin() {
                 </div>
             </form>
             </div>
-            <div>
-                <Printout formData={formData} client={client}/>
-            </div>
+            }
+            <Printout formData={formData} client={client}/>
         </div>
     )
 }
