@@ -17,7 +17,14 @@ export default function profile() {
                 let { id } = router.query
                 let response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
                 let data = await response.json()
-                setClient(data[0])
+                let client = data[0]
+                
+                client.firstName = client.firstName.toLowerCase()
+                client.lastName = client.lastName.toLowerCase()
+                client.firstName = client.firstName[0].toUpperCase() + client.firstName.slice(1)
+                client.lastName = client.lastName[0].toUpperCase() + client.lastName.slice(1)
+
+                setClient(client)
                 setLoading(false)
             }
         }
