@@ -199,9 +199,7 @@ export default function checkin() {
             </form>
             </div>
             }
-            <div>
-                <Printout formData={formData} client={client}/>
-            </div>
+            <Printout formData={formData} client={client}/>
         </div>
     )
 }

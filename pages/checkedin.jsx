@@ -8,7 +8,10 @@ export default function checkedin() {
     const [loading, setLoading] = useState(false)
     const [settings, setSettings] = useState(null)
     const [mapped, setMapped] = useState(null)
-    const [reprint, setReprint] = useState(null)
+    const [reprint, setReprint] = useState({
+        form: null,
+        client: null
+    })
 
     useEffect(() => {
         async function getSettings() {
@@ -26,23 +29,20 @@ export default function checkedin() {
     },[settings])
 
     return (
-        <div className="mx-auto mt-40 w-screen px-10">
-            <h1 className="text-3xl text-primary-content select-none hide">Checked In Clients</h1>
+        <>
+        <div className="mx-auto mt-40 w-screen px-10 hide">
+            <h1 className="text-3xl text-primary-content select-none">Checked In Clients</h1>
             <div className="divider hide"></div>
             {
             loading ? 
             <Loading loading={loading} />
             :  
-            <div className="flex mx-auto container flex-row flex-wrap justify-center hide">
+            <div className="flex mx-auto container flex-row flex-wrap justify-center">
                 {mapped} 
             </div>  
-           }
-            {
-            reprint ? 
-            <Printout formData={reprint.form} client={reprint.client} />
-            : 
-            null 
             }
         </div>
+        <Printout formData={reprint.form} client={reprint.client} />
+        </>
     )
 }

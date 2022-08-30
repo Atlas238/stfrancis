@@ -14,7 +14,12 @@ export default function ClientBody({ client, view, settings, checkedIn, handleCh
         let data = localStorage.getItem('checkedInClients') 
         if (!data) return
         data = JSON.parse(data)
-        setReprint(data)
+        data.forEach((d) => {
+            if (client.clientID === d.client.clientID) {
+                console.log('clicked client found, setting reprint data')
+                setReprint(d)
+            }
+        })
         setTimeout(()=>{
             window.print()
         }, 500)
