@@ -1,35 +1,67 @@
-export default function ClientBody({ client, view, checkedIn, handleCheckin, handleCheckout, goToProfile }) {
+import { useEffect, useState } from "react"
+import { TbConfetti } from 'react-icons/tb'
+import Early from "./Early"
+import Printout from "./Printout"
+
+export default function ClientBody({ client, view, settings, checkedIn, handleCheckin, handleCheckout, goToProfile, setReprint }) {
+    const [overridden, setOverriden] = useState(false)
+
+    const override = () => {
+        setOverriden(true)
+        client.isEarly = false
+    }
+
+    const rePrint = () => {
+        
+    }
+
+    if (!settings) return null
+
     return (
         <>
-            {client.eligibleItems?.length > 0 ? 
-            <div>
-            <p className="font-semibold">Allowed this visit: </p>
-            <ul className="flex">
-                {client.eligibleItems.map((item) => {
-                    return <li className="p-2" key={item}>{item}</li>
-                })}
-            </ul>
-            </div>
+            {client.isEarly && !overridden ? 
+            <Early daysAgo={client.daysEarly} override={override} overrideOn={settings.override}  /> 
+            : null
+            }
+            {client.visits?.length > 0 ?
+            <>
+                <label className="font-semibold">Last Visit</label>
+                <p>{new Date(client.visits[0].visitDate).toLocaleTimeString() === '12:00:00 AM' ? '' : new Date(client.visits[0].visitDate).toLocaleTimeString() + ','} {new Date(client.visits[0].visitDate).toDateString()}</p>
+            </>
             : 
             <>
-            <p className="font-semibold">No Backpack or Sleeping Bag</p>
+                <p className="font-semibold text-lg flex">New Client!<span className="text-xl pl-2"><TbConfetti /></span></p>
             </>
             }
 
             {client.clientNote === 'none' ? null : <><label className="font-semibold">Client Note:</label><p className="text-center">{client.clientNote}</p></> }
 
-            {(client.visits === null || client.visits[0]?.request === 'none') ? null : <><label className="font-semibold">Last Visit Notes: </label><p className="text-center">{client.visits[0]?.request}</p></>}
+            {(client.visits === null || client.visits.length === 0 || client.visits[0]?.request === 'none')  ? 
+            null 
+            : 
+            <>
+                <label className="font-semibold">Last Visit Notes: </label>
+                <p className="text-center">{client.visits[0]?.request}</p>
+            </>
+            }
 
-            <div className="card-actions justify-end">
-                { view === 0 || checkedIn === true || client.isEarly === true
-                    ? <></> 
-                    : view === 1 && client?.banned === false 
-                    ? <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
-                    : view === 2 && client?.banned === false
-                    ? <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
-                    : <></>}
-                    <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
-                </div>
+            <div className="card-actions justify-center">
+                { view === 0 
+                  || checkedIn === true 
+                  || client.isEarly === true ? 
+                  <></> 
+                  : view === 1 && client?.banned === false ? 
+                  <button className="btn btn-accent btn-sm" onClick={handleCheckin}>Check In</button> 
+                  : view === 2 && client?.banned === false ? 
+                  <>
+                  <button className="btn btn-secondary btn-sm" onClick={rePrint}>Reprint</button> 
+                  <button className="btn btn-secondary btn-sm" onClick={handleCheckout}>Check Out</button> 
+                  </>
+                  : 
+                  <></>
+                }
+                <button className="btn btn-primary btn-sm" onClick={goToProfile}>Profile</button>
+            </div>
         </>
     )
 }
