@@ -51,6 +51,11 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
 
         if (clients.length != 0) {
             clients.forEach((client) => {
+                client.firstName = client.firstName.toLowerCase()
+                client.firstName = client.firstName[0].toUpperCase() + client.firstName.slice(1)
+                client.lastName = client.lastName.toLowerCase()
+                client.lastName = client.lastName[0].toUpperCase() + client.lastName.slice(1)
+
                 setEligibleItems(client)
 
                 if (client.visits) {
