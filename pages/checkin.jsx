@@ -47,22 +47,19 @@ export default function checkin() {
 
     const submitForm = async (data) => {
         setFormData(data)
-        localStorage.setItem('lastPrintout', JSON.stringify({
-            form: data, client: client
-        }))
 
         // store client to chckedInClients localstorage
         let checkedInClients = JSON.parse(localStorage.getItem("checkedInClients"))
         if (checkedInClients === undefined || checkedInClients === null) {
             checkedInClients = []
-            checkedInClients.push(client)
+            checkedInClients.push({ client: client, form: data })
         } else {
             checkedInClients.forEach((client) => {
                 if (client.clientID === data.clientID) {
                     return 
                 }
             })
-            checkedInClients.push(client)
+            checkedInClients.push({ client: client, form: data })
         }
         localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
 

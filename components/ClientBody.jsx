@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
 import { TbConfetti } from 'react-icons/tb'
 import Early from "./Early"
-import Printout from "./Printout"
 
 export default function ClientBody({ client, view, settings, checkedIn, handleCheckin, handleCheckout, goToProfile, setReprint }) {
     const [overridden, setOverriden] = useState(false)
@@ -12,7 +11,13 @@ export default function ClientBody({ client, view, settings, checkedIn, handleCh
     }
 
     const rePrint = () => {
-        
+        let data = localStorage.getItem('checkedInClients') 
+        if (!data) return
+        data = JSON.parse(data)
+        setReprint(data)
+        setTimeout(()=>{
+            window.print()
+        }, 500)
     }
 
     if (!settings) return null

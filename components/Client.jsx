@@ -5,7 +5,7 @@ import { RiCake2Fill } from "react-icons/ri"
 import Banned from "./Banned"
 import ClientBody from "./ClientBody"
 
-export default function Client({client, settings }) {
+export default function Client({client, settings, setReprint }) {
     // State variables used to control component render
     const [view, setView] = useState(null)  // 0 display nothing, 1 precheckin, 2 postcheckin
     const [checkedIn, setCheckedIn] = useState(false)
@@ -71,6 +71,7 @@ export default function Client({client, settings }) {
                     settings={settings}
                     handleCheckin={handleCheckin}
                     handleCheckout={handleCheckout}
+                    setReprint={setReprint}
                     goToProfile={goToProfile} 
                 />
             </div>
