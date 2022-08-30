@@ -19,8 +19,8 @@ export default function checkedin() {
         getSettings()
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         if (checkedInClients) {
-            setMapped(checkedInClients.map((client) => {
-                return <Client key={client.clientID} client={client} settings={settings} />
+            setMapped(checkedInClients.map((data) => {
+                return <Client key={data.client.clientID} client={data.client} settings={settings} setReprint={setReprint} />
             }))
         }
     },[settings])
@@ -37,7 +37,12 @@ export default function checkedin() {
                 {mapped} 
             </div>  
            }
-           <Printout formData={reprint.form} client={reprint.client} />
+            {
+            reprint ? 
+            <Printout formData={reprint.form} client={reprint.client} />
+            : 
+            null 
+            }
         </div>
     )
 }
