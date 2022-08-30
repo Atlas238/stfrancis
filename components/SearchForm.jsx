@@ -5,7 +5,6 @@ import { useRouter } from "next/router"
 
 import { useState } from 'react'
 import { useForm } from "react-hook-form"
-import { getDate } from 'date-fns'
 
 const clientLookupSchema = Yup.object().shape({
     firstName: Yup.string(),
@@ -49,12 +48,14 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
         let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByInfo?firstName=${data.firstName}&lastName=${data.lastName}&birthdate=${data.dateOfBirth}`)
         let clients = await res.json()
 
-        if (clients.length != 0) {
+        if (clients.length != 0 && clients.length < 500) {
             clients.forEach((client) => {
-                client.firstName = client.firstName.toLowerCase()
-                client.firstName = client.firstName[0].toUpperCase() + client.firstName.slice(1)
-                client.lastName = client.lastName.toLowerCase()
-                client.lastName = client.lastName[0].toUpperCase() + client.lastName.slice(1)
+                if (client.firstName && client.lastName) {
+                    client.firstName = client.firstName.toLowerCase()
+                    client.firstName = client.firstName[0].toUpperCase() + client.firstName.slice(1)
+                    client.lastName = client.lastName.toLowerCase()
+                    client.lastName = client.lastName[0].toUpperCase() + client.lastName.slice(1)
+                }
 
                 setEligibleItems(client)
 
@@ -72,9 +73,25 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
                 }
             })
             setDbClients(clients)
-        }
 
-        localStorage.setItem('lastClients', JSON.stringify(clients))
+            if (clients.length < 100) {
+                localStorage.setItem('lastClients', JSON.stringify(clients))
+            } else {
+                let firstPage = clients.slice(0, 100)
+                localStorage.setItem('lastClients', JSON.stringify(firstPage))
+            }
+
+        } else {
+            //List was soo long we say we couldnt find anyone...
+            setDbClients(null)
+
+        }
+        if (clients.length < 100) {
+            localStorage.setItem('lastClients', JSON.stringify(clients))
+        } else {
+            let firstPage = clients.slice(0, 100)
+            localStorage.setItem('lastClients', JSON.stringify(firstPage))
+        }
 
         setLoading(false)
 
