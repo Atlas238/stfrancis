@@ -82,32 +82,38 @@ export default function checkin() {
 
     useEffect(() => {
         setLoading(true)
+        let checkinClient = JSON.parse(localStorage.getItem('tmpCheckinClient'))
+        console.log(checkinClient)
+        if (checkinClient != null | checkinClient != undefined){
+            setClient(checkinClient)
+        }
+        setLoading(false)
         // Check for clients on page load
-        async function getClientData(id) {
-            let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByID?clientID=${id}`)
-            let data = await res.json()
-            setClient(data[0])
-        }
+        // async function getClientData(id) {
+        //     let res = await fetch(`https://stfrancisone.herokuapp.com/home/getClientByID?clientID=${id}`)
+        //     let data = await res.json()
+        //     setClient(data[0])
+        // }
 
-        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        if (checkedInClients != null || checkedInClients != undefined) {
-            if (router.isReady) {
-                const { id } = router.query
-                checkedInClients.forEach((c) => {
-                    if (c.clientID == id) {
-                        setAbort(true)
-                    }
-                })
-                if (!abort) getClientData(id)
-                setLoading(false)
-            }
-        } else {
-            if (router.isReady) {
-                const { id } = router.query
-                getClientData(id)
-                setLoading(false)
-            }
-        }
+        // let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+        // if (checkedInClients != null || checkedInClients != undefined) {
+        //     if (router.isReady) {
+        //         const { id } = router.query
+        //         checkedInClients.forEach((c) => {
+        //             if (c.clientID == id) {
+        //                 setAbort(true)
+        //             }
+        //         })
+        //         if (!abort) getClientData(id)
+        //         setLoading(false)
+        //     }
+        // } else {
+        //     if (router.isReady) {
+        //         const { id } = router.query
+        //         getClientData(id)
+        //         setLoading(false)
+        //     }
+        // }
 
     }, [localStorage])
 
