@@ -16,11 +16,10 @@ const checkoutSchema = Yup.object().shape({
     womenClothing: Yup.boolean(),
     boyClothing: Yup.boolean(),
     girlClothing: Yup.boolean(),
-    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null),
+    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    financialAssistance: Yup.number().min(0).nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
     household: Yup.string(),
@@ -72,6 +71,7 @@ export default function checkin() {
             checkedInClientDict[client.clientID] = data
         }
         localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+        localStorage.removeItem('tmpCheckinClient');
 
         setTimeout(function () {
             printForm() // Print!
@@ -159,19 +159,19 @@ export default function checkin() {
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
                     <div className="collapse-content grid grid-cols-4 p-4 gap-y-8 gap-x-16 bg-white"> 
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Bus Ticket</span> 
+                        <span className="label-text text-lg">Bus Ticket <p className="text-sm text-orange-700">{errors.busTicket?.message}</p></span> 
                             <input type="text" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Gift Card</span> 
+                        <span className="label-text text-lg">Gift Card <p className="text-sm text-orange-700">{errors.giftCard?.message}</p></span> 
                             <input type="text" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Diaper</span> 
+                        <span className="label-text text-lg">Diaper <p className="text-sm text-orange-700">{errors.diaper?.message}</p></span> 
                             <input type="text" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Financial Assistance</span> 
+                        <span className="label-text text-lg">Financial Assistance <p className="text-sm text-orange-700">{errors.financialAssistance?.message}</p></span> 
                             <input type="text" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
