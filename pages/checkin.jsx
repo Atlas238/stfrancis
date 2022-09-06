@@ -122,27 +122,27 @@ export default function checkin() {
                 <div className="grid grid-flow-col">
                     <div>
                         <h1 className="card-title text-3xl">{client?.firstName != undefined ? client?.firstName : "Who"} {client?.middleInitial === undefined ? "" : client?.middleInitial === "" ? "" : client?.middleInitial + '.'} {client?.lastName != undefined ? client?.lastName : "are you?"}</h1>
-                        <p className="text-base">Family Size: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
+                        <p className="text-base">Number of Kids: {(client?.numFamily===undefined || client?.numFamily===null) ? '' : client?.numFamily}</p>
                     </div>
                 </div>
                 <div className='divider my-0'></div>
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Men</span> 
                             <input type="checkbox" name="menClothing" {...register('menClothing')} className="checkbox checkbox-lg" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Women</span> 
                             <input type="checkbox" name="womenClothing" {...register('womenClothing')} className="checkbox checkbox-lg" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Kids (Boy)</span> 
                             <input type="checkbox" name="boyClothing" {...register('boyClothing')} className="checkbox checkbox-lg" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Kids (Girl)</span> 
                             <input type="checkbox" name="girlClothing" {...register('girlClothing')} className="checkbox checkbox-lg" />
                         </label>
@@ -157,30 +157,30 @@ export default function checkin() {
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Backpack</span> 
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Sleeping Bag</span> 
-                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
-                        </label>
-                        <label className="label cursor-pointer py-4">
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-y-8 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Bus Ticket</span> 
                             <input type="text" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Gift Card</span> 
                             <input type="text" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Diaper</span> 
                             <input type="text" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Financial Assistance</span> 
                             <input type="text" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Backpack</span> 
+                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Sleeping Bag</span> 
+                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
                         </label>
                     </div>
                 </div>
