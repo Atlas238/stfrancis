@@ -7,15 +7,14 @@ import * as Yup from 'yup';
 
 // form validation
 const checkoutSchema = Yup.object().shape({
-    menClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    womenClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    boyClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    girlClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    menClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    womenClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    boyClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    girlClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
     household: Yup.string(),
@@ -128,19 +127,19 @@ export default function checkout() {
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
                     <div className="collapse-content grid grid-cols-4 p-4 gap-x-16 bg-white"> 
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                            <span className="label-text text-lg">Men</span> 
+                            <span className="label-text text-lg">Men <p className="text-sm text-orange-700">{errors.menClothing?.message}</p></span> 
                             <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                            <span className="label-text text-lg">Women</span> 
+                            <span className="label-text text-lg">Women <p className="text-sm text-orange-700">{errors.womenClothing?.message}</p></span> 
                             <input type="text" name="womenClothing" placeholder="Qty" {...register('womenClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                            <span className="label-text text-lg">Kids (Boy)</span> 
+                            <span className="label-text text-lg">Kids (Boy) <p className="text-sm text-orange-700">{errors.boyClothing?.message}</p></span> 
                             <input type="text" name="boyClothing" placeholder="Qty" {...register('boyClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                            <span className="label-text text-lg">Kids (Girl)</span> 
+                            <span className="label-text text-lg">Kids (Girl) <p className="text-sm text-orange-700">{errors.girlClothing?.message}</p></span> 
                             <input type="text" name="girlClothing" placeholder="Qty" {...register('girlClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
 
@@ -157,19 +156,19 @@ export default function checkout() {
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
                     <div className="collapse-content grid grid-cols-4 p-4 gap-y-8 gap-x-16 bg-white"> 
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Bus Ticket</span> 
+                        <span className="label-text text-lg">Bus Ticket <p className="text-sm text-orange-700">{errors.busTicket?.message}</p></span> 
                             <input type="text" id="busTicket" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Gift Card</span> 
+                        <span className="label-text text-lg">Gift Card <p className="text-sm text-orange-700">{errors.giftCard?.message}</p></span> 
                             <input type="text" id="giftCard" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Diaper</span> 
+                        <span className="label-text text-lg">Diaper <p className="text-sm text-orange-700">{errors.diaper?.message}</p></span> 
                             <input type="text" id="diaper" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
-                        <span className="label-text text-lg">Financial Assistance</span> 
+                        <span className="label-text text-lg">Financial Assistance <p className="text-sm text-orange-700">{errors.financialAssistance?.message}</p></span> 
                             <input type="text" id="financialAssistance" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
                         <label className="label cursor-pointer gap-x-8 justify-center">
@@ -187,8 +186,6 @@ export default function checkout() {
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
                     <textarea id="notes" name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
-                <p>{errors.menClothing?.message}</p>
-                <p>{errors.womenClothing?.message}</p>
                 <div className='divider my-0'></div>
                 <div className="flex p-4 gap-8">
                     <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>
