@@ -141,20 +141,20 @@ export default function checkout() {
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Men</span> 
                             <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Women</span> 
                             <input type="text" name="womenClothing" placeholder="Qty" {...register('womenClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Kids (Boy)</span> 
                             <input type="text" name="boyClothing" placeholder="Qty" {...register('boyClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                             <span className="label-text text-lg">Kids (Girl)</span> 
                             <input type="text" name="girlClothing" placeholder="Qty" {...register('girlClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
@@ -170,40 +170,30 @@ export default function checkout() {
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Backpack</span> 
-                        {/* {client?.eligibleItems.includes('Backpack') ? ( */}
-                            <input type="checkbox" id="backpack" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
-                        )} */}
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Sleeping Bag</span> 
-                        {/* {client?.eligibleItems.includes('sleepingbag') ? ( */}
-                            <input type="checkbox" id="sleepingbag" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
-                        )} */}
-                        </label>
-                        <label></label>
-                        <label></label>
-                        <label className="label cursor-pointer py-4">
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-y-8 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Bus Ticket</span> 
                             <input type="text" id="busTicket" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Gift Card</span> 
                             <input type="text" id="giftCard" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Diaper</span> 
                             <input type="text" id="diaper" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
+                        <label className="label cursor-pointer gap-x-8 justify-center">
                         <span className="label-text text-lg">Financial Assistance</span> 
                             <input type="text" id="financialAssistance" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Backpack</span> 
+                            <input type="checkbox" id="backpack" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Sleeping Bag</span> 
+                            <input type="checkbox" id="sleepingbag" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
                         </label>
                     </div>
                 </div>
