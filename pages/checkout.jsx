@@ -37,8 +37,6 @@ export default function checkout() {
 
     // Submits form data to DB, updates VISIT record
     const submitForm = async (data) => {
-        console.log(data)
-
         // Create visit record and check out record when client received items, if not, visit will not be created
         if (data.menClothing || data.womenClothing || data.boyClothing || data.girlClothing || data.busTicket || data.giftCard || data.diaper || data.financialAssistance || data.backpack || data.sleeingbag || data.notes!=="") {
             // Create a visit record with client ID
@@ -67,16 +65,9 @@ export default function checkout() {
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
         checkedInClients?.forEach(c => {
-            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+            if (c.client.clientID !== client.clientID) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-
-        // Remove client from checkedInClientDict list
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (client.clientID in checkedInClientDict){
-            delete checkedInClientDict[client.clientID]
-        }
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
 
         //Move them back to the checkedin page
         router.push('/checkedin');
@@ -112,15 +103,9 @@ export default function checkout() {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         checkedInClients?.forEach(client => {
-            console.log(typeof(client.clientID))
-            if (client.clientID === Number(id)) setClient(client)
+            if (client.client.clientID === Number(id)) setClient(client.client); fillFieldswithCheckinInfo(client.form)
         })
-
-        let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
-        if (checkedInClientDict && Number(id) in checkedInClientDict){
-            fillFieldswithCheckinInfo(checkedInClientDict[Number(id)])
-        }
-    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
+    }, [localStorage])
 
     return (
        <div className="mt-20">
