@@ -128,6 +128,7 @@ export default function updateclient({ data }) {
         document.getElementById('postalCode').value = profile.zipCode === 0 ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
         document.getElementById('numKids').value = profile.numFamily
+        document.getElementById('notes').value = profile.clientNote !== 'none' ? profile.clientNote : ''
         profile.banned ? handleBanned() : null
     }
 
@@ -226,7 +227,7 @@ export default function updateclient({ data }) {
                     {/* Client Notes */}
                     <div className="p-2 w-full flex flex-col">
                         <label className="label label-text text-xl">Notes</label>
-                        <textarea name="notes" {...register('notes')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
+                        <textarea id="notes" name="notes" {...register('notes')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
