@@ -86,7 +86,7 @@ export default function updateclient({ data }) {
             let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
             let updatedCheckedInClients = []
             checkedInClients?.forEach(c => {
-                if (c.clientID !== Number(id)) updatedCheckedInClients.push(c)
+                if (c.client.clientID !== Number(id)) updatedCheckedInClients.push(c)
             })
             localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
