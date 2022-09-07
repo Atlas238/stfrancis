@@ -162,31 +162,31 @@ export default function updateclient({ data }) {
                         {/* First Name */}
                         <div className='p-2 w-60 flex flex-col'>
                         <label className="label label-text text-xl">First name <span className="text-orange-700 text-sm">{errors.firstName?.message}</span></label>
-                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Last Name */}
                         <div className="p-2 w-60 flex flex-col">
                         <label className="label label-text text-xl">Last name <span className="text-orange-700 text-sm">{errors.lastName?.message}</span></label>
-                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Middle Initial */}
                         <div className="p-2 w-60 flex flex-col">
                         <label className="label label-text text-xl">Middle Initial <span className="text-orange-700 text-sm">{errors.middleInitial?.message}</span></label>
-                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Date of Birth */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700 text-sm">{errors.dateOfBirth?.message}</span></label>
-                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center"></input>
+                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center bg-white"></input>
                         </div>
 
                         {/* Gender */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Gender</label>
-                            <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>F</option>
                                 <option>M</option>
@@ -197,7 +197,7 @@ export default function updateclient({ data }) {
                         {/* Race */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Race</label>
-                            <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>American Indian or Alaska Native</option>
                                 <option>Asian</option>
@@ -212,13 +212,13 @@ export default function updateclient({ data }) {
                         {/* Zip Code */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Postal code <span className="text-orange-700 text-sm">{errors.postalCode?.message}</span></label>
-                            <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Num Kids */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Number of Kids <span className="text-orange-700 text-sm">{errors.numKids?.message}</span></label>
-                            <input id="numKids" type="text" name="numKids" {...register('numKids')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <input id="numKids" type="text" name="numKids" {...register('numKids')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                     </div>
