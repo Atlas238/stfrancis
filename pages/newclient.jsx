@@ -67,6 +67,22 @@ export default function newclient() {
         setGoToCheckin(true)
     }
 
+    const fillFieldswithPartialClient = (data) => {
+        document.getElementById('firstName').value = data.firstName
+        document.getElementById('lastName').value = data.lastName
+        document.getElementById('dateOfBirth').valueAsDate = data.dateOfBirth ? new Date(data.dateOfBirth) : null 
+    }
+
+    useEffect(() => {
+        // get checkedInClients from localstorage
+        let partialData = JSON.parse(localStorage.getItem('partialClient'))
+        if(partialData){
+            fillFieldswithPartialClient(partialData)
+        }
+
+    }, [localStorage])
+
+
     return (
         <div className="flex flex-col min-w-full min-h-screen overflow-x-hidden">
             <form onSubmit={handleSubmit(submitForm)} className="card mt-28 mx-auto">

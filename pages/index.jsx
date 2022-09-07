@@ -20,6 +20,8 @@ export default function Home() {
 
     // Subscribes to the loggedin user
     useEffect(() => {
+        // remove partialClient from localStorage previously set
+        localStorage.removeItem('partialClient')
         let stored = localStorage.getItem('lastClients')
 
         if (stored === undefined | stored === "undefined") {
