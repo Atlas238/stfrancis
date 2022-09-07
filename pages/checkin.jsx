@@ -61,16 +61,6 @@ export default function checkin() {
             checkedInClients.push({ client: client, form: data })
         }
         localStorage.setItem("checkedInClients", JSON.stringify(checkedInClients))
-
-        // store form data to checkedInClientDict localstorage (key:clientID, value:json object)
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (checkedInClientDict === undefined || checkedInClientDict === null) {
-            checkedInClientDict = {}
-            checkedInClientDict[client.clientID] = data
-        } else {
-            checkedInClientDict[client.clientID] = data
-        }
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
         localStorage.removeItem('tmpCheckinClient');
 
         setTimeout(function () {

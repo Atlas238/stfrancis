@@ -75,9 +75,7 @@ export default function updateclient({ data }) {
         console.log(id)
         console.log(typeof(id))
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        console.log(checkedInClients)
-        console.log(checkedInClientDict)
+        
         // delete client by id (add route)
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteClientByID?clientID=${id}`)
         // if successful
@@ -90,12 +88,6 @@ export default function updateclient({ data }) {
             })
             localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
-            // if checked in, remove client from checkedInClientDict list
-            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-            if (Number(id) in checkedInClientDict){
-                delete checkedInClientDict[Number(id)]
-                localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-            } 
 
             // display successful popup
             alert("Successfully Deleted")
