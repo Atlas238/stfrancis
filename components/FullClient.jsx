@@ -87,6 +87,14 @@ export default function FullClient({ client }) {
                     </h3>
                     : <></>
                 }
+                {/* Display client notes if exists */}
+                {client?.clientNote && client?.clientNote !== 'none'?
+                    <h3 className="card-title text-xl pt-1 pl-2">
+                        Notes: {client.clientNote}
+                    </h3>
+                    :
+                    <></>  
+                }
 
                 <div className="divider"></div>
                 <ul>
