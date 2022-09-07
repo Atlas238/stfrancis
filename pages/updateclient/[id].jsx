@@ -14,6 +14,7 @@ const clientSchema = Yup.object().shape({
     race: Yup.string().notRequired(),
     postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: 'Invalid format'}),
     numKids: Yup.number().min(0, 'Number >= 0').integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('Number only'),
+    notes: Yup.string().notRequired(),
     banned: Yup.bool()
 },
 // add cyclic dependencies for requiring itself
@@ -45,7 +46,7 @@ export default function updateclient({ data }) {
         setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
 
         // Update client request to DB
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth ? updateClient.dateOfBirth : '0001-01-01'}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numKids=${updateClient.numKids}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth ? updateClient.dateOfBirth : '0001-01-01'}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numKids=${updateClient.numKids}&notes=${updateClient.notes}`)
         // if successful
         if(response.ok && response.status===200){
             alert("Successfully Saved")
@@ -221,6 +222,11 @@ export default function updateclient({ data }) {
                             <input id="numKids" type="text" name="numKids" {...register('numKids')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
+                    </div>
+                    {/* Client Notes */}
+                    <div className="p-2 w-full flex flex-col">
+                        <label className="label label-text text-xl">Notes</label>
+                        <textarea name="notes" {...register('notes')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>
