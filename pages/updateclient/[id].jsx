@@ -149,7 +149,7 @@ export default function updateclient({ data }) {
         // get checkedInClients from localstorage
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         // if client is checked in, set isCheckedIn to true
-        if (checkedInClients?.some(c => c.clientID === Number(id))) {
+        if (checkedInClients?.some(c => c.client.clientID === Number(id))) {
             setIsCheckedIn(true)
         }
         
