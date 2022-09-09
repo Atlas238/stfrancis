@@ -29,7 +29,19 @@ export default function Visit({ visit }) {
                     {/* other requests */}
                     <li><span className="font-semibold">Requests:</span> {visit.request}</li>
                 </ul>
-                <button id="visitDelete" value={visit.visitID} onClick={deleteVisit} className="btn btn-ghost">Delete</button>
+                <div className='card-actions justify-end my-0 py-0'>
+                    <label htmlFor="my-modal" className="btn modal-button btn-ghost">Delete</label>
+                    <input type="checkbox" id="my-modal" className="modal-toggle" />
+                    <label htmlFor="my-modal" className="modal cursor-pointer">                    
+                    <label className="modal-box relative" htmlFor="my-modal">
+                        <label htmlFor="my-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
+                        <h3 className="text-center text-lg font-bold">Delete this visit?</h3>
+                        <div className="modal-action justify-center">
+                            <label onClick={()=> {deleteVisit()}} htmlFor="my-modal" className="btn btn-sm btn-warning">DELETE</label>
+                        </div>
+                    </label>
+                    </label>
+                </div>
                 </div>
             </div>
         </li>
