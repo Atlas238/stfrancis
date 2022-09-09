@@ -66,17 +66,16 @@ export default function updateclient({ data }) {
                     checkedInClients[index].client = data.length > 0 ? data[0] : checkedInClients[index]
                     localStorage.setItem('checkedInClients', JSON.stringify(checkedInClients))
                 }
-            }
-
-            if (goToCheckin) {
-                // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
-                localStorage.setItem("tmpCheckinClient", JSON.stringify(updateClient))
-                // go to checkin page
-                router.push(`/checkin?id=${id}`)
-            }
-            else{
-                // go back to profile page
-                router.push(`/profile/${id}`)
+                if (goToCheckin && data.length > 0) {
+                    // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data[0]))
+                    // go to checkin page
+                    router.push(`/checkin?id=${id}`)
+                }
+                else{
+                    // go back to profile page
+                    router.push(`/profile/${id}`)
+                }
             }
         }else{
             // display unsuccessful popup
