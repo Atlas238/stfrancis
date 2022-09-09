@@ -33,7 +33,6 @@ export default function updateclient({ data }) {
     const router = useRouter()
     const { id } = router.query
     const [client, setClient] = useState(null)
-    const [updateClient, setUpdateClient] = useState(null)
     const { register, handleSubmit, reset, formState } = useForm({
         resolver: yupResolver(clientSchema)
     });
@@ -43,13 +42,32 @@ export default function updateclient({ data }) {
     const [goToCheckin, setGoToCheckin] = useState(false)
 
     const submitForm = async (updateClient) => {
-        setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
-
         // Update client request to DB
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth ? updateClient.dateOfBirth : '0001-01-01'}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numKids=${updateClient.numKids}&notes=${updateClient.notes}`)
         // if successful
         if(response.ok && response.status===200){
             alert("Successfully Saved")
+
+            // update lastClients list and checkedInClients list with the updated data
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
+            if(response.ok && response.status===200){
+                let data = await response.json()
+                // update lastClients
+                let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+                let index = lastClients.findIndex(client => client.clientID === Number(id))
+                if(index !== -1){
+                    lastClients[index] = data.length > 0 ? data[0] : lastClients[index]
+                    localStorage.setItem('lastClients', JSON.stringify(lastClients))
+                }
+                // if checked in, update checkedInClients
+                let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+                index = checkedInClients.findIndex(client => client.client.clientID === Number(id))
+                if(index !== -1){
+                    checkedInClients[index].client = data.length > 0 ? data[0] : checkedInClients[index]
+                    localStorage.setItem('checkedInClients', JSON.stringify(checkedInClients))
+                }
+            }
+
             if (goToCheckin) {
                 // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
                 localStorage.setItem("tmpCheckinClient", JSON.stringify(updateClient))
@@ -72,10 +90,6 @@ export default function updateclient({ data }) {
     
 
     const deleteClient = async () => {
-        console.log(id)
-        console.log(typeof(id))
-        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        
         // delete client by id (add route)
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteClientByID?clientID=${id}`)
         // if successful
@@ -88,6 +102,13 @@ export default function updateclient({ data }) {
             })
             localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
+            // remove the deleted client from lastClient list
+            let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+            let updatedLastClients = []
+            lastClients?.forEach(c => {
+                if (c.clientID !== Number(id)) updatedLastClients.push(c)
+            })
+            localStorage.setItem("lastClients", JSON.stringify(updatedLastClients))
 
             // display successful popup
             alert("Successfully Deleted")
