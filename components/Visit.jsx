@@ -18,8 +18,8 @@ export default function Visit({ visit }) {
                     {visit.womens > 0 ? <li><span className="font-semibold">Womens Clothing:</span> {visit.womens}</li> : <></>}
                     {visit.kids > 0 ? <li><span className="font-semibold">Kids Clothing:</span> {visit.kids}</li> : <></>}
                     {/* special items */}
-                    <li><span className="font-semibold">Last Backpack:</span> {new Date(visit.lastBackpack).toDateString()}</li>
-                    <li><span className="font-semibold">Last Sleeping Bag:</span> {new Date(visit.lastSleepingBag).toDateString()}</li>
+                    <li><span className="font-semibold">Last Backpack:</span> {visit.lastBackpack.split('T')[0] === '0001-01-01' ? null : new Date(visit.lastBackpack).toDateString()}</li>
+                    <li><span className="font-semibold">Last Sleeping Bag:</span> {visit.lastSleepingBag.split('T')[0] === '0001-01-01' ? null : new Date(visit.lastSleepingBag).toDateString()}</li>
                     {visit.busTicket > 0 ? <li><span className="font-semibold">Bus Ticket:</span> {visit.busTicket}</li> : <></>}
                     {visit.giftCard > 0 ? <li><span className="font-semibold">Gift Card:</span> {visit.giftCard}</li> : <></>}
                     {visit.diapers > 0 ? <li><span className="font-semibold">Diaper:</span> {visit.diapers}</li> : <></>}
