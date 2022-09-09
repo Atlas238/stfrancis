@@ -27,7 +27,7 @@ export default function newclient() {
     const [newClient, setNewClient] = useState(null)
     const [goToCheckin, setGoToCheckin] = useState(false)
 
-    const { register, handleSubmit, formState } = useForm({
+    const { register, handleSubmit, reset, formState } = useForm({
         resolver: yupResolver(clientSchema)
     });
 
@@ -45,12 +45,17 @@ export default function newclient() {
                 // get json data from server
                 let res = await response.json()
                 if(res.length > 0){
-                    // add clientID to data object
-                    data.clientID = res[0].clientID
+                    // fetch newly created data for checkin
+                    response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${res[0].clientID}`)
+                    let data = await response.json()
+                    if (data.length <= 0) {
+                        // go back to index page
+                        router.push(`/`)
+                    }
                     // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
-                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data))
+                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data[0]))
                     // go to checkin page
-                    router.push(`/checkin?id=${data.clientID}`)
+                    router.push(`/checkin?id=${data[0].clientID}`)
                 }
             }
             else{
@@ -71,6 +76,8 @@ export default function newclient() {
         document.getElementById('firstName').value = data.firstName
         document.getElementById('lastName').value = data.lastName
         document.getElementById('dateOfBirth').valueAsDate = data.dateOfBirth ? new Date(data.dateOfBirth) : null 
+        // reset form fields
+        reset(data)
     }
 
     useEffect(() => {
