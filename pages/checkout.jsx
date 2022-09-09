@@ -58,6 +58,18 @@ export default function checkout() {
                     console.log("Banned status updated")
                 }
             }
+            // Fetch full client record again to update lastClients
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${client.clientID}`)
+            if(response.ok && response.status===200){
+                let data = await response.json()
+                // update lastClients
+                let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+                let index = lastClients.findIndex(client => client.clientID === Number(client.clientID))
+                if(index !== -1){
+                    lastClients[index] = data.length > 0 ? data[0] : lastClients[index]
+                    localStorage.setItem('lastClients', JSON.stringify(lastClients))
+                }
+            }
         }
 
         // Remove client from checkedin list
