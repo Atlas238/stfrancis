@@ -9,7 +9,7 @@ export default function Printout({ formData, client }) {
 
             {/* Client Portion */}
             <div className="flex justify-center border-b-black border-b-2">
-                <h1 className="text-2xl font-bold pt-5 pl-5 pr-24">{client.firstName} {client.lastName}'s Shopping List</h1>
+                <h1 className="text-2xl font-bold pt-5 pl-5 pr-24">{client.firstName} {client.lastName}&apos;s Shopping List</h1>
                 <h1 className="text-2xl font-bold pt-5">{new Date(Date.now()).toDateString()}</h1>
             </div>
 
@@ -80,6 +80,13 @@ export default function Printout({ formData, client }) {
                     {formData?.giftCard != null && formData?.giftCard > 0 ?
                     <div className="p-2">
                         <label className="p-3">Gift Card</label>
+                        <div className="border border-black border-solid w-10 h-10 p-4 ml-5"></div>
+                    </div>
+                    :
+                    <></>}
+                    {formData?.diaper != null && formData?.diaper > 0 ?
+                    <div className="p-2">
+                        <label className="p-5">Diaper</label>
                         <div className="border border-black border-solid w-10 h-10 p-4 ml-5"></div>
                     </div>
                     :

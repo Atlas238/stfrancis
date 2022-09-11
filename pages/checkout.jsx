@@ -7,15 +7,14 @@ import * as Yup from 'yup';
 
 // form validation
 const checkoutSchema = Yup.object().shape({
-    menClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    womenClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    boyClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    girlClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
-    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    menClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    womenClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    boyClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    girlClothing: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    busTicket: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    giftCard: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    diaper: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
+    financialAssistance: Yup.number().min(0).integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('A number is required.'),
     backpack: Yup.boolean(),
     sleeingbag: Yup.boolean(),
     household: Yup.string(),
@@ -37,8 +36,6 @@ export default function checkout() {
 
     // Submits form data to DB, updates VISIT record
     const submitForm = async (data) => {
-        console.log(data)
-
         // Create visit record and check out record when client received items, if not, visit will not be created
         if (data.menClothing || data.womenClothing || data.boyClothing || data.girlClothing || data.busTicket || data.giftCard || data.diaper || data.financialAssistance || data.backpack || data.sleeingbag || data.notes!=="") {
             // Create a visit record with client ID
@@ -61,22 +58,27 @@ export default function checkout() {
                     console.log("Banned status updated")
                 }
             }
+            // Fetch full client record again to update lastClients
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${client.clientID}`)
+            if(response.ok && response.status===200){
+                let data = await response.json()
+                // update lastClients
+                let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+                let index = lastClients.findIndex(c => c.clientID === Number(client.clientID))
+                if(index !== -1){
+                    lastClients[index] = data.length > 0 ? data[0] : lastClients[index]
+                    localStorage.setItem('lastClients', JSON.stringify(lastClients))
+                }
+            }
         }
 
         // Remove client from checkedin list
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
         checkedInClients?.forEach(c => {
-            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+            if (c.client.clientID !== client.clientID) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-
-        // Remove client from checkedInClientDict list
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (client.clientID in checkedInClientDict){
-            delete checkedInClientDict[client.clientID]
-        }
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
 
         //Move them back to the checkedin page
         router.push('/checkedin');
@@ -112,15 +114,9 @@ export default function checkout() {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         checkedInClients?.forEach(client => {
-            console.log(typeof(client.clientID))
-            if (client.clientID === Number(id)) setClient(client)
+            if (client.client.clientID === Number(id)) setClient(client.client); fillFieldswithCheckinInfo(client.form)
         })
-
-        let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
-        if (checkedInClientDict && Number(id) in checkedInClientDict){
-            fillFieldswithCheckinInfo(checkedInClientDict[Number(id)])
-        }
-    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
+    }, [localStorage])
 
     return (
        <div className="mt-20">
@@ -141,21 +137,21 @@ export default function checkout() {
                 {/* Clothing */}
                 <div tabIndex="0" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title text-xl font-body bg-base-200 ">Clothing</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Men</span> 
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                            <span className="label-text text-lg">Men <p className="text-sm text-orange-700">{errors.menClothing?.message}</p></span> 
                             <input type="text" name="menClothing" placeholder="Qty" {...register('menClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Women</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                            <span className="label-text text-lg">Women <p className="text-sm text-orange-700">{errors.womenClothing?.message}</p></span> 
                             <input type="text" name="womenClothing" placeholder="Qty" {...register('womenClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Kids (Boy)</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                            <span className="label-text text-lg">Kids (Boy) <p className="text-sm text-orange-700">{errors.boyClothing?.message}</p></span> 
                             <input type="text" name="boyClothing" placeholder="Qty" {...register('boyClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                            <span className="label-text text-lg">Kids (Girl)</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                            <span className="label-text text-lg">Kids (Girl) <p className="text-sm text-orange-700">{errors.girlClothing?.message}</p></span> 
                             <input type="text" name="girlClothing" placeholder="Qty" {...register('girlClothing')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
 
@@ -170,40 +166,30 @@ export default function checkout() {
                 {/* Special Items */}
                 <div tabIndex="2" className="collapse collapse-open border border-gray-200 dark:border-gray-700 rounded-box"> 
                     <div className="collapse-title flex-auto text-xl font-body bg-base-200">Special Requests</div>
-                    <div className="collapse-content grid grid-cols-4 gap-8 bg-white"> 
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Backpack</span> 
-                        {/* {client?.eligibleItems.includes('Backpack') ? ( */}
-                            <input type="checkbox" id="backpack" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="backpack" {...register('backpack')} className="checkbox checkbox-lg btn-disabled" disabled />
-                        )} */}
-                        </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Sleeping Bag</span> 
-                        {/* {client?.eligibleItems.includes('sleepingbag') ? ( */}
-                            <input type="checkbox" id="sleepingbag" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
-                        {/* ) : (
-                            <input type="checkbox" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" disabled />
-                        )} */}
-                        </label>
-                        <label></label>
-                        <label></label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Bus Ticket</span> 
+                    <div className="collapse-content grid grid-cols-4 p-4 gap-y-8 gap-x-16 bg-white"> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Bus Ticket <p className="text-sm text-orange-700">{errors.busTicket?.message}</p></span> 
                             <input type="text" id="busTicket" name="busTicket" {...register('busTicket')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Gift Card</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Gift Card <p className="text-sm text-orange-700">{errors.giftCard?.message}</p></span> 
                             <input type="text" id="giftCard" name="giftCard" {...register('giftCard')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Diaper</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Diaper <p className="text-sm text-orange-700">{errors.diaper?.message}</p></span> 
                             <input type="text" id="diaper" name="diaper" {...register('diaper')} className="input input-bordered w-1/3 text-lg text-center" />
                         </label>
-                        <label className="label cursor-pointer py-4">
-                        <span className="label-text text-lg">Financial Assistance</span> 
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Financial Assistance <p className="text-sm text-orange-700">{errors.financialAssistance?.message}</p></span> 
                             <input type="text" id="financialAssistance" name="financialAssistance" {...register('financialAssistance')} className="input input-bordered w-1/3 text-lg text-center" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Backpack</span> 
+                            <input type="checkbox" id="backpack" name="backpack" {...register('backpack')} className="checkbox checkbox-lg" />
+                        </label>
+                        <label className="label cursor-pointer gap-x-8 justify-center">
+                        <span className="label-text text-lg">Sleeping Bag</span> 
+                            <input type="checkbox" id="sleepingbag" name="sleepingbag" {...register('sleepingbag')} className="checkbox checkbox-lg" />
                         </label>
                     </div>
                 </div>
@@ -212,8 +198,6 @@ export default function checkout() {
                     <div className="collapse-title text-xl font-body bg-base-200">Notes</div>
                     <textarea id="notes" name="notes" {...register('notes')} placeholder="Additional requests/needs.." className ="textarea bg-white text-lg"></textarea> 
                 </div>
-                <p>{errors.menClothing?.message}</p>
-                <p>{errors.womenClothing?.message}</p>
                 <div className='divider my-0'></div>
                 <div className="flex p-4 gap-8">
                     <button type="submit" className="btn btn-accent btn-sm w-1/2">Checkout</button>

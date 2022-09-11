@@ -69,17 +69,32 @@ export default function FullClient({ client }) {
                     <div className="justify-self-end"><button onClick={()=> { updateClientProfile() }} className="btn btn-sm btn-outline">Edit Profile</button></div>
                 </div>
                 <ul className="flex">
-                    <li className="p-2 text-xl"><span className="font-bold">Birthday:</span> {client?.birthday.split(' ')[0]}</li>
+                    <li className="p-2 text-xl"><span className="font-bold">Birthday:</span> {client?.birthday}</li>
                     <li className="p-2 text-xl"><span className="font-bold">Gender:</span> {client?.gender}</li>
                     <li className="p-2 text-xl"><span className="font-bold">Race:</span> {client?.race}</li>
                     <li className="p-2 text-xl"><span className="font-bold">ZipCode:</span> {client?.zipCode}</li>
                     <li className="p-2 text-xl"><span className="font-bold">Number of Kids:</span> {client?.numFamily}</li>
                 </ul>
-                {oldestVisit ? 
-                        <h3 className="card-title text-xl pt-1 pl-2">
-                            Client since {new Date(oldestVisit.visitDate).toDateString()}
-                        </h3>
-                        : null}
+                {/* Display date of clientCreated if exists, otherwise display the oldestVisit */}
+                {client?.clientCreated ? 
+                    <h3 className="card-title text-xl pt-1 pl-2">
+                        Client since {new Date(client.clientCreated).toDateString()}
+                    </h3>
+                    :
+                    oldestVisit ?
+                    <h3 className="card-title text-xl pt-1 pl-2">
+                        Client since {new Date(oldestVisit.visitDate).toDateString()}
+                    </h3>
+                    : <></>
+                }
+                {/* Display client notes if exists */}
+                {client?.clientNote && client?.clientNote !== 'none'?
+                    <h3 className="card-title text-xl pt-1 pl-2">
+                        Notes: {client.clientNote}
+                    </h3>
+                    :
+                    <></>  
+                }
 
                 <div className="divider"></div>
                 <ul>

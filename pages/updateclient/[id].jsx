@@ -6,14 +6,15 @@ import { useEffect, useState } from 'react';
 
 // form validation
 const clientSchema = Yup.object().shape({
-    firstName: Yup.string().required('*'),
-    lastName: Yup.string().required('*'),
-    middleInitial: Yup.string().notRequired().when('middleInitial', {is:(value) => value?.length, then:(rule) => rule.length(1)}),
-    dateOfBirth: Yup.date().required('*').nullable().transform(v => (v instanceof Date && !isNaN(v) ? v : null)),
+    firstName: Yup.string().required('Required'),
+    lastName: Yup.string().required('Required'),
+    middleInitial: Yup.string().notRequired().when('middleInitial', {is:(value) => value?.length, then:(rule) => rule.length(1, 'One letter only')}),
+    dateOfBirth: Yup.string().matches(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, {excludeEmptyString: true, message: 'Invalid format'}),
     gender: Yup.string().notRequired(),
     race: Yup.string().notRequired(),
-    postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: '* wrong format'}),
-    familySize: Yup.number().positive().integer().nullable(true).transform((_, val) => val ? Number(val) : null),
+    postalCode: Yup.string().matches(/^\d{5}(?:[- ]?\d{4})?$/, {excludeEmptyString: true, message: 'Invalid format'}),
+    numKids: Yup.number().min(0, 'Number >= 0').integer().nullable(true).transform((_, val) => val ? Number(val) : null).typeError('Number only'),
+    notes: Yup.string().notRequired(),
     banned: Yup.bool()
 },
 // add cyclic dependencies for requiring itself
@@ -32,7 +33,6 @@ export default function updateclient({ data }) {
     const router = useRouter()
     const { id } = router.query
     const [client, setClient] = useState(null)
-    const [updateClient, setUpdateClient] = useState(null)
     const { register, handleSubmit, reset, formState } = useForm({
         resolver: yupResolver(clientSchema)
     });
@@ -42,22 +42,40 @@ export default function updateclient({ data }) {
     const [goToCheckin, setGoToCheckin] = useState(false)
 
     const submitForm = async (updateClient) => {
-        setUpdateClient(updateClient) //save in submit function so we can CALL submitForm in second button, but use data from state in other function (ie go to checkin)
-
         // Update client request to DB
-        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth.toISOString().split('T')[0]}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numKids=${updateClient.familySize}`)
+        let response = await fetch(`https://stfrancisone.herokuapp.com/home/updateClientByID?clientID=${id}&firstName=${updateClient.firstName}&lastName=${updateClient.lastName}&middleInitial=${updateClient.middleInitial}&birthdate=${updateClient.dateOfBirth ? updateClient.dateOfBirth : '0001-01-01'}&gender=${updateClient.gender}&race=${updateClient.race}&zipcode=${updateClient.postalCode}&banned=${updateClient.banned}&numKids=${updateClient.numKids}&notes=${updateClient.notes}`)
         // if successful
         if(response.ok && response.status===200){
             alert("Successfully Saved")
-            if (goToCheckin) {
-                // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
-                localStorage.setItem("tmpCheckinClient", JSON.stringify(updateClient))
-                // go to checkin page
-                router.push(`/checkin?id=${id}`)
-            }
-            else{
-                // go back to profile page
-                router.push(`/profile/${id}`)
+
+            // update lastClients list and checkedInClients list with the updated data
+            response = await fetch(`https://stfrancisone.herokuapp.com/home/getClientVisits?clientID=${id}`)
+            if(response.ok && response.status===200){
+                let data = await response.json()
+                // update lastClients
+                let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+                let index = lastClients.findIndex(client => client.clientID === Number(id))
+                if(index !== -1){
+                    lastClients[index] = data.length > 0 ? data[0] : lastClients[index]
+                    localStorage.setItem('lastClients', JSON.stringify(lastClients))
+                }
+                // if checked in, update checkedInClients
+                let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
+                index = checkedInClients.findIndex(client => client.client.clientID === Number(id))
+                if(index !== -1){
+                    checkedInClients[index].client = data.length > 0 ? data[0] : checkedInClients[index]
+                    localStorage.setItem('checkedInClients', JSON.stringify(checkedInClients))
+                }
+                if (goToCheckin && data.length > 0) {
+                    // temporary store client info to localstorage for checing-in (will be deleted in Checkin page)
+                    localStorage.setItem("tmpCheckinClient", JSON.stringify(data[0]))
+                    // go to checkin page
+                    router.push(`/checkin?id=${id}`)
+                }
+                else{
+                    // go back to profile page
+                    router.push(`/profile/${id}`)
+                }
             }
         }else{
             // display unsuccessful popup
@@ -71,12 +89,6 @@ export default function updateclient({ data }) {
     
 
     const deleteClient = async () => {
-        console.log(id)
-        console.log(typeof(id))
-        let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        console.log(checkedInClients)
-        console.log(checkedInClientDict)
         // delete client by id (add route)
         let response = await fetch(`https://stfrancisone.herokuapp.com/home/deleteClientByID?clientID=${id}`)
         // if successful
@@ -85,16 +97,17 @@ export default function updateclient({ data }) {
             let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
             let updatedCheckedInClients = []
             checkedInClients?.forEach(c => {
-                if (c.clientID !== Number(id)) updatedCheckedInClients.push(c)
+                if (c.client.clientID !== Number(id)) updatedCheckedInClients.push(c)
             })
             localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
-            // if checked in, remove client from checkedInClientDict list
-            let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-            if (Number(id) in checkedInClientDict){
-                delete checkedInClientDict[Number(id)]
-                localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
-            } 
+            // remove the deleted client from lastClient list
+            let lastClients = JSON.parse(localStorage.getItem('lastClients'))
+            let updatedLastClients = []
+            lastClients?.forEach(c => {
+                if (c.clientID !== Number(id)) updatedLastClients.push(c)
+            })
+            localStorage.setItem("lastClients", JSON.stringify(updatedLastClients))
 
             // display successful popup
             alert("Successfully Deleted")
@@ -121,12 +134,13 @@ export default function updateclient({ data }) {
         document.getElementById('firstName').value = profile.firstName
         document.getElementById('lastName').value = profile.lastName
         document.getElementById('middleInitial').value = profile.middleInitial
-        document.getElementById('dateOfBirth').valueAsDate = new Date(profile.birthday)
+        document.getElementById('dateOfBirth').valueAsDate = profile.birthday.split(' ')[0] === '01/01/0001' ? null : new Date(profile.birthday)
         document.getElementById('gender').value = profile.gender === 'N/A' ? '' : profile.gender
         document.getElementById('race').value = profile.race === 'N/A' ? '' : profile.race
         document.getElementById('postalCode').value = profile.zipCode === 0 ? '' : profile.zipCode
         document.getElementById('banned').checked = profile.banned
-        document.getElementById('familySize').value = profile.numFamily
+        document.getElementById('numKids').value = profile.numFamily
+        document.getElementById('notes').value = profile.clientNote !== 'none' ? profile.clientNote : ''
         profile.banned ? handleBanned() : null
     }
 
@@ -134,7 +148,7 @@ export default function updateclient({ data }) {
         // get checkedInClients from localstorage
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         // if client is checked in, set isCheckedIn to true
-        if (checkedInClients?.some(c => c.clientID === Number(id))) {
+        if (checkedInClients?.some(c => c.client.clientID === Number(id))) {
             setIsCheckedIn(true)
         }
         
@@ -161,32 +175,32 @@ export default function updateclient({ data }) {
 
                         {/* First Name */}
                         <div className='p-2 w-60 flex flex-col'>
-                        <label className="label label-text text-xl">First name <span className="text-orange-700">{errors.firstName?.message}</span></label>
-                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <label className="label label-text text-xl">First name <span className="text-orange-700 text-sm">{errors.firstName?.message}</span></label>
+                        <input id="firstName" type="text" name="firstName" {...register('firstName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Last Name */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text text-xl">Last name <span className="text-orange-700">{errors.lastName?.message}</span></label>
-                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <label className="label label-text text-xl">Last name <span className="text-orange-700 text-sm">{errors.lastName?.message}</span></label>
+                        <input id="lastName" type="text" name="lastName" {...register('lastName')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Middle Initial */}
                         <div className="p-2 w-60 flex flex-col">
-                        <label className="label label-text text-xl">Middle Initial</label>
-                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center" />
+                        <label className="label label-text text-xl">Middle Initial <span className="text-orange-700 text-sm">{errors.middleInitial?.message}</span></label>
+                        <input id="middleInitial" type="text" name="middleInitial" {...register('middleInitial')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
                         {/* Date of Birth */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700">{errors.dateOfBirth?.message}</span></label>
-                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center"></input>
+                            <label className="label label-text text-xl">Date of Birth  <span className="text-orange-700 text-sm">{errors.dateOfBirth?.message}</span></label>
+                            <input id="dateOfBirth" type="date" name="dateOfBirth" {...register('dateOfBirth')} placeholder="date" className="input input-bordered min-w-sm p-2 text-center bg-white"></input>
                         </div>
 
                         {/* Gender */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Gender</label>
-                            <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select id="gender" name="gender" {...register('gender')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>F</option>
                                 <option>M</option>
@@ -197,7 +211,7 @@ export default function updateclient({ data }) {
                         {/* Race */}
                         <div className="p-2 w-60 flex flex-col">
                             <label className="label label-text text-xl">Race</label>
-                            <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center">
+                            <select id="race" name="race" {...register('race')} className="select select-bordered min-w-sm p-2 text-center bg-white">
                                 <option defaultValue value="">(Optional)</option>
                                 <option>American Indian or Alaska Native</option>
                                 <option>Asian</option>
@@ -211,16 +225,21 @@ export default function updateclient({ data }) {
 
                         {/* Zip Code */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Postal code <span className="text-orange-700">{errors.postalCode?.message}</span></label>
-                            <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <label className="label label-text text-xl">Postal code <span className="text-orange-700 text-sm">{errors.postalCode?.message}</span></label>
+                            <input id="postalCode" type="text" name="postalCode" {...register('postalCode')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
-                        {/* Family */}
+                        {/* Num Kids */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Number of Kids</label>
-                            <input id="familySize" type="text" name="familySize" {...register('familySize')} className="input input-bordered min-w-sm p-2 text-center" />
+                            <label className="label label-text text-xl">Number of Kids <span className="text-orange-700 text-sm">{errors.numKids?.message}</span></label>
+                            <input id="numKids" type="text" name="numKids" {...register('numKids')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
+                    </div>
+                    {/* Client Notes */}
+                    <div className="p-2 w-full flex flex-col">
+                        <label className="label label-text text-xl">Notes</label>
+                        <textarea id="notes" name="notes" {...register('notes')} placeholder="Notes.." className ="textarea bg-white text-lg"></textarea> 
                     </div>
                     <div className='card-actions justify-center my-0 py-8'>
                         <button type="submit" className="btn btn-wide btn-secondary p-2 my-2 m-8">Update</button>

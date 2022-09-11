@@ -44,7 +44,7 @@ export default function Client({client, settings, setReprint }) {
                 break
         }
         checkedInClients?.forEach(c => {
-            if (c.clientID === client.clientID) setView(2)
+            if (c.client.clientID === client.clientID) setView(2)
         })
 
     }, [localStorage.getItem('checkedInClients'), window.location.pathname])

@@ -46,13 +46,13 @@ export default function ClientBody({ client, view, settings, checkedIn, handleCh
 
             {client.clientNote === 'none' ? null : <><label className="font-semibold">Client Note:</label><p className="text-center">{client.clientNote}</p></> }
 
-            {(client.visits === null || client.visits.length === 0 || client.visits[0]?.request === 'none')  ? 
-            null 
-            : 
+            {client.visits?.length > 0 ?
             <>
                 <label className="font-semibold">Last Visit Notes: </label>
                 <p className="text-center">{client.visits[0]?.request}</p>
             </>
+            :
+            null
             }
 
             <div className="card-actions justify-center">
