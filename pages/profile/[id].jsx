@@ -19,10 +19,10 @@ export default function profile() {
                 let data = await response.json()
                 let client = data[0]
                 
-                client.firstName = client.firstName.toLowerCase()
-                client.lastName = client.lastName.toLowerCase()
-                client.firstName = client.firstName[0].toUpperCase() + client.firstName.slice(1)
-                client.lastName = client.lastName[0].toUpperCase() + client.lastName.slice(1)
+                client.firstName = (client.firstName.length > 0? client.firstName[0].toUpperCase() : '') + (client.firstName.length > 1 ? client.firstName.slice(1).toLowerCase() : '')
+                client.lastName = (client.lastName.length > 0? client.lastName[0].toUpperCase() : '') + (client.lastName.length > 1 ? client.lastName.slice(1).toLowerCase() : '')
+                client.middleInitial = client.middleInitial.toUpperCase()
+                client.birthday = client.birthday.split(' ')[0] === '01/01/0001' ? null : client.birthday.split(' ')[0]
 
                 setClient(client)
                 setLoading(false)

@@ -95,6 +95,9 @@ export default function SearchForm({ setDbClients, setSubmitted, setLoading, set
 
         setLoading(false)
 
+        //Store the search info in local storage
+        localStorage.setItem('partialClient', JSON.stringify(data))
+        
         // Can move or change?
         document.getElementById('firstName').value = ""
         document.getElementById('lastName').value = ""
