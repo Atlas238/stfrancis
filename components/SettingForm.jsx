@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 
 import Loading from "./Loading"
+import Saved from './Saved'
 import Setting from "./Setting"
 
 export default function SettingForm() {
     const [loading, setLoading] = useState(null)
+    const [error, setError] = useState(false)
+    const [saved, setSaved] = useState(false)
     const [settings, setSettings] = useState({
         daysEarlyThreshold: 25,
         backpackThreshold: 91,
@@ -71,18 +74,30 @@ export default function SettingForm() {
     }
 
     const saveSettings = async () => {
-        let res = await fetch('/api/settings', { method: 'POST', body: JSON.stringify(settings) })
-        let data = await res.json()
-        setSettings(data)
+        try {
+            let res = await fetch('/api/settings', { method: 'POST', body: JSON.stringify(settings) })
+            let data = await res.json()
+            setSettings(data)
+            document.getElementById('savedModal').value = true
+            window.alert('Saved!')
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     useEffect(() => {
         async function getSettings() {
             setLoading(true)
+            try {
             let res = await fetch('/api/settings', { method: 'GET'})
             let data = await res.json()
             setSettings(data)
             setLoading(false)
+            } catch (err) {
+                console.log(err)
+                setError(true)
+                setLoading(false)
+            }
         }
 
         getSettings()
@@ -95,6 +110,7 @@ export default function SettingForm() {
         <Loading loading={loading} options={'py-10 mx-auto w-3/12'}/>
         :
         <form className="form-control card pl-10 w-screen">
+            {saved ? <Saved setSaved={setSaved} /> : null}
             <Setting 
                 name={"Days Early Threshold"}
                 description={`The number of days a client must wait before being eligible to shop`}

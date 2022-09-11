@@ -156,7 +156,7 @@ export default function newclient() {
 
                         {/* Number of Kids */}
                         <div className="p-2 w-60 flex flex-col">
-                            <label className="label label-text text-xl">Number of Kids <span className="text-orange-700 text-sm">{errors.numKids?.message}</span></label>
+                            <label className="label label-text text-xl">Family Size<span className="text-orange-700 text-sm">{errors.numKids?.message}</span></label>
                             <input type="text" name="numKids" {...register('numKids')} className="input input-bordered min-w-sm p-2 text-center bg-white" />
                         </div>
 
