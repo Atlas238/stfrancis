@@ -79,6 +79,7 @@ export default function SettingForm() {
             let data = await res.json()
             setSettings(data)
             document.getElementById('savedModal').value = true
+            window.alert('Saved!')
         } catch (err) {
             console.log(err)
         }
