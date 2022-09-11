@@ -64,7 +64,7 @@ export default function checkout() {
                 let data = await response.json()
                 // update lastClients
                 let lastClients = JSON.parse(localStorage.getItem('lastClients'))
-                let index = lastClients.findIndex(client => client.clientID === Number(client.clientID))
+                let index = lastClients.findIndex(c => c.clientID === Number(client.clientID))
                 if(index !== -1){
                     lastClients[index] = data.length > 0 ? data[0] : lastClients[index]
                     localStorage.setItem('lastClients', JSON.stringify(lastClients))
