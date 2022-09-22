@@ -21,7 +21,7 @@ export default function NewUserForm() {
         if (response.status === 200) {
             router.push('/')
         } else {
-
+            errors.apiError.mesage = "Something went wrong, please try again"
         }
     }
     return (
