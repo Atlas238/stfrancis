@@ -29,7 +29,9 @@ export default function checkout() {
     const [banned, setBanned] = useState(false)
 
     // Client ID from query parameters
-    const { id } = router.query
+    //const { id } = router.query.id
+    var clientIDBackup = router.query.id
+    console.log(clientIDBackup)
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
     });
@@ -43,7 +45,9 @@ export default function checkout() {
         if (data.menClothing || data.womenClothing || data.boyClothing || data.girlClothing || data.busTicket || data.giftCard || data.diaper || data.financialAssistance || data.backpack || data.sleeingbag || data.notes!=="") {
             // Create a visit record with client ID
             let visitID = null
-            let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`)
+
+
+            let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${clientIDBackup}`)
             if(response.ok && response.status===200){
                 console.log("Visit created")
                 let data = await response.json()
@@ -67,14 +71,14 @@ export default function checkout() {
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
         checkedInClients?.forEach(c => {
-            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+            if (c.clientID !== clientIDBackup) updatedCheckedInClients.push(c)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
         // Remove client from checkedInClientDict list
         let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (client.clientID in checkedInClientDict){
-            delete checkedInClientDict[client.clientID]
+        if (clientIDBackup == checkedInClientDict.clientID) {
+            delete checkedInClientDict[clientIDBackup]
         }
         localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
 
@@ -113,12 +117,12 @@ export default function checkout() {
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         checkedInClients?.forEach(client => {
             console.log(typeof(client.clientID))
-            if (client.clientID === Number(id)) setClient(client)
+            if (client.clientID === clientIDBackup) setClient(client)
         })
 
         let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
-        if (checkedInClientDict && Number(id) in checkedInClientDict){
-            fillFieldswithCheckinInfo(checkedInClientDict[Number(id)])
+        if (checkedInClientDict && clientIDBackup in checkedInClientDict){
+            fillFieldswithCheckinInfo(checkedInClientDict[clientIDBackup])
         }
     }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
 
