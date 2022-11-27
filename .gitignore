@@ -30,3 +30,11 @@ yarn-error.log*
 
 # vercel
 .vercel
+/.vs/legacystfrancis/FileContentIndex/1ccfe223-a8f5-4bb9-8ecb-e1e86fe55373.vsidx
+/.vs/legacystfrancis/FileContentIndex/merges/214ccfc6-55ff-4137-a404-b94068fe92ca.vsidx
+/.vs/legacystfrancis/FileContentIndex/write.lock
+/.gitignore
+/.vs/VSWorkspaceState.json
+/.vs/slnx.sqlite
+/.vs/legacystfrancis/v17/.wsuo
+*.vsidx
