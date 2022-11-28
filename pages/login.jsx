@@ -25,7 +25,7 @@ function Login() {
             <div className="hero-content flex-col lg:flex-row-reverse">
                 <div className="text-secondary text-center lg:text-left">
                     <h1 className=" text-8xl font-bold select-none">Login to Continue</h1>
-                    <p className="py-6 text-3xl text-center select-none">Enter your issued username and password to sign into the main portal test</p>
+                    <p className="py-6 text-3xl text-center select-none">Enter your issued username and password to sign into the main portal</p>
                 </div>
                 <div className="card flex-shrink-0 w-full max-w-md mx-5 shadow-2xl bg-accent">
                     <LoginForm /> 

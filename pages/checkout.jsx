@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { NavLink } from '../components/NavLink.jsx';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import checkedin from "./checkedin.jsx";
 
 // form validation
 const checkoutSchema = Yup.object().shape({
@@ -68,18 +69,26 @@ export default function checkout() {
         }
 
         // Remove client from checkedin list
+        console.log("GETTING TO REMOVE CLIENT FROM CHECKED IN LIST")
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
+        console.log("before loop")
         checkedInClients?.forEach(c => {
-            if (c.clientID !== clientIDBackup) updatedCheckedInClients.push(c)
+            if (c.client.clientID != clientIDBackup) updatedCheckedInClients.push(c)
+            console.log("in loop")
+            console.log("clientID : " + c.client.clientID)
+            console.log("clientIDBACKUP : " + clientIDBackup)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
+        console.log("after loop")
 
         // Remove client from checkedInClientDict list
+        console.log("line 81")
         let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (clientIDBackup == checkedInClientDict.clientID) {
-            delete checkedInClientDict[clientIDBackup]
-        }
+        console.log("getting to check type: ")
+        console.log(typeof(checkedInClientDict) )
+        delete checkedInClientDict[clientIDBackup]
+        
         localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
 
         //Move them back to the checkedin page
@@ -115,9 +124,11 @@ export default function checkout() {
     useEffect(() => {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        checkedInClients?.forEach(client => {
-            console.log(typeof(client.clientID))
-            if (client.clientID === clientIDBackup) setClient(client)
+        checkedInClients?.forEach(c => {
+            console.log("type of client :"  )
+            console.log(typeof (c.client.clientID))
+            //new add right here c.client.clientID improper reading from storage previously.
+            if (c.client.clientID === clientIDBackup) setClient(client)
         })
 
         let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
