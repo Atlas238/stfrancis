@@ -69,27 +69,24 @@ export default function checkout() {
         }
 
         // Remove client from checkedin list
-        console.log("GETTING TO REMOVE CLIENT FROM CHECKED IN LIST")
+        //console.log("GETTING TO REMOVE CLIENT FROM CHECKED IN LIST")
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
-        console.log("before loop")
+        //console.log("before loop")
         checkedInClients?.forEach(c => {
             if (c.client.clientID != clientIDBackup) updatedCheckedInClients.push(c)
-            console.log("in loop")
-            console.log("clientID : " + c.client.clientID)
-            console.log("clientIDBACKUP : " + clientIDBackup)
+            //console.log("clientID : " + c.client.clientID)
+            //console.log("clientIDBACKUP : " + clientIDBackup)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
-        console.log("after loop")
 
-        // Remove client from checkedInClientDict list
-        console.log("line 81")
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        console.log("getting to check type: ")
-        console.log(typeof(checkedInClientDict) )
-        delete checkedInClientDict[clientIDBackup]
+        // Remove client from checkedInClientObj list
+        let checkedInClientObj = JSON.parse(localStorage.getItem("checkedInClientObj"))
+        //console.log("getting to check type: ")
+        //console.log(typeof(checkedInClientObj) )
+        delete checkedInClientObj[clientIDBackup]
         
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+        localStorage.setItem("checkedInClientObj", JSON.stringify(checkedInClientObj))
 
         //Move them back to the checkedin page
         router.push('/checkedin');
@@ -131,11 +128,11 @@ export default function checkout() {
             if (c.client.clientID === clientIDBackup) setClient(client)
         })
 
-        let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
-        if (checkedInClientDict && clientIDBackup in checkedInClientDict){
-            fillFieldswithCheckinInfo(checkedInClientDict[clientIDBackup])
+        let checkedInClientObj = JSON.parse(localStorage.getItem('checkedInClientObj'))
+        if (checkedInClientObj && clientIDBackup in checkedInClientObj){
+            fillFieldswithCheckinInfo(checkedInClientObj[clientIDBackup])
         }
-    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
+    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientObj')])
 
     return (
        <div className="mt-20">
