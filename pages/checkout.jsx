@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { NavLink } from '../components/NavLink.jsx';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import checkedin from "./checkedin.jsx";
 
 // form validation
 const checkoutSchema = Yup.object().shape({
@@ -29,7 +30,9 @@ export default function checkout() {
     const [banned, setBanned] = useState(false)
 
     // Client ID from query parameters
-    const { id } = router.query
+    //const { id } = router.query.id
+    var clientIDBackup = router.query.id
+    console.log(clientIDBackup)
     const { register, handleSubmit, formState } = useForm({
         resolver: yupResolver(checkoutSchema)
     });
@@ -43,7 +46,9 @@ export default function checkout() {
         if (data.menClothing || data.womenClothing || data.boyClothing || data.girlClothing || data.busTicket || data.giftCard || data.diaper || data.financialAssistance || data.backpack || data.sleeingbag || data.notes!=="") {
             // Create a visit record with client ID
             let visitID = null
-            let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${client.clientID}`)
+
+
+            let response = await fetch(`https://stfrancisone.herokuapp.com/home/createClientVisitByID?clientID=${clientIDBackup}`)
             if(response.ok && response.status===200){
                 console.log("Visit created")
                 let data = await response.json()
@@ -64,19 +69,24 @@ export default function checkout() {
         }
 
         // Remove client from checkedin list
+        //console.log("GETTING TO REMOVE CLIENT FROM CHECKED IN LIST")
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
         let updatedCheckedInClients = []
+        //console.log("before loop")
         checkedInClients?.forEach(c => {
-            if (c.clientID !== client.clientID) updatedCheckedInClients.push(c)
+            if (c.client.clientID != clientIDBackup) updatedCheckedInClients.push(c)
+            //console.log("clientID : " + c.client.clientID)
+            //console.log("clientIDBACKUP : " + clientIDBackup)
         })
         localStorage.setItem("checkedInClients", JSON.stringify(updatedCheckedInClients))
 
-        // Remove client from checkedInClientDict list
-        let checkedInClientDict = JSON.parse(localStorage.getItem("checkedInClientDict"))
-        if (client.clientID in checkedInClientDict){
-            delete checkedInClientDict[client.clientID]
-        }
-        localStorage.setItem("checkedInClientDict", JSON.stringify(checkedInClientDict))
+        // Remove client from checkedInClientObj list
+        let checkedInClientObj = JSON.parse(localStorage.getItem("checkedInClientObj"))
+        //console.log("getting to check type: ")
+        //console.log(typeof(checkedInClientObj) )
+        delete checkedInClientObj[clientIDBackup]
+        
+        localStorage.setItem("checkedInClientObj", JSON.stringify(checkedInClientObj))
 
         //Move them back to the checkedin page
         router.push('/checkedin');
@@ -111,16 +121,18 @@ export default function checkout() {
     useEffect(() => {
         // Check for clients on page load
         let checkedInClients = JSON.parse(localStorage.getItem('checkedInClients'))
-        checkedInClients?.forEach(client => {
-            console.log(typeof(client.clientID))
-            if (client.clientID === Number(id)) setClient(client)
+        checkedInClients?.forEach(c => {
+            console.log("type of client :"  )
+            console.log(typeof (c.client.clientID))
+            //new add right here c.client.clientID improper reading from storage previously.
+            if (c.client.clientID === clientIDBackup) setClient(client)
         })
 
-        let checkedInClientDict = JSON.parse(localStorage.getItem('checkedInClientDict'))
-        if (checkedInClientDict && Number(id) in checkedInClientDict){
-            fillFieldswithCheckinInfo(checkedInClientDict[Number(id)])
+        let checkedInClientObj = JSON.parse(localStorage.getItem('checkedInClientObj'))
+        if (checkedInClientObj && clientIDBackup in checkedInClientObj){
+            fillFieldswithCheckinInfo(checkedInClientObj[clientIDBackup])
         }
-    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientDict')])
+    }, [localStorage.getItem('checkedInClients'), localStorage.getItem('checkedInClientObj')])
 
     return (
        <div className="mt-20">
